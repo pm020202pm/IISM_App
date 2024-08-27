@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "46658532627",
+    "project_id": "iism2024",
+    "storage_bucket": "iism2024.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:46658532627:android:d98cf727496d05ea59d6e6",
+        "android_client_info": {
+          "package_name": "com.example.iism"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDW7Wf2OdKIZKIW7U74I0AQI1tNt8BSlqA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:46658532627:android:209042453b80d99159d6e6",
+        "android_client_info": {
+          "package_name": "com.example.iism_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDW7Wf2OdKIZKIW7U74I0AQI1tNt8BSlqA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
