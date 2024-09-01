@@ -9,6 +9,7 @@ import 'package:iism/pages/players_page.dart';
 import 'package:iism/pages/schedule_page.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'package:excel/excel.dart' as exl;
+import 'package:iism/pages/teams_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,9 +29,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
 
   Future<void> loadExcelData() async {
+    String category = 'teams';
     // final ByteData data = await rootBundle.load('assets/files/schedule.xlsx');
     // final ByteData data = await rootBundle.load('assets/files/players.xlsx');
-    final ByteData data = await rootBundle.load('assets/files/gallery.xlsx');
+    final ByteData data = await rootBundle.load('assets/files/$category.xlsx');
 
     final List<int> bytes = data.buffer.asUint8List();
     final exl.Excel excel = exl.Excel.decodeBytes(bytes);
@@ -51,7 +53,7 @@ class _MyAppState extends State<MyApp> {
           if(header!='Date') dataMap[header] = cellValue.toString().toLowerCase();
           else dataMap[header] = cellValue.toString();
         }
-        await firestore.collection('gallery').add(dataMap);
+        await firestore.collection(category).add(dataMap);
       }
     }
   }
@@ -181,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
               activeColor: Colors.green.shade900,
               iconSize: 24,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
-              tabMargin: const EdgeInsets.only(top: 8, right: 8, left: 8, bottom: 8),
+              tabMargin: const EdgeInsets.only(top: 5, right: 5, left: 5, bottom: 5),
               duration: const Duration(milliseconds: 200),
               backgroundColor: Colors.grey.shade300,
               tabBackgroundColor: Colors.green.shade200,
@@ -227,6 +229,15 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                   icon: Icons.image,
                   text: 'Gallery',
+                ),
+                GButton(
+                  onPressed: (){
+                    setState(() {
+                      item = TeamsPage();
+                    });
+                  },
+                  icon: Icons.people,
+                  text: 'Teams',
                 ),
               ],
             ),

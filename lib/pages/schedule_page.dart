@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:iism/utils.dart';
 import 'package:intl/intl.dart';
 
 class SchedulePage extends StatefulWidget {
@@ -243,7 +244,7 @@ class _SchedulePageState extends State<SchedulePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${data['Sport']} - ${data['Team1']} vs ${data['Team2']}',
+                      '${formatName(data['Sport'])} - ${data['Team1'].toUpperCase()} vs ${data['Team2'].toUpperCase()}',
                       style: const TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
@@ -253,24 +254,26 @@ class _SchedulePageState extends State<SchedulePage> {
                     Text('Date: ${formattedDate}'),
                     Text('Time: ${formattedTime}'),
                     Text('Venue: ${data['Venue']}'),
-                    SizedBox(height: 8.0),
+                    if(data['Score1'] != '0' && data['Score2'] != '0')
+                    const SizedBox(height: 8.0),
+                    if(data['Score1'] != '0' && data['Score2'] != '0')
                     Row(
                       children: [
-                        Text('Score: '),
+                        const Text('Score: '),
                         Text(
                           '${data['Score1']} - ${data['Score2']}',
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),
-                    if (data['Livelink'] != null && data['Livelink'].isNotEmpty)
-                      SizedBox(height: 8.0),
-                    if (data['Livelink'] != null && data['Livelink'].isNotEmpty)
+                    if (data['Livelink'] != 'null' && data['Livelink'].isNotEmpty)
+                      const SizedBox(height: 8.0),
+                    if (data['Livelink'] != 'null' && data['Livelink'].isNotEmpty)
                       GestureDetector(
                         onTap: () {
                           // Handle live link tap
                         },
-                        child: Text(
+                        child: const Text(
                           'Watch Live',
                           style: TextStyle(
                             color: Colors.blue,
