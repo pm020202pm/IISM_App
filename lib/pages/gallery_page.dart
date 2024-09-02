@@ -14,7 +14,7 @@ class _GalleryPageState extends State<GalleryPage> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = "";
   final int _itemsPerPage = 15;
-  String _sortCriteria = 'Sport';
+  final String _sortCriteria = 'Sport';
   DocumentSnapshot? _lastDocument;
   bool _hasMore = true;
   bool _isLoading = false;

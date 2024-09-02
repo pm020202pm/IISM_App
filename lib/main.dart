@@ -86,74 +86,40 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Widget item = const HomePage();
+  int index = 0;
+  // List<Widget> items= [
+  //   HomePage(onTap: () {
+  //   },),
+  //   SchedulePage(),
+  //   PlayersPage(),
+  //   GalleryPage(),
+  //   TeamsPage(),
+  // ];
 
+  // Widget item = HomePage(onTap: () {
+  //   setState(() {
+  //     item = SchedulePage();
+  //   });
+  // },);
+  void setGalleryPage() {
+    setState(() {
+      index = 3;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // bottomNavigationBar: Padding(
-      //   padding: const EdgeInsets.all(8.0),
-      //   child: ClipRRect(
-      //     borderRadius: BorderRadius.circular(30),
-      //     child: GNav(
-      //       // rippleColor: Colors.grey[300]!,
-      //       // hoverColor: Colors.grey[100]!,
-      //       gap: 4,
-      //       activeColor: Colors.green.shade900,
-      //       iconSize: 24,
-      //       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 18),
-      //       tabMargin: const EdgeInsets.only(top: 8, right: 8, left: 8, bottom: 8),
-      //       duration: const Duration(milliseconds: 200),
-      //       backgroundColor: Colors.grey.shade300,
-      //       tabBackgroundColor: Colors.green.shade200,
-      //       // tabActiveBorder: Border.all(color: Colors.green.shade400, width: 2),
-      //       textStyle: TextStyle(
-      //         color: Colors.green.shade900,
-      //         fontWeight: FontWeight.bold,
-      //       ),
-      //
-      //       tabs: [
-      //         GButton(
-      //           onPressed: (){
-      //             setState(() {
-      //               item = HomePage();
-      //             });
-      //           },
-      //           icon: Icons.home,
-      //           text: 'Home',
-      //         ),
-      //         GButton(
-      //           onPressed: (){
-      //             setState(() {
-      //               item = SchedulePage();
-      //             });
-      //           },
-      //           icon: Icons.schedule,
-      //           text: 'Schedule',
-      //         ),
-      //         GButton(
-      //           onPressed: (){
-      //             setState(() {
-      //               item = PlayersPage();
-      //             });
-      //           },
-      //           icon: Icons.sports_basketball,
-      //           text: 'Players',
-      //         ),
-      //         GButton(
-      //           onPressed: (){
-      //             setState(() {
-      //               item = GalleryPage();
-      //             });
-      //           },
-      //           icon: Icons.image,
-      //           text: 'Gallery',
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // ),
-      body: item,
+      body: (index == 0) ?
+        HomePage(onTap: setGalleryPage,) :
+      (index == 1)
+          ? const SchedulePage()
+          : (index == 2)
+          ? const PlayersPage()
+          : (index == 3)
+          ? const GalleryPage()
+          : (index == 4)
+          ? const TeamsPage()
+          : Container(),
       floatingActionButton: Padding(
         padding: const EdgeInsets.all(6),
         child: Container(
@@ -176,9 +142,6 @@ class _MyHomePageState extends State<MyHomePage> {
           child: ClipRRect(
             borderRadius: BorderRadius.circular(40),
             child: GNav(
-
-              // rippleColor: Colors.grey[300]!,
-              // hoverColor: Colors.grey[100]!,
               gap: 4,
               activeColor: Colors.green.shade900,
               iconSize: 24,
@@ -197,7 +160,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 GButton(
                   onPressed: (){
                     setState(() {
-                      item = HomePage();
+                      index = 0;
+                      // item = HomePage();
                     });
                   },
                   icon: Icons.home,
@@ -206,7 +170,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 GButton(
                   onPressed: (){
                     setState(() {
-                      item = SchedulePage();
+                      index = 1;
+                      // item = SchedulePage();
                     });
                   },
                   icon: Icons.schedule,
@@ -215,25 +180,24 @@ class _MyHomePageState extends State<MyHomePage> {
                 GButton(
                   onPressed: (){
                     setState(() {
-                      item = PlayersPage();
+                      index = 2;
+                      // item = PlayersPage();
                     });
                   },
                   icon: Icons.sports_basketball,
                   text: 'Players',
                 ),
                 GButton(
-                  onPressed: (){
-                    setState(() {
-                      item = GalleryPage();
-                    });
-                  },
+                  onPressed: setGalleryPage,
                   icon: Icons.image,
                   text: 'Gallery',
                 ),
                 GButton(
                   onPressed: (){
+
                     setState(() {
-                      item = TeamsPage();
+                      index = 4;
+                      // item = TeamsPage();
                     });
                   },
                   icon: Icons.people,

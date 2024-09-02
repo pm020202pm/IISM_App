@@ -41,6 +41,8 @@ dependencies:
   intl: ^0.19.0
   google_nav_bar: ^5.0.6
   shimmer: ^3.0.0
+  carousel_slider: ^5.0.0
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +69,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/files/
+    - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -79,11 +82,11 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
+  fonts:
+     - family: Aptos
+       fonts:
+         - asset: fonts/aptos-black.ttf
+         - asset: fonts/Aptos-SemiBold.ttf
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:

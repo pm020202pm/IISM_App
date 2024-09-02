@@ -225,6 +225,7 @@ class _SchedulePageState extends State<SchedulePage> {
           return false;
         },
         child: ListView.builder(
+          // shrinkWrap: true,
           itemCount: _scheduleDocs.length + (_hasMore ? 1 : 0),
           itemBuilder: (context, index) {
             if (index >= _scheduleDocs.length) {
@@ -232,57 +233,116 @@ class _SchedulePageState extends State<SchedulePage> {
             }
             var data = _scheduleDocs[index].data() as Map<String, dynamic>;
             DateTime date = DateTime.parse(data['Date']);
-            String formattedDate = DateFormat('MMMM d, y').format(date);
+            String formattedDate = DateFormat('d MMMM').format(date);
             DateTime dateTime = DateFormat('HH:mm').parse(data['Time']);
             String formattedTime = DateFormat('h:mm a').format(dateTime);
+
             return Card(
               elevation: 4.0,
               margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${formatName(data['Sport'])} - ${data['Team1'].toUpperCase()} vs ${data['Team2'].toUpperCase()}',
-                      style: const TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 8.0),
-                    Text('Date: ${formattedDate}'),
-                    Text('Time: ${formattedTime}'),
-                    Text('Venue: ${data['Venue']}'),
-                    if(data['Score1'] != '0' && data['Score2'] != '0')
-                    const SizedBox(height: 8.0),
-                    if(data['Score1'] != '0' && data['Score2'] != '0')
-                    Row(
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12.0),
+                      child: Image.asset("assets/images/cricket.png",)),
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Score: '),
-                        Text(
-                          '${data['Score1']} - ${data['Score2']}',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Column(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.all(5.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(70),
+
+                                ),
+                                  child: Image.asset('assets/images/iitk.png', width: 55.0, height: 55.0)
+                              ),
+                              Text(
+                                '${data['Team1'].toUpperCase()}',
+                                style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.w900,
+                                    color: Colors.grey.shade800,
+                                  fontFamily: 'Aptos'
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text('${formattedTime}',
+                              style: TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.w900,
+                                  color: Colors.grey.shade900,
+                                  fontFamily: 'Aptos',
+                                height: 1.4,
+                              ),
+                            ),
+                            Text('${formattedDate}',
+                              style: TextStyle(
+                                  fontSize: 13.0,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.grey.shade700,
+                                  fontFamily: 'Aptos',
+                                height: 1,
+                              ),
+                            ),
+                            Text('${data['Venue']}',
+                              style: TextStyle(
+                                  fontSize: 13.0,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.grey.shade700,
+                                  fontFamily: 'Aptos',
+                                height: 1,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Column(
+                            children: [
+                              Column(
+                                children: [
+                                  Container(
+                                      padding: EdgeInsets.all(5.0),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(70),
+
+                                      ),
+                                      child: Image.asset('assets/images/iitb.png', width: 55.0, height: 55.0)
+                                  ),
+                                  Text(
+                                    '${data['Team1'].toUpperCase()}',
+                                    style: TextStyle(
+                                        fontSize: 15.0,
+                                        fontWeight: FontWeight.w900,
+                                        color: Colors.grey.shade800,
+                                        fontFamily: 'Aptos'
+                                    ),
+
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
-                    if (data['Livelink'] != 'null' && data['Livelink'].isNotEmpty)
-                      const SizedBox(height: 8.0),
-                    if (data['Livelink'] != 'null' && data['Livelink'].isNotEmpty)
-                      GestureDetector(
-                        onTap: () {
-                          // Handle live link tap
-                        },
-                        child: const Text(
-                          'Watch Live',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             );
           },
