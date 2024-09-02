@@ -118,7 +118,7 @@ class _SchedulePageState extends State<SchedulePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text("Schedule", style: TextStyle(fontSize: 40)),
+                    const Text("Matches", style: TextStyle(fontSize: 40)),
                     TextButton(onPressed: () {}, child: Text("Fixture")),
                   ],
                 ),

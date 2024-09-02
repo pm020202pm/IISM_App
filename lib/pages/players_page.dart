@@ -202,10 +202,10 @@ class _PlayersPageState extends State<PlayersPage> {
         },
         child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, // 2 items per row
-            crossAxisSpacing: 10.0, // Spacing between columns
-            mainAxisSpacing: 10.0,  // Spacing between rows
-            childAspectRatio: 0.90, // Adjust the aspect ratio as needed
+            crossAxisCount: 1, // 2 items per row
+            crossAxisSpacing: 0.0, // Spacing between columns
+            mainAxisSpacing: 5.0,  // Spacing between rows
+            childAspectRatio: 4.4, // Adjust the aspect ratio as needed
           ),
           padding: const EdgeInsets.all(16.0),
           itemCount: _scheduleDocs.length + (_hasMore ? 1 : 0),
@@ -218,26 +218,63 @@ class _PlayersPageState extends State<PlayersPage> {
               elevation: 2.0,
               margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
+                padding: const EdgeInsets.all(6.0),
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      formatName(data['Name']),
-                      style: const TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(8.0),
+                        child: Image.asset('assets/images/person.png', fit: BoxFit.cover)),
+                    const SizedBox(width: 5.0),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          formatName(data['Name']),
+                          style: const TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                            height: 1
+                          ),
+
+                        ),
+                        Text(formatName(data['Sport']),
+                          style: TextStyle(
+                              color: Colors.grey.shade800,
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w600,
+                              height: 1
+                          ),
+                        ),
+                        Text(data['College'][0].toUpperCase()+data['College'][1].toUpperCase()+data['College'][2].toUpperCase()+formatName(data['College'].substring(3)),
+                          style: TextStyle(
+                              color: Colors.grey.shade800,
+                              fontSize: 14.0,
+                              fontWeight: FontWeight.w600,
+                              height: 1.1
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 8.0),
-                    Text('${data['RollNo']}'),
-                    Text('${formatName(data['Department'])}'),
+                    // const SizedBox(height: 8.0),
+                    // Text('${data['RollNo']}',
+                    //   style: TextStyle(
+                    //     color: Colors.grey.shade800,
+                    //       fontSize: 14.0,
+                    //       fontWeight: FontWeight.w600,
+                    //       height: 1.1
+                    //   ),
+                    // ),
+
+
                     // Text('Email: ${data['Email']}'),
                     // Text('Gender: ${data['Gender']}'),
                     // Text('Phone No: ${data['PhoneNo']}'),
                     // Text('College: ${data['College']}'),
-                    Text('Sport: ${formatName(data['Sport'])}'),
+                    // Text('Sport: ${formatName(data['Department'])}'),
                   ],
                 ),
               ),

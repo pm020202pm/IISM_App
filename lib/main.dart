@@ -175,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     });
                   },
                   icon: Icons.schedule,
-                  text: 'Schedule',
+                  text: 'Matches',
                 ),
                 GButton(
                   onPressed: (){
