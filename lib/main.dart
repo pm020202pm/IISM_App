@@ -5,6 +5,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:iism/firebase_options.dart';
 import 'package:iism/pages/gallery_page.dart';
 import 'package:iism/pages/home_page.dart';
+import 'package:iism/pages/player_profile_page.dart';
 import 'package:iism/pages/players_page.dart';
 import 'package:iism/pages/schedule_page.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
@@ -87,20 +88,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int index = 0;
-  // List<Widget> items= [
-  //   HomePage(onTap: () {
-  //   },),
-  //   SchedulePage(),
-  //   PlayersPage(),
-  //   GalleryPage(),
-  //   TeamsPage(),
-  // ];
-
-  // Widget item = HomePage(onTap: () {
-  //   setState(() {
-  //     item = SchedulePage();
-  //   });
-  // },);
   void setGalleryPage() {
     setState(() {
       index = 3;
@@ -112,13 +99,15 @@ class _MyHomePageState extends State<MyHomePage> {
       body: (index == 0) ?
         HomePage(onTap: setGalleryPage,) :
       (index == 1)
-          ? const SchedulePage()
+          ? SchedulePage()
           : (index == 2)
           ? const PlayersPage()
           : (index == 3)
           ? const GalleryPage()
           : (index == 4)
           ? const TeamsPage()
+          : (index == 5)
+          ? ProfilePage()
           : Container(),
       floatingActionButton: Padding(
         padding: const EdgeInsets.all(6),
@@ -192,16 +181,27 @@ class _MyHomePageState extends State<MyHomePage> {
                   icon: Icons.image,
                   text: 'Gallery',
                 ),
+                // GButton(
+                //   onPressed: (){
+                //
+                //     setState(() {
+                //       index = 4;
+                //       // item = TeamsPage();
+                //     });
+                //   },
+                //   icon: Icons.people,
+                //   text: 'Teams',
+                // ),
                 GButton(
                   onPressed: (){
 
                     setState(() {
-                      index = 4;
+                      index = 5;
                       // item = TeamsPage();
                     });
                   },
-                  icon: Icons.people,
-                  text: 'Teams',
+                  icon: Icons.person,
+                  text: 'Profile',
                 ),
               ],
             ),

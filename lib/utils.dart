@@ -7,3 +7,12 @@ String formatName(String name) {
     return word;
   }).join(' ');
 }
+
+Map<String, String> sportsTableMap = {
+  'Cricket': 'crickettable',
+  'VolleyBall': 'volleyballtable',
+  'BasketBall': 'basketballtable',
+  'Lawn Tennis': 'lawntennistable',
+  'Hockey': 'hockeytable',
+  'Table Tennis': 'tabletennistable',
+};

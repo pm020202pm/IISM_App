@@ -116,7 +116,7 @@ class _PlayersPageState extends State<PlayersPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      width: 115,
+                      // width: 115,
                       decoration: BoxDecoration(
                         color: Colors.transparent,
                         borderRadius: BorderRadius.circular(30.0),
@@ -167,19 +167,21 @@ class _PlayersPageState extends State<PlayersPage> {
                         ),
                       ),
                     ),
-                    Container(
-                      width: 220,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: TextField(
-                        controller: _searchController,
-                        onChanged: _filterSchedule,
-                        decoration: const InputDecoration(
-                          hintText: "Search...",
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.all(8.0),
+                    Expanded(
+                      child: Container(
+                        // width: 220,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: TextField(
+                          controller: _searchController,
+                          onChanged: _filterSchedule,
+                          decoration: const InputDecoration(
+                            hintText: "Search...",
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.all(8.0),
+                          ),
                         ),
                       ),
                     ),
@@ -205,7 +207,7 @@ class _PlayersPageState extends State<PlayersPage> {
             crossAxisCount: 1, // 2 items per row
             crossAxisSpacing: 0.0, // Spacing between columns
             mainAxisSpacing: 5.0,  // Spacing between rows
-            childAspectRatio: 4.4, // Adjust the aspect ratio as needed
+            childAspectRatio: 4, // Adjust the aspect ratio as needed
           ),
           padding: const EdgeInsets.all(16.0),
           itemCount: _scheduleDocs.length + (_hasMore ? 1 : 0),
@@ -226,7 +228,7 @@ class _PlayersPageState extends State<PlayersPage> {
                     ClipRRect(
                         borderRadius: BorderRadius.circular(8.0),
                         child: Image.asset('assets/images/person.png', fit: BoxFit.cover)),
-                    const SizedBox(width: 5.0),
+                    const SizedBox(width: 15.0),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,

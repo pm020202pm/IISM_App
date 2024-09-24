@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
+import '../SchedulePage/models/MatchesModel.dart';
+import '../SchedulePage/widgets/widgets.dart';
+import '../api.dart';
+import '../utils.dart';
 import '../widgets/big_card.dart';
-import 'gallery_page.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key, required this.onTap});
@@ -88,10 +93,30 @@ class _HomePageState extends State<HomePage> {
       fit: BoxFit.cover,
     ),
   ];
+  String chipSportValue = "Cricket";
+  bool _isLoading = false;
+  double livenowHeight = 50;
+  List<dynamic> _matches = [];
+  List<dynamic> liveMatchesLength=[];
 
-  final CarouselSliderController carouselController =
-      CarouselSliderController();
+  Future<void> onChipTap(String sport) async {
+    setState(() {
+      chipSportValue = sport;
+      _matches.clear();
+      // _page = 1;
+      // _hasMore = true;
+    });
+    await _fetchMatches(sportsTableMap[chipSportValue]!);
+  }
+
+  final CarouselSliderController carouselController = CarouselSliderController();
   int currIndex = 0;
+  @override
+  void initState() {
+    getLiveMatchesLength();
+    onChipTap(chipSportValue);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -103,13 +128,9 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  height: 400,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade500,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                    child: Image.asset('assets/images/iism.png', width: double.infinity)),
                 const SizedBox(height: 10),
                 CarouselSlider(
                   items: widgets,
@@ -119,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                       height: 200,
                       scrollPhysics: const BouncingScrollPhysics(),
                       enlargeCenterPage: true,
-                      viewportFraction: 0.8,
+                      viewportFraction: 0.84,
                       onPageChanged: (index, reason) {
                         // setState(() {
                         //   currIndex = index;
@@ -129,6 +150,52 @@ class _HomePageState extends State<HomePage> {
                 ),
                 const Padding(
                   padding: EdgeInsets.only(top: 28.0, bottom: 8.0),
+                  child: Text(
+                    "Live Now",
+                    style: TextStyle(fontSize: 28),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 0.0, bottom: 5),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        if(liveMatchesLength[0][1]>0 ?? false) customChips1("Cricket", Icons.sports_cricket,chipSportValue=="Cricket",() async {await onChipTap("Cricket");}),
+                        const SizedBox(width: 8.0),
+                        if(liveMatchesLength[1][1]>0 ?? false) customChips1("VolleyBall", Icons.sports_volleyball,chipSportValue=="VolleyBall", () async {await onChipTap("VolleyBall");}),
+                        const SizedBox(width: 8.0),
+                        if(liveMatchesLength[2][1]>0 ?? false) customChips1("BasketBall", Icons.sports_basketball,chipSportValue=="BasketBall",() async {await onChipTap("BasketBall");}),
+                        const SizedBox(width: 8.0),
+                        if(liveMatchesLength[3][1]>0 ?? false) customChips1("Hockey", Icons.sports_hockey,chipSportValue=="Hockey", () async {await onChipTap("Hockey");}),
+                        const SizedBox(width: 8.0),
+                        if(liveMatchesLength[4][1]>0 ?? false) customChips1("Lawn Tennis", Icons.sports_tennis,chipSportValue=="Lawn Tennis",() async {await onChipTap("Lawn Tennis");}),
+                        const SizedBox(width: 8.0),
+                        if(liveMatchesLength[5][1]>0 ?? false) customChips1("Table Tennis", Icons.sports_tennis,chipSportValue=="Table Tennis", () async {await onChipTap("Table Tennis");}),
+                      ],
+                    ),
+                  ),
+                ),
+                // LiveNowCard(match: BasketballMatchModel.fromJson(_matches[0])),
+                SizedBox(
+                  height: livenowHeight,
+                  // width: 200,
+                  child: ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: _matches.length,
+                    itemBuilder: (context, index) {
+                      if (index >= _matches.length) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      var match = _matches[index];
+                      String sport = match['sport'];
+                      LiveNowMatchModel matchModel = LiveNowMatchModel.fromJson(match);
+                      return LiveNowCard(match: matchModel);
+                    },
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 15.0, bottom: 8.0),
                   child: Text(
                     "Gallery",
                     style: TextStyle(fontSize: 28),
@@ -306,4 +373,200 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  void getLiveMatchesLength() async {
+    final String apiUrl = '$apiBaseUrl/getTablesLength';
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+      print("###2 ${response.statusCode}");
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          liveMatchesLength = data['data'];
+          print("###3 ${liveMatchesLength[0][1]}");
+        });
+        // print("###1 ${data['data']}");
+      } else {
+
+        print('Failed to load matches');
+      }
+    } catch (e) {
+      print('Error fetching matches: $e');
+    }
+  }
+
+  Future<void> _fetchMatches(String sportTableName) async {
+    if (_isLoading) return;
+    setState(() {
+      _isLoading = true;
+    });
+    final String apiUrl = '$apiBaseUrl/getLiveMatches?page=1&limit=3&sortBy=time&order=ASC&search=&sportTableName=$sportTableName';
+
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          _matches.addAll(data['matches']);
+          int len = _matches.length;
+          if(len == 0){
+            livenowHeight = 0;
+          }
+          else if(len == 1){
+            livenowHeight = 54;
+          }
+          else if(len == 2){
+            livenowHeight = 100;
+          }
+          else{
+            livenowHeight = 166;
+          }
+        });
+        print("### ${_matches.length}");
+      } else {
+
+        print('Failed to load matches');
+      }
+    } catch (e) {
+      print('Error fetching matches: $e');
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
 }
+
+class LiveNowCard extends StatelessWidget {
+  const LiveNowCard({super.key, required this.match});
+  final LiveNowMatchModel match;
+
+  @override
+  Widget build(BuildContext context) {
+    print(match.sport);
+    return Card(
+      elevation: 2.0,
+      margin: const EdgeInsets.symmetric(vertical: 3.0),
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                    padding: const EdgeInsets.only(left: 5),
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: Row(
+                        children: [
+                          Container(
+                              padding: const EdgeInsets.all(2.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(70),
+                              ),
+                              child: Image.asset('assets/logo/${match.team1}.png', width: 20, height: 20)
+                          ),
+                          const SizedBox(width: 5,),
+                          Container(
+                            width: 80,
+                              child: customText(match.team1!.toUpperCase(), 10, FontWeight.w900, Colors.grey.shade800,1.9)),
+                        ],
+                      ),
+                    )
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    if(match.sport == "table tennis" || match.sport == "lawn tennis" || match.sport == "volleyball")
+                    setScore("1", match.set1Score1.toString(), match.set1Score2.toString()),
+                    if(match.sport == "hockey")
+                    score2(match.team1Goals.toString(), match.team2Goals.toString()),
+                    if(match.sport == "basketball")
+                    score2(match.team1Score.toString(), match.team2Score.toString()),
+                    if(match.sport == "cricket")
+                    score2(match.team1_score.toString(), match.team2_score.toString()),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 5),
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 80,
+                            child: customText(match.team2!.toUpperCase(), 10, FontWeight.w900, Colors.grey.shade800,1.9)),
+                        const SizedBox(width: 5),
+                        Container(
+                            padding: const EdgeInsets.all(2.0),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(70),
+                            ),
+                            child: Image.asset('assets/logo/${match.team2}.png', width: 20, height: 20)
+                        ),
+                      ],
+                    ),
+                  )
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+Widget setScore(String setCount, String score1, String score2){
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
+    decoration: BoxDecoration(
+      color: Colors.grey.shade300,
+      borderRadius: BorderRadius.circular(10),
+    ),
+    child: Column(
+      children: [
+        Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(7),
+            ),
+            child: customText("Set $setCount", 10, FontWeight.w700, Colors.grey.shade800, 1)),
+        Row(
+          children: [
+            customText(score1, 13, FontWeight.w700, Colors.grey.shade800, 1.4),
+            customText(" : ", 13, FontWeight.w700, Colors.grey.shade700, 1.4),
+            customText(score2, 13, FontWeight.w700, Colors.grey.shade800, 1),
+          ],
+        ),
+
+      ],
+    ),
+  );
+}
+
+Widget score2(String score1, String score2){
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+    decoration: BoxDecoration(
+      color: Colors.grey.shade300,
+      borderRadius: BorderRadius.circular(10),
+    ),
+    child: Row(
+      children: [
+        customText(score1, 15, FontWeight.w900, Colors.grey.shade900, 1.4),
+        customText(" : ", 13, FontWeight.w700, Colors.grey.shade700, 1.4),
+        customText(score2, 15, FontWeight.w900, Colors.grey.shade900, 1.4),
+      ],
+    ),
+  );
+}
+
+
