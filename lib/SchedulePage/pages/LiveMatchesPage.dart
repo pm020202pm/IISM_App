@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:iism/api.dart';
 import 'package:iism/utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../models/MatchesModel.dart';
 import '../widgets/LiveBasketBallCard.dart';
@@ -123,6 +126,8 @@ class _LiveMatchesPageState extends State<LiveMatchesPage> {
 
 
 
+
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -185,28 +190,29 @@ class LiveMatchesListWidget extends StatelessWidget {
         }
         var match = matches[index];
         String sport = match['sport'];
+        LiveNowMatchModel matchModel = LiveNowMatchModel.fromJson(match);
         if(sport == 'cricket'){
-          CricketMatchModel matchModel = CricketMatchModel.fromJson(match);
+          // CricketMatchModel matchModel = CricketMatchModel.fromJson(match);
           return LiveCricketCard(match: matchModel);
         }
         else if(sport == 'volleyball'){
-          VolleyballMatchModel matchModel = VolleyballMatchModel.fromJson(match);
+          // VolleyballMatchModel matchModel = VolleyballMatchModel.fromJson(match);
           return LiveVolleyBallCard(match: matchModel);
         }
         else if(sport == 'basketball'){
-          BasketballMatchModel matchModel = BasketballMatchModel.fromJson(match);
+          // BasketballMatchModel matchModel = BasketballMatchModel.fromJson(match);
           return LiveBasketBallCard(match: matchModel);
         }
         else if(sport == 'hockey'){
-          HockeyMatchModel matchModel = HockeyMatchModel.fromJson(match);
+          // HockeyMatchModel matchModel = HockeyMatchModel.fromJson(match);
           return LiveHockeyCard(match: matchModel);
         }
         else if(sport == 'lawn tennis'){
-          LawnTennisMatchModel matchModel = LawnTennisMatchModel.fromJson(match);
+          // LawnTennisMatchModel matchModel = LawnTennisMatchModel.fromJson(match);
           return LiveLawnTennisCard(match: matchModel);
         }
         else if(sport == 'table tennis'){
-          TableTennisMatchModel matchModel = TableTennisMatchModel.fromJson(match);
+          // TableTennisMatchModel matchModel = TableTennisMatchModel.fromJson(match);
           return LiveTableTennisCard(match: matchModel);
         }
         else{
@@ -217,4 +223,15 @@ class LiveMatchesListWidget extends StatelessWidget {
   }
 }
 
+Future<void> openLocationUrl(String locationUrl) async {
+  if (Platform.isAndroid || Platform.isIOS) {
+    if (await canLaunchUrl(Uri.parse(locationUrl))) {
+      await launchUrl(Uri.parse(locationUrl), mode: LaunchMode.externalApplication);
+    } else {
+      Fluttertoast.showToast(msg: 'Could not open location.');
+    }
+  } else {
+    Fluttertoast.showToast(msg: 'Could not open location');
+  }
+}
 

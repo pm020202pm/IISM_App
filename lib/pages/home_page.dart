@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../SchedulePage/models/MatchesModel.dart';
+import '../SchedulePage/pages/live_page.dart';
 import '../SchedulePage/widgets/widgets.dart';
 import '../api.dart';
 import '../utils.dart';
@@ -97,6 +98,7 @@ class _HomePageState extends State<HomePage> {
   bool _isLoading = false;
   double livenowHeight = 50;
   List<dynamic> _matches = [];
+  List<int> _liveMatchesLength = List.filled(6, 0);
   List<dynamic> liveMatchesLength=[];
 
   Future<void> onChipTap(String sport) async {
@@ -148,6 +150,7 @@ class _HomePageState extends State<HomePage> {
                         // });
                       }),
                 ),
+                if(_liveMatchesLength[0]>0 || _liveMatchesLength[1]>0 || _liveMatchesLength[2]>0 || _liveMatchesLength[3]>0 || _liveMatchesLength[4]>0 || _liveMatchesLength[5]>0)
                 const Padding(
                   padding: EdgeInsets.only(top: 28.0, bottom: 8.0),
                   child: Text(
@@ -155,23 +158,24 @@ class _HomePageState extends State<HomePage> {
                     style: TextStyle(fontSize: 28),
                   ),
                 ),
+
                 Padding(
                   padding: const EdgeInsets.only(left: 0.0, bottom: 5),
                   child: SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-                        if(liveMatchesLength[0][1]>0 ?? false) customChips1("Cricket", Icons.sports_cricket,chipSportValue=="Cricket",() async {await onChipTap("Cricket");}),
+                        if(_liveMatchesLength[0]>0) customChips1("Cricket", Icons.sports_cricket,chipSportValue=="Cricket",() async {await onChipTap("Cricket");}),
                         const SizedBox(width: 8.0),
-                        if(liveMatchesLength[1][1]>0 ?? false) customChips1("VolleyBall", Icons.sports_volleyball,chipSportValue=="VolleyBall", () async {await onChipTap("VolleyBall");}),
+                        if(_liveMatchesLength[1]>0) customChips1("VolleyBall", Icons.sports_volleyball,chipSportValue=="VolleyBall", () async {await onChipTap("VolleyBall");}),
                         const SizedBox(width: 8.0),
-                        if(liveMatchesLength[2][1]>0 ?? false) customChips1("BasketBall", Icons.sports_basketball,chipSportValue=="BasketBall",() async {await onChipTap("BasketBall");}),
+                        if(_liveMatchesLength[2]>0) customChips1("BasketBall", Icons.sports_basketball,chipSportValue=="BasketBall",() async {await onChipTap("BasketBall");}),
                         const SizedBox(width: 8.0),
-                        if(liveMatchesLength[3][1]>0 ?? false) customChips1("Hockey", Icons.sports_hockey,chipSportValue=="Hockey", () async {await onChipTap("Hockey");}),
+                        if(_liveMatchesLength[3]>0) customChips1("Hockey", Icons.sports_hockey,chipSportValue=="Hockey", () async {await onChipTap("Hockey");}),
                         const SizedBox(width: 8.0),
-                        if(liveMatchesLength[4][1]>0 ?? false) customChips1("Lawn Tennis", Icons.sports_tennis,chipSportValue=="Lawn Tennis",() async {await onChipTap("Lawn Tennis");}),
+                        if(_liveMatchesLength[4]>0) customChips1("Lawn Tennis", Icons.sports_tennis,chipSportValue=="Lawn Tennis",() async {await onChipTap("Lawn Tennis");}),
                         const SizedBox(width: 8.0),
-                        if(liveMatchesLength[5][1]>0 ?? false) customChips1("Table Tennis", Icons.sports_tennis,chipSportValue=="Table Tennis", () async {await onChipTap("Table Tennis");}),
+                        if(_liveMatchesLength[5]>0) customChips1("Table Tennis", Icons.sports_tennis,chipSportValue=="Table Tennis", () async {await onChipTap("Table Tennis");}),
                       ],
                     ),
                   ),
@@ -307,7 +311,7 @@ class _HomePageState extends State<HomePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Image.asset('assets/images/ceat.png', width: 180,height: 60, fit:BoxFit.cover,),
+                    Image.asset('assets/images/ceat.png', width: 170,height: 60, fit:BoxFit.cover,),
                     Image.asset('assets/images/cred.png', width: 180, height: 80, fit:BoxFit.cover,),
                   ],
                 ),
@@ -315,7 +319,7 @@ class _HomePageState extends State<HomePage> {
                 Row(
                   children: [
                     Image.asset('assets/images/tata.png', width: 150,height: 60, fit:BoxFit.cover,),
-                    Image.asset('assets/images/vivo.png', width: 190, height: 80, fit:BoxFit.cover,),
+                    Image.asset('assets/images/vivo.png', width: 180, height: 80, fit:BoxFit.cover,),
                   ],
                 ),
                 Padding(
@@ -382,8 +386,14 @@ class _HomePageState extends State<HomePage> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
-          liveMatchesLength = data['data'];
-          print("###3 ${liveMatchesLength[0][1]}");
+          // liveMatchesLength = data['data'];
+          _liveMatchesLength[0] = data['data'][0][1];
+          _liveMatchesLength[1] = data['data'][1][1];
+          _liveMatchesLength[2] = data['data'][2][1];
+          _liveMatchesLength[3] = data['data'][3][1];
+          _liveMatchesLength[4] = data['data'][4][1];
+          _liveMatchesLength[5] = data['data'][5][1];
+          print("###3 ${_liveMatchesLength}");
         });
         // print("###1 ${data['data']}");
       } else {
@@ -445,79 +455,84 @@ class LiveNowCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print(match.sport);
-    return Card(
-      elevation: 2.0,
-      margin: const EdgeInsets.symmetric(vertical: 3.0),
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              // crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                    padding: const EdgeInsets.only(left: 5),
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: Row(
-                        children: [
-                          Container(
-                              padding: const EdgeInsets.all(2.0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(70),
-                              ),
-                              child: Image.asset('assets/logo/${match.team1}.png', width: 20, height: 20)
-                          ),
-                          const SizedBox(width: 5,),
-                          Container(
-                            width: 80,
-                              child: customText(match.team1!.toUpperCase(), 10, FontWeight.w900, Colors.grey.shade800,1.9)),
-                        ],
-                      ),
-                    )
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    if(match.sport == "table tennis" || match.sport == "lawn tennis" || match.sport == "volleyball")
-                    setScore("1", match.set1Score1.toString(), match.set1Score2.toString()),
-                    if(match.sport == "hockey")
-                    score2(match.team1Goals.toString(), match.team2Goals.toString()),
-                    if(match.sport == "basketball")
-                    score2(match.team1Score.toString(), match.team2Score.toString()),
-                    if(match.sport == "cricket")
-                    score2(match.team1_score.toString(), match.team2_score.toString()),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 5),
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LivePage(match: match,),
+          ),
+        );
+      },
+      child: Card(
+        elevation: 2.0,
+        margin: const EdgeInsets.symmetric(vertical: 3.0),
+        child: Padding(
+          padding: const EdgeInsets.all(5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            // crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                  padding: const EdgeInsets.only(left: 5),
                   child: Container(
                     alignment: Alignment.center,
                     child: Row(
                       children: [
-                        Container(
-                          width: 80,
-                            child: customText(match.team2!.toUpperCase(), 10, FontWeight.w900, Colors.grey.shade800,1.9)),
-                        const SizedBox(width: 5),
                         Container(
                             padding: const EdgeInsets.all(2.0),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(70),
                             ),
-                            child: Image.asset('assets/logo/${match.team2}.png', width: 20, height: 20)
+                            child: Image.asset('assets/logo/${match.team1}.png', width: 20, height: 20)
                         ),
+                        const SizedBox(width: 5,),
+                        Container(
+                          width: 80,
+                            child: customText(match.team1!.toUpperCase(), 10, FontWeight.w900, Colors.grey.shade800,1.9)),
                       ],
                     ),
                   )
-                ),
-              ],
-            ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  if(match.sport == "table tennis" || match.sport == "lawn tennis" || match.sport == "volleyball")
+                  setScore("1", match.set1Score1.toString(), match.set1Score2.toString()),
+                  if(match.sport == "hockey")
+                  score2(match.team1Goals.toString(), match.team2Goals.toString()),
+                  if(match.sport == "basketball")
+                  score2(match.team1Score.toString(), match.team2Score.toString()),
+                  if(match.sport == "cricket")
+                  score2(match.team1_score.toString(), match.team2_score.toString()),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 5),
+                child: Container(
+                  alignment: Alignment.center,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 80,
+                          child: customText(match.team2!.toUpperCase(), 10, FontWeight.w900, Colors.grey.shade800,1.9)),
+                      const SizedBox(width: 5),
+                      Container(
+                          padding: const EdgeInsets.all(2.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(70),
+                          ),
+                          child: Image.asset('assets/logo/${match.team2}.png', width: 20, height: 20)
+                      ),
+                    ],
+                  ),
+                )
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

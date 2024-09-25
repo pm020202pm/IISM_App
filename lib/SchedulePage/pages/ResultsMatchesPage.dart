@@ -220,28 +220,29 @@ class LiveMatchesListWidget extends StatelessWidget {
         }
         var match = matches[index];
         String sport = match['sport'];
+        LiveNowMatchModel matchModel = LiveNowMatchModel.fromJson(match);
         if(sport == 'cricket'){
-          CricketMatchModel matchModel = CricketMatchModel.fromJson(match);
+          // CricketMatchModel matchModel = CricketMatchModel.fromJson(match);
           return LiveCricketCard(match: matchModel);
         }
         else if(sport == 'volleyball'){
-          VolleyballMatchModel matchModel = VolleyballMatchModel.fromJson(match);
+          // VolleyballMatchModel matchModel = VolleyballMatchModel.fromJson(match);
           return LiveVolleyBallCard(match: matchModel);
         }
         else if(sport == 'basketball'){
-          BasketballMatchModel matchModel = BasketballMatchModel.fromJson(match);
+          // BasketballMatchModel matchModel = BasketballMatchModel.fromJson(match);
           return LiveBasketBallCard(match: matchModel);
         }
         else if(sport == 'hockey'){
-          HockeyMatchModel matchModel = HockeyMatchModel.fromJson(match);
+          // HockeyMatchModel matchModel = HockeyMatchModel.fromJson(match);
           return LiveHockeyCard(match: matchModel);
         }
         else if(sport == 'lawn tennis'){
-          LawnTennisMatchModel matchModel = LawnTennisMatchModel.fromJson(match);
+          // LawnTennisMatchModel matchModel = LawnTennisMatchModel.fromJson(match);
           return LiveLawnTennisCard(match: matchModel);
         }
         else if(sport == 'table tennis'){
-          TableTennisMatchModel matchModel = TableTennisMatchModel.fromJson(match);
+          // TableTennisMatchModel matchModel = TableTennisMatchModel.fromJson(match);
           return LiveTableTennisCard(match: matchModel);
         }
         else{
