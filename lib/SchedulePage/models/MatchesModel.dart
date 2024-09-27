@@ -20,9 +20,10 @@ class UpcomingMatchesModel {
       });
 
   factory UpcomingMatchesModel.fromJson(Map<String, dynamic> json) {
-    final dateTime = DateTime.parse(json['time']);
-    final formattedDate = DateFormat('d MMMM').format(dateTime); // Date format
-    final formattedTime = DateFormat('h:mm a').format(dateTime);   // Time format
+    DateTime time = DateFormat('HH:mm:ss').parse(json['time'].toString());
+    final date = DateTime.parse(json['date']??'2024-12-05');
+    final formattedDate = DateFormat('d MMMM').format(date); // Date format
+    final formattedTime = DateFormat('h:mm a').format(time);   // Time format
 
     return UpcomingMatchesModel(
       team1: json['team1'],
@@ -73,9 +74,10 @@ class CricketMatchModel {
       });
 
   factory CricketMatchModel.fromJson(Map<String, dynamic> json) {
-    final dateTime = DateTime.parse(json['time']);
-    final formattedDate = DateFormat('d MMMM').format(dateTime); // Date format
-    final formattedTime = DateFormat('h:mm a').format(dateTime);   // Time format
+    DateTime time = DateFormat('HH:mm:ss').parse(json['time'].toString());
+    final date = DateTime.parse(json['date']??'2024-12-05');
+    final formattedDate = DateFormat('d MMMM').format(date); // Date format
+    final formattedTime = DateFormat('h:mm a').format(time);   // Time format
     return CricketMatchModel(
       matchId: json['matchId'],
       team1: json['team1'],
@@ -143,9 +145,10 @@ class VolleyballMatchModel {
       });
 
   factory VolleyballMatchModel.fromJson(Map<String, dynamic> json) {
-    final dateTime = DateTime.parse(json['time']);
-    final formattedDate = DateFormat('d MMMM').format(dateTime); // Date format
-    final formattedTime = DateFormat('h:mm a').format(dateTime);   // Time format
+    DateTime time = DateFormat('HH:mm:ss').parse(json['time'].toString());
+    final date = DateTime.parse(json['date']??'2024-12-05');
+    final formattedDate = DateFormat('d MMMM').format(date); // Date format
+    final formattedTime = DateFormat('h:mm a').format(time);   // Time format
     return VolleyballMatchModel(
       matchId: json['matchId'],
       team1: json['team1'],
@@ -202,9 +205,10 @@ class BasketballMatchModel {
       });
 
   factory BasketballMatchModel.fromJson(Map<String, dynamic> json) {
-    final dateTime = DateTime.parse(json['time']);
-    final formattedDate = DateFormat('d MMMM').format(dateTime); // Date format
-    final formattedTime = DateFormat('h:mm a').format(dateTime);   // Time format
+    DateTime time = DateFormat('HH:mm:ss').parse(json['time'].toString());
+    final date = DateTime.parse(json['date']??'2024-12-05');
+    final formattedDate = DateFormat('d MMMM').format(date); // Date format
+    final formattedTime = DateFormat('h:mm a').format(time);   // Time format
     return BasketballMatchModel(
       matchId: json['matchId'],
       team1: json['team1'],
@@ -253,9 +257,10 @@ class HockeyMatchModel {
       });
 
   factory HockeyMatchModel.fromJson(Map<String, dynamic> json) {
-    final dateTime = DateTime.parse(json['time']);
-    final formattedDate = DateFormat('d MMMM').format(dateTime); // Date format
-    final formattedTime = DateFormat('h:mm a').format(dateTime);   // Time format
+    DateTime time = DateFormat('HH:mm:ss').parse(json['time'].toString());
+    final date = DateTime.parse(json['date']??'2024-12-05');
+    final formattedDate = DateFormat('d MMMM').format(date); // Date format
+    final formattedTime = DateFormat('h:mm a').format(time);   // Time format
     return HockeyMatchModel(
       matchId: json['matchId'],
       team1: json['team1'],
@@ -320,9 +325,10 @@ class LawnTennisMatchModel {
       });
 
   factory LawnTennisMatchModel.fromJson(Map<String, dynamic> json) {
-    final dateTime = DateTime.parse(json['time']);
-    final formattedDate = DateFormat('d MMMM').format(dateTime); // Date format
-    final formattedTime = DateFormat('h:mm a').format(dateTime);   // Time format
+    DateTime time = DateFormat('HH:mm:ss').parse(json['time'].toString());
+    final date = DateTime.parse(json['date']??'2024-12-05');
+    final formattedDate = DateFormat('d MMMM').format(date); // Date format
+    final formattedTime = DateFormat('h:mm a').format(time);   // Time format
     return LawnTennisMatchModel(
       matchId: json['matchId'],
       team1: json['team1'],
@@ -395,9 +401,10 @@ class TableTennisMatchModel {
       });
 
   factory TableTennisMatchModel.fromJson(Map<String, dynamic> json) {
-    final dateTime = DateTime.parse(json['time']);
-    final formattedDate = DateFormat('d MMMM').format(dateTime); // Date format
-    final formattedTime = DateFormat('h:mm a').format(dateTime);   // Time format
+    DateTime time = DateFormat('HH:mm:ss').parse(json['time'].toString());
+    final date = DateTime.parse(json['date']??'2024-12-05');
+    final formattedDate = DateFormat('d MMMM').format(date); // Date format
+    final formattedTime = DateFormat('h:mm a').format(time);   // Time format
     return TableTennisMatchModel(
       matchId: json['matchId'],
       team1: json['team1'],
@@ -494,9 +501,10 @@ class LiveNowMatchModel {
       });
 
   factory LiveNowMatchModel.fromJson(Map<String, dynamic> json) {
-    final dateTime = DateTime.parse(json['time']);
-    final formattedDate = DateFormat('d MMMM').format(dateTime); // Date format
-    final formattedTime = DateFormat('h:mm a').format(dateTime);   // Time format
+    DateTime time = DateFormat('HH:mm:ss').parse(json['time'].toString());
+    final date = DateTime.parse(json['date']??'2024-12-05');
+    final formattedDate = DateFormat('d MMMM').format(date); // Date format
+    final formattedTime = DateFormat('h:mm a').format(time);   // Time format
     return LiveNowMatchModel(
         matchId: json['matchId'],
         team1: json['team1'],

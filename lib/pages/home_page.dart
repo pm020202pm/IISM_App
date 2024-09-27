@@ -4,6 +4,11 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:iism/HomePage/widgets/ConnectWithUs.dart';
+import 'package:iism/HomePage/widgets/CopyrightFooter.dart';
+import 'package:iism/HomePage/widgets/GalleryHighLight.dart';
+import 'package:iism/HomePage/widgets/Sponsors.dart';
+import '../HomePage/widgets/LiveNowHighlight.dart';
 import '../SchedulePage/models/MatchesModel.dart';
 import '../SchedulePage/pages/live_page.dart';
 import '../SchedulePage/widgets/widgets.dart';
@@ -150,226 +155,19 @@ class _HomePageState extends State<HomePage> {
                         // });
                       }),
                 ),
-                if(_liveMatchesLength[0]>0 || _liveMatchesLength[1]>0 || _liveMatchesLength[2]>0 || _liveMatchesLength[3]>0 || _liveMatchesLength[4]>0 || _liveMatchesLength[5]>0)
-                const Padding(
-                  padding: EdgeInsets.only(top: 28.0, bottom: 8.0),
-                  child: Text(
-                    "Live Now",
-                    style: TextStyle(fontSize: 28),
-                  ),
-                ),
 
-                Padding(
-                  padding: const EdgeInsets.only(left: 0.0, bottom: 5),
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        if(_liveMatchesLength[0]>0) customChips1("Cricket", Icons.sports_cricket,chipSportValue=="Cricket",() async {await onChipTap("Cricket");}),
-                        const SizedBox(width: 8.0),
-                        if(_liveMatchesLength[1]>0) customChips1("VolleyBall", Icons.sports_volleyball,chipSportValue=="VolleyBall", () async {await onChipTap("VolleyBall");}),
-                        const SizedBox(width: 8.0),
-                        if(_liveMatchesLength[2]>0) customChips1("BasketBall", Icons.sports_basketball,chipSportValue=="BasketBall",() async {await onChipTap("BasketBall");}),
-                        const SizedBox(width: 8.0),
-                        if(_liveMatchesLength[3]>0) customChips1("Hockey", Icons.sports_hockey,chipSportValue=="Hockey", () async {await onChipTap("Hockey");}),
-                        const SizedBox(width: 8.0),
-                        if(_liveMatchesLength[4]>0) customChips1("Lawn Tennis", Icons.sports_tennis,chipSportValue=="Lawn Tennis",() async {await onChipTap("Lawn Tennis");}),
-                        const SizedBox(width: 8.0),
-                        if(_liveMatchesLength[5]>0) customChips1("Table Tennis", Icons.sports_tennis,chipSportValue=="Table Tennis", () async {await onChipTap("Table Tennis");}),
-                      ],
-                    ),
-                  ),
-                ),
-                // LiveNowCard(match: BasketballMatchModel.fromJson(_matches[0])),
-                SizedBox(
-                  height: livenowHeight,
-                  // width: 200,
-                  child: ListView.builder(
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: _matches.length,
-                    itemBuilder: (context, index) {
-                      if (index >= _matches.length) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                      var match = _matches[index];
-                      String sport = match['sport'];
-                      LiveNowMatchModel matchModel = LiveNowMatchModel.fromJson(match);
-                      return LiveNowCard(match: matchModel);
-                    },
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 15.0, bottom: 8.0),
-                  child: Text(
-                    "Gallery",
-                    style: TextStyle(fontSize: 28),
-                  ),
-                ),
-                StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection('gallery')
-                      .limit(6)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    }
-
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-
-                    if (snapshot.hasData) {
-                      var documents = snapshot.data!.docs;
-
-                      return SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: documents.asMap().entries.map((entry) {
-                            int index = entry.key; // Current index
-                            var doc = entry.value; // Current document
-
-                            var imageUrl = doc[
-                                'ImageUrl']; // Assuming 'ImageUrl' is the field name in Firestore
-
-                            return Padding(
-                                padding: const EdgeInsets.only(right: 4),
-                                child: (index != 5)
-                                    ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(16),
-                                        child: Image.network(
-                                          imageUrl,
-                                          width: 100,
-                                          height: 100,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      )
-                                    : Stack(
-                                        children: [
-                                          ClipRRect(
-                                            borderRadius: BorderRadius.circular(16),
-                                            child: Image.network(
-                                              imageUrl,
-                                              width: 100,
-                                              height: 100,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                          Opacity(
-                                            opacity: 0.93,
-                                            child: InkWell(
-                                              onTap: widget.onTap,
-                                              child: Container(
-
-                                                width: 100,
-                                                height: 100,
-                                                decoration: BoxDecoration(
-
-                                                  color: Colors.grey.shade300,
-                                                  borderRadius:
-                                                      BorderRadius.circular(16),
-                                                ),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Icon(
-                                                      Icons.add,
-                                                      color: Colors.grey.shade700,
-                                                      size: 30,
-                                                    ),
-                                                    Text(
-                                                      'See more',
-                                                      style: TextStyle(
-                                                          color: Colors.grey.shade700, fontWeight: FontWeight.bold
-                                                      ),
-
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-
-                                        ],
-                                      ));
-                          }).toList(),
-                        ),
-                      );
-                    } else {
-                      return const Center(child: Text('No Images Available'));
-                    }
-                  },
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 28.0, bottom: 8.0),
-                  child: Text(
-                    "Sponsor",
-                    style: TextStyle(fontSize: 28),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Image.asset('assets/images/ceat.png', width: 170,height: 60, fit:BoxFit.cover,),
-                    Image.asset('assets/images/cred.png', width: 180, height: 80, fit:BoxFit.cover,),
-                  ],
-                ),
+                LiveNowHighLight(),
+                const SizedBox(height: 20),
+                GalleryHighLight(onTap: widget.onTap),
                 const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Image.asset('assets/images/tata.png', width: 150,height: 60, fit:BoxFit.cover,),
-                    Image.asset('assets/images/vivo.png', width: 180, height: 80, fit:BoxFit.cover,),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 28.0, bottom: 8.0),
-                  child: Text(
-                    "Connect With Us",
-                    style: TextStyle(fontSize: 28),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 70,
-                      width: 70,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Container(
-                      height: 70,
-                      width: 70,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Container(
-                      height: 70,
-                      width: 70,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Container(
-                      height: 70,
-                      width: 70,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 100),
+                const Sponsors(),
+                const SizedBox(height: 30),
+                const Divider(),
+                ConnectWithUs(),
+                const Divider(),
+                const SizedBox(height: 10),
+                const CopyrightFooter(),
+                const SizedBox(height: 80),
               ],
             ),
           ),
