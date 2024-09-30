@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../pages/home_page.dart';
+import '../../HomePage/pages/home_page.dart';
+import '../../widgets/widgets.dart';
 import '../models/MatchesModel.dart';
 import '../widgets/widgets.dart';
 class LivePage extends StatelessWidget {

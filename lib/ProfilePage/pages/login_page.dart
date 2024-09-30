@@ -2,11 +2,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:iism/DashBoard/pages/dashboard.dart';
 import 'package:iism/ProfilePage/pages/profile_page.dart';
 import 'package:iism/SchedulePage/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../api.dart';
-import '../models/PlayerModel.dart';
+import '../../utils.dart';
+import '../../widgets/widgets.dart';
+import '../models/ParticipantModel.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({super.key, required this.onTap});
@@ -22,8 +25,12 @@ class _LoginPageState extends State<LoginPage> {
   bool isOTPSent = false;
   bool isRegistering = false;
   String tmpEmail = '';
+  bool isLoading=false;
 
   Future<void> sendOTP(String emailId) async {
+    setState(() {
+      isLoading=true;
+    });
     String apiUrl = '$apiBaseUrl/auth/requestotp';
     try {
       final response = await http.post(
@@ -35,10 +42,7 @@ class _LoginPageState extends State<LoginPage> {
           'contact': emailId,
         }),
       );
-      print(response.statusCode);
-      print(response.body);
       if (response.statusCode == 200) {
-
         setState(() {
           tmpEmail = emailId;
           emailController.clear();
@@ -51,6 +55,9 @@ class _LoginPageState extends State<LoginPage> {
     } catch (e) {
       print('Error sending OTP: $e');
     }
+    setState(() {
+      isLoading=false;
+    });
   }
 
   Future<void> saveLoginState(ParticipantModel player) async {
@@ -110,6 +117,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> registerPlayer(String emailId, String otp) async {
+    setState(() {
+      isLoading=true;
+    });
     String apiUrl = '$apiBaseUrl/auth/register';
     try {
       final response = await http.post(
@@ -122,7 +132,6 @@ class _LoginPageState extends State<LoginPage> {
           'otp' : otp
         }),
       );
-      print(response.statusCode);
       String body = response.body;
       Fluttertoast.showToast(
           msg: body,
@@ -133,9 +142,7 @@ class _LoginPageState extends State<LoginPage> {
           textColor: Colors.white,
           fontSize: 16.0
       );
-      print(response.body);
       if (response.statusCode == 200) {
-        print("Registered successfully");
         final data = json.decode(response.body);
         dynamic player = data['player'];
         ParticipantModel playerModel = ParticipantModel(
@@ -151,15 +158,16 @@ class _LoginPageState extends State<LoginPage> {
           hall_name: player['hall_name'].toString()?? '',
         );
         await saveLoginState(playerModel);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => PlayerProfilePage(player: playerModel,)));
-
-        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PlayerProfilePage()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const DashBoard(index: 5)));
       } else {
         print('Failed to register');
       }
     } catch (e) {
       print('Error registering OTP: $e');
     }
+    setState(() {
+      isLoading=false;
+    });
   }
 
   @override
@@ -171,8 +179,17 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Login Page"),
+      backgroundColor:  dark? Colors.black : Colors.white,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(80.0),
+        child: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          flexibleSpace: Padding(
+              padding: const EdgeInsets.only(top: 30.0, left: 16, right: 16),
+              child: pageTitleText("Login")
+          ),
+        ),
       ),
       body: Center(
         child: Padding(
@@ -228,40 +245,28 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   Expanded(
                     child: TextField(
+                      style: TextStyle(color: dark? Colors.white:Colors.grey.shade800, fontFamily: 'GlacialIndifference', fontSize: 14),
                       controller: emailController,
                       decoration: InputDecoration(
                         border: const OutlineInputBorder(),
+                        labelStyle: TextStyle(color: dark? Colors.grey.shade100 : Colors.grey.shade800, fontFamily: 'GlacialIndifference', fontSize: 14),
                         labelText: isOTPSent? 'OTP' : 'Email',
                         hintText: isOTPSent? 'Enter OTP' : '',
                       ),
                     ),
                   ),
                   const SizedBox(width: 5,),
-                  Container(
-                    padding: const EdgeInsets.all(9),
-                    decoration: BoxDecoration(
-                      color: Colors.green.shade300,
-                      borderRadius: BorderRadius.circular(8)
-                    ),
-                    child: TextButton(
-                      onPressed: () async {
-                        if(!isOTPSent){
-                          await sendOTP(emailController.text);
-                        } else {
-                          // await verifyOTP(tmpEmail, emailController.text);
-                          // if(isRegistering) {
-                            await registerPlayer(tmpEmail, emailController.text);
-                          // } else {
-                          //   await loginPlayer(tmpEmail, emailController.text);
-                          // }
-                        }
-                      },
-                      child: Text(isOTPSent? "Submit" : "Send OTP"),
-                    ),
-                  ),
+                  isLoading
+                      ? const CircularProgressIndicator()
+                      : octagonalButton(isOTPSent? "Submit" : "Send OTP",12,17, Colors.green.shade300, Colors.green.shade800, () async {
+                    if(!isOTPSent){
+                      await sendOTP(emailController.text);
+                    } else {
+                      await registerPlayer(tmpEmail, emailController.text);
+                    }
+                  }),
                 ],
               ),
-
               if(isOTPSent) Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -282,7 +287,6 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ],
               ),
-
             ],
           ),
         ),

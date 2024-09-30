@@ -7,7 +7,8 @@ import 'package:http/http.dart' as http;
 import 'package:iism/SchedulePage/widgets/widgets.dart';
 import '../../SchedulePage/models/MatchesModel.dart';
 import '../../api.dart';
-import '../../pages/home_page.dart';
+import '../../widgets/widgets.dart';
+import '../pages/home_page.dart';
 import '../../utils.dart';
 class LiveNowHighLight extends StatefulWidget {
   LiveNowHighLight({super.key});
@@ -125,7 +126,7 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              customText("Live Now", 28, FontWeight.w600, Colors.grey.shade900, 1),
+              customText("Live Now", 28, FontWeight.w600, dark? Colors.grey.shade100: Colors.grey.shade900, 1),
               AnimateIcon(
                 key: UniqueKey(),
                 onTap: () {},

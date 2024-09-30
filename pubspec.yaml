@@ -93,6 +93,10 @@ flutter:
        fonts:
          - asset: fonts/aptos-black.ttf
          - asset: fonts/Aptos-SemiBold.ttf
+     - family: GlacialIndifference
+       fonts:
+         - asset: fonts/GlacialIndifference-Bold.ttf
+         - asset: fonts/GlacialIndifference-Regular.ttf
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:

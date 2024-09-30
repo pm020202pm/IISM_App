@@ -353,9 +353,12 @@
 // }
 
 import 'package:flutter/material.dart';
-import '../SchedulePage/pages/LiveMatchesPage.dart';
-import '../SchedulePage/pages/ResultsMatchesPage.dart';
-import '../SchedulePage/pages/UpcomingMatchesPage.dart';
+import '../../utils.dart';
+import '../../widgets/widgets.dart';
+import 'LiveMatchesPage.dart';
+import 'ResultsMatchesPage.dart';
+import 'UpcomingMatchesPage.dart';
+import '../widgets/widgets.dart';
 
 class SchedulePage extends StatefulWidget {
   @override
@@ -383,16 +386,23 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Matches'),
-
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Live'),
-            Tab(text: 'Upcoming'),
-            Tab(text: 'Results'),
-          ],
+      backgroundColor: dark? Colors.black : Colors.white,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(125.0),
+        child: AppBar(
+          backgroundColor: dark? Colors.black : Colors.white,
+          flexibleSpace: Padding(
+            padding: const EdgeInsets.only(top: 30.0, left: 16, right: 16),
+            child: pageTitleText('Matches'),
+          ),
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(text: 'Live'),
+              Tab(text: 'Upcoming'),
+              Tab(text: 'Results'),
+            ],
+          ),
         ),
       ),
       body: TabBarView(

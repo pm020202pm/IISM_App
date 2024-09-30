@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iism/SchedulePage/widgets/widgets.dart';
 
+import '../../widgets/widgets.dart';
 import '../models/MatchesModel.dart';
 class UpcomingMatchCard extends StatelessWidget {
   final UpcomingMatchesModel match;

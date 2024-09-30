@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../widgets/widgets.dart';
 Widget verticalLogoWithCollegeName(String collegeName, double height, double width) {
   return  Container(
     width: 90,
@@ -40,18 +42,7 @@ Widget horizontalLogoWithCollegeName(String collegeName, double height, double w
 }
 
 
-Widget customText(String text, double fontSize, FontWeight fontWeight, Color color, double? height){
-  return Text(
-    text,
-    style: TextStyle(
-      fontSize: fontSize,
-      fontWeight: fontWeight,
-      color: color,
-      fontFamily: 'Aptos',
-      height: height??1,),
-      overflow: TextOverflow.ellipsis
-  );
-}
+
 
 Widget customChips(String sport, IconData icon, bool isActive, Function() onTap){
   return Container(

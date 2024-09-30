@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:iism/firebase_options.dart';
 import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'package:excel/excel.dart' as exl;
-import 'package:iism/pages/myhome_page.dart';
+import 'package:iism/DashBoard/pages/dashboard.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -68,7 +68,7 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(index: 0),
+      home: const DashBoard(index: 0),
     );
   }
 }

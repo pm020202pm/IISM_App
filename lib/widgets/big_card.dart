@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:iism/widgets/widgets.dart';
 class BigCard extends StatelessWidget {
   BigCard({Key? key, required this.imageUrl, required this.name, required this.imageHeight, required this.imageWidth, this.position, required this.text, required this.subName, this.color, required this.radius, required this.clubName, required this.fit}) : super(key: key);
   final String imageUrl;
@@ -22,19 +23,52 @@ class BigCard extends StatelessWidget {
           onTap: (){
             // Navigator.push(context, MaterialPageRoute(builder: (context)=> ClubDetail(image: imageUrl, name: name, text: text, subName: subName, clubName: clubName,)));
             },
-          child: Container(
-            decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(radius),
-            ),
-            height: imageHeight,
-            width: imageWidth,
-            child: Hero(tag: Key(imageUrl),child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-                child: Image.network(imageUrl, fit: fit,))),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              ClipPath(
+                clipper: OctagonClipper(padding: 20),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: color,
+                    borderRadius: BorderRadius.circular(radius),
+                  ),
+                  height: imageHeight-10,
+                  width: imageWidth-10,
+                  child: Hero(
+                      tag: Key(imageUrl),
+                      child: ClipRRect(
+                        // borderRadius: BorderRadius.circular(16),
+                          child: Image.network(imageUrl, fit: fit,)
+                      )
+                  ),
+                ),
+              ),
+              ClipPath(
+                clipper: OctagonClipper(padding: 160),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: color,
+                    // borderRadius: BorderRadius.circular(radius),
+                    border: Border.all(color: Colors.white, width: 1),
+                  ),
+                  height: imageHeight,
+                  width: imageWidth,
+                  // child: Hero(
+                  //     tag: Key(imageUrl),
+                  //     child: ClipRRect(
+                  //         // borderRadius: BorderRadius.circular(16),
+                  //         child: Image.network(imageUrl, fit: fit,)
+                  //     )
+                  // ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 }
+
+

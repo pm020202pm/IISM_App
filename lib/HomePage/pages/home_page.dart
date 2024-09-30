@@ -2,19 +2,21 @@ import 'dart:convert';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:excel/excel.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:iism/HomePage/widgets/ConnectWithUs.dart';
 import 'package:iism/HomePage/widgets/CopyrightFooter.dart';
 import 'package:iism/HomePage/widgets/GalleryHighLight.dart';
 import 'package:iism/HomePage/widgets/Sponsors.dart';
-import '../HomePage/widgets/LiveNowHighlight.dart';
-import '../SchedulePage/models/MatchesModel.dart';
-import '../SchedulePage/pages/live_page.dart';
-import '../SchedulePage/widgets/widgets.dart';
-import '../api.dart';
-import '../utils.dart';
-import '../widgets/big_card.dart';
+import '../../widgets/widgets.dart';
+import '../widgets/LiveNowHighlight.dart';
+import '../../SchedulePage/models/MatchesModel.dart';
+import '../../SchedulePage/pages/live_page.dart';
+import '../../SchedulePage/widgets/widgets.dart';
+import '../../api.dart';
+import '../../utils.dart';
+import '../../widgets/big_card.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({super.key, required this.onTap});
@@ -105,6 +107,8 @@ class _HomePageState extends State<HomePage> {
   List<dynamic> _matches = [];
   List<int> _liveMatchesLength = List.filled(6, 0);
   List<dynamic> liveMatchesLength=[];
+  final CarouselSliderController carouselController = CarouselSliderController();
+  int currIndex = 0;
 
   Future<void> onChipTap(String sport) async {
     setState(() {
@@ -115,9 +119,7 @@ class _HomePageState extends State<HomePage> {
     });
     await _fetchMatches(sportsTableMap[chipSportValue]!);
   }
-
-  final CarouselSliderController carouselController = CarouselSliderController();
-  int currIndex = 0;
+  
   @override
   void initState() {
     getLiveMatchesLength();
@@ -129,46 +131,79 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(10),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                    child: Image.asset('assets/images/iism.png', width: double.infinity)),
-                const SizedBox(height: 10),
-                CarouselSlider(
-                  items: widgets,
-                  carouselController: carouselController,
-                  options: CarouselOptions(
-                    autoPlay: true,
-                      height: 200,
-                      scrollPhysics: const BouncingScrollPhysics(),
-                      enlargeCenterPage: true,
-                      viewportFraction: 0.84,
-                      onPageChanged: (index, reason) {
-                        // setState(() {
-                        //   currIndex = index;
-                        //   // print(currIndex);
-                        // });
-                      }),
-                ),
-
-                LiveNowHighLight(),
-                const SizedBox(height: 20),
-                GalleryHighLight(onTap: widget.onTap),
-                const SizedBox(height: 10),
-                const Sponsors(),
-                const SizedBox(height: 30),
-                const Divider(),
-                ConnectWithUs(),
-                const Divider(),
-                const SizedBox(height: 10),
-                const CopyrightFooter(),
-                const SizedBox(height: 80),
-              ],
+        backgroundColor: dark? Colors.black: Colors.grey.shade200,
+        body: SingleChildScrollView(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.black, Colors.black, Colors.grey.shade100, Colors.grey.shade100],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 80, bottom: 30, left: 50, right: 50),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                            child: Image.asset('assets/logo/iismlogo3.png')),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              customText("57", 35, FontWeight.bold, whiteColor, 1),
+                              customText("th", 18, FontWeight.bold, whiteColor, 1),
+                            ],
+                          ),
+                          const SizedBox(width: 5),
+                          customText("INTER IIT", 35, FontWeight.bold, blueColor, 1),
+                        ],
+                      ),
+                      customText("SPORTS MEET 2024", 35, FontWeight.bold, whiteColor, 1),
+                      customText("IIT KANPUR", 35, FontWeight.bold, yellowColor, 1),
+                      const SizedBox(height: 200),
+                    ],
+                  ),
+                  CarouselSlider(
+                    items: widgets,
+                    carouselController: carouselController,
+                    options: CarouselOptions(
+                      autoPlay: true,
+                        height: 200,
+                        scrollPhysics: const BouncingScrollPhysics(),
+                        enlargeCenterPage: true,
+                        viewportFraction: 0.84,
+                        onPageChanged: (index, reason) {
+                          // setState(() {
+                          //   currIndex = index;
+                          //   // print(currIndex);
+                          // });
+                        }),
+                  ),
+                  SizedBox(height: 20,),
+                  LiveNowHighLight(),
+                  const SizedBox(height: 30),
+                  GalleryHighLight(onTap: widget.onTap),
+                  const SizedBox(height: 20),
+                  const Sponsors(),
+                  const SizedBox(height: 40),
+                  const Divider(),
+                  ConnectWithUs(),
+                  const Divider(),
+                  const SizedBox(height: 20),
+                  const CopyrightFooter(),
+                  const SizedBox(height: 80),
+                ],
+              ),
             ),
           ),
         ),
@@ -286,7 +321,7 @@ class LiveNowCard extends StatelessWidget {
                             child: Image.asset('assets/logo/${match.team1}.png', width: 20, height: 20)
                         ),
                         const SizedBox(width: 5,),
-                        Container(
+                        SizedBox(
                           width: 80,
                             child: customText(match.team1!.toUpperCase(), 10, FontWeight.w900, Colors.grey.shade800,1.9)),
                       ],

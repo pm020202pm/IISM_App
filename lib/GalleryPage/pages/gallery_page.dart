@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import '../../SchedulePage/widgets/widgets.dart';
+import '../../utils.dart';
+import '../../widgets/widgets.dart';
 import 'full_screen_image_page.dart';
 
 class GalleryPage extends StatefulWidget {
@@ -11,7 +14,7 @@ class GalleryPage extends StatefulWidget {
 }
 
 class _GalleryPageState extends State<GalleryPage> {
-  final TextEditingController _searchController = TextEditingController();
+  // final TextEditingController _searchController = TextEditingController();
   String _searchQuery = "";
   final int _itemsPerPage = 15;
   final String _sortCriteria = 'Sport';
@@ -113,8 +116,9 @@ class _GalleryPageState extends State<GalleryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: dark? Colors.black : Colors.white,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(120.0),
+        preferredSize: const Size.fromHeight(90.0),
         child: AppBar(
           backgroundColor: Colors.transparent,
           title: null,
@@ -123,28 +127,28 @@ class _GalleryPageState extends State<GalleryPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text("Gallery", style: TextStyle(fontSize: 40)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: 320,
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: TextField(
-                        controller: _searchController,
-                        onChanged: _filterSchedule,
-                        decoration: const InputDecoration(
-                          hintText: "Search...",
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.all(8.0),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                pageTitleText("Gallery"),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Container(
+                //       width: 320,
+                //       decoration: BoxDecoration(
+                //         border: Border.all(color: Colors.grey),
+                //         borderRadius: BorderRadius.circular(12),
+                //       ),
+                //       child: TextField(
+                //         controller: _searchController,
+                //         onChanged: _filterSchedule,
+                //         decoration: const InputDecoration(
+                //           hintText: "Search...",
+                //           border: InputBorder.none,
+                //           contentPadding: EdgeInsets.all(8.0),
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
               ],
             ),
           ),

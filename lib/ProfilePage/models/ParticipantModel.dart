@@ -25,16 +25,16 @@ class ParticipantModel {
 
   factory ParticipantModel.fromJson(Map<String, dynamic> json) {
     return ParticipantModel(
-      id: json['id'],
-      name: json['name'],
-      email: json['email'],
-      gender: json['gender'],
-      photo: json['photo'],
-      sport: json['sport'],
-      team: json['team'],
-      id_generation: json['id_generation'],
-      contact: json['contact'],
-      hall_name: json['hall_name'],
+      id: (json['id']??'0').toString(),
+      name: json['name']??"",
+      email: json['email']??"",
+      gender: json['gender']??"",
+      photo: json['photo']??"",
+      sport: json['sport']??"",
+      team: json['team']??"",
+      id_generation: json['id_generation']??"",
+      contact: json['contact']??"",
+      hall_name: json['hall_name']??"",
     );
   }
 }

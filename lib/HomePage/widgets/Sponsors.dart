@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../SchedulePage/widgets/widgets.dart';
+import '../../utils.dart';
+import '../../widgets/widgets.dart';
 
 class Sponsors extends StatelessWidget {
   const Sponsors({super.key});
@@ -12,12 +14,12 @@ class Sponsors extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(top: 28.0, bottom: 8.0),
-          child: customText("Sponsors", 28, FontWeight.w600, Colors.grey.shade900, 1),
+          child: customText("Sponsors", 28, FontWeight.w600, dark? Colors.grey.shade100:Colors.grey.shade900, 1),
         ),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: dark? Colors.grey.shade400 : Colors.white,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(

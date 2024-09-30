@@ -1,27 +1,28 @@
 
 import 'package:flutter/material.dart';
-import 'package:iism/ProfilePage/models/PlayerModel.dart';
-import 'package:iism/SchedulePage/widgets/widgets.dart';
-import 'package:iism/pages/gallery_page.dart';
-import 'package:iism/pages/home_page.dart';
-import 'package:iism/pages/players_page.dart';
-import 'package:iism/pages/schedule_page.dart';
-import 'package:iism/pages/teams_page.dart';
+import 'package:iism/ProfilePage/models/ParticipantModel.dart';
+import 'package:iism/GalleryPage/pages/gallery_page.dart';
+import 'package:iism/HomePage/pages/home_page.dart';
+import 'package:iism/PlayersPage/pages/players_page.dart';
+import 'package:iism/SchedulePage/pages/schedule_page.dart';
+import 'package:iism/TeamsPage/pages/teams_page.dart';
+import 'package:iism/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../ProfilePage/pages/login_page.dart';
-import '../ProfilePage/pages/profile_page.dart';
+import '../../ProfilePage/pages/login_page.dart';
+import '../../ProfilePage/pages/profile_page.dart';
+import '../widgets/NavButton.dart';
 
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.index});
+class DashBoard extends StatefulWidget {
+  const DashBoard({super.key, required this.index});
   final int index;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<DashBoard> createState() => _DashBoardState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _DashBoardState extends State<DashBoard> {
   int index = 0;
   bool isLoggedIn = false;
 
@@ -105,10 +106,10 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: const EdgeInsets.all(5),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(40),
-            color: Colors.white,
+            color: dark? Colors.grey.shade900:Colors.white,
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
+                color: dark? Colors.grey.shade900: Colors.grey.withOpacity(0.5),
                 spreadRadius: 1,
                 blurRadius: 3,
                 offset: const Offset(0, 2),
@@ -127,12 +128,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 setState(() {
                   index = 1;
                 });
-              }, isActive: index==1, text: "Schedule", icon: Icons.schedule,),
+              }, isActive: index==1, text: "Matches", icon: Icons.sports_volleyball_rounded,),
               NavButton(onTap: (){
                 setState(() {
                   index = 2;
                 });
-              }, isActive: index==2, text: "Players", icon: Icons.sports_basketball,),
+              }, isActive: index==2, text: "Players", icon: Icons.sports_handball_outlined,),
               NavButton(onTap: (){
                 setState(() {
                   index = 3;
@@ -151,7 +152,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
                 });
               }, isActive: index==5, text: "Profile", icon: Icons.person,),
-
             ],
           ),
 
@@ -162,61 +162,5 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class NavButton extends StatefulWidget {
-  const NavButton({super.key, required this.onTap, required this.isActive, required this.text, required this.icon});
-  final Function() onTap;
-  final bool isActive;
-  final String text;
-  final IconData icon;
 
-  @override
-  State<NavButton> createState() => _NavButtonState();
-}
-
-class _NavButtonState extends State<NavButton> {
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: widget.onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200), // Adjust the duration as needed
-        padding: const EdgeInsets.symmetric(vertical:10 , horizontal: 10),
-        decoration: BoxDecoration(
-          color: widget.isActive ? Colors.green.shade200 : Colors.transparent,
-          borderRadius: BorderRadius.circular(40),
-          boxShadow: [
-            BoxShadow(
-              color: widget.isActive
-                  ? Colors.green.shade300.withOpacity(0.4)
-                  : Colors.grey.withOpacity(0),
-              spreadRadius: 2,
-              blurRadius: 9,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              widget.icon,
-              color: widget.isActive ? Colors.green.shade800 : Colors.deepPurple,
-              size: 25,
-            ),
-            if (widget.isActive) const SizedBox(width: 3),
-            if (widget.isActive)
-              customText(
-                widget.text,
-                15,
-                FontWeight.w600,
-                widget.isActive ? Colors.green.shade800 : Colors.deepPurple,
-                1,
-              )
-          ],
-        ),
-      ),
-    );
-  }
-}
 

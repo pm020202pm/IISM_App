@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:iism/SchedulePage/widgets/widgets.dart';
+import 'package:iism/utils.dart';
 import 'package:shimmer/shimmer.dart';
+
+import '../../widgets/widgets.dart';
 
 class GalleryHighLight extends StatelessWidget {
   GalleryHighLight({super.key, required this.onTap});
@@ -15,8 +18,8 @@ class GalleryHighLight extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(top: 15.0, bottom: 8.0),
-          child: customText("Gallery", 28, FontWeight.w600, Colors.grey.shade900, 1),
+          padding: const EdgeInsets.only(top: 15.0, bottom: 8.0),
+          child: customText("Gallery", 28, FontWeight.w600, dark? Colors.grey.shade100:Colors.grey.shade900, 1),
         ),
         StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance.collection('gallery').limit(6).snapshots(),
@@ -50,8 +53,8 @@ class GalleryHighLight extends StatelessWidget {
                           children: [
                             // Shimmer loading effect
                             Shimmer.fromColors(
-                              baseColor: Colors.grey[300]!,
-                              highlightColor: Colors.grey[100]!,
+                              baseColor: dark? Colors.grey[800]! : Colors.grey[300]!,
+                              highlightColor: dark? Colors.grey[300]! : Colors.grey[100]!,
                               child: Container(
                                 width: width,
                                 height: height,
