@@ -31,19 +31,20 @@ class Sponsors extends StatelessWidget {
             ],
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Image.asset('assets/images/ceat.png', width: 160,height: 50, fit:BoxFit.cover,),
+                  Image.asset('assets/images/ceat.png', width: 150,height: 50, fit:BoxFit.cover,),
                   Image.asset('assets/images/cred.png', width: 170, height: 80, fit:BoxFit.cover,),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Image.asset('assets/images/tata.png', width: 140,height: 50, fit:BoxFit.cover,),
-                  Image.asset('assets/images/vivo.png', width: 180, height: 80, fit:BoxFit.cover,),
+                  Image.asset('assets/images/tata.png', width: 110,height: 50, fit:BoxFit.cover,),
+                  Image.asset('assets/images/vivo.png', width: 160, height: 80, fit:BoxFit.cover,),
                 ],
               ),
             ],

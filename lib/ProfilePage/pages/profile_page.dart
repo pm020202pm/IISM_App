@@ -33,7 +33,7 @@ class PlayerProfilePage extends StatelessWidget {
         child: AppBar(
           backgroundColor: Colors.transparent,
           flexibleSpace: Padding(
-            padding: const EdgeInsets.only(top: 30.0, left: 16, right: 16),
+            padding: const EdgeInsets.only(top: 60.0, left: 16, right: 16),
             child: pageTitleText("My Profile")
           ),
         ),

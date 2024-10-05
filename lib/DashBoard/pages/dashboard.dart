@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:iism/ProfilePage/models/ParticipantModel.dart';
 import 'package:iism/GalleryPage/pages/gallery_page.dart';
 import 'package:iism/HomePage/pages/home_page.dart';
@@ -8,7 +9,6 @@ import 'package:iism/SchedulePage/pages/schedule_page.dart';
 import 'package:iism/TeamsPage/pages/teams_page.dart';
 import 'package:iism/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../ProfilePage/pages/login_page.dart';
 import '../../ProfilePage/pages/profile_page.dart';
 import '../widgets/NavButton.dart';
@@ -119,39 +119,47 @@ class _DashBoardState extends State<DashBoard> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
+              // const NavBarButton(icon: Icons.home),
+              // Button(onPressed: (){}, active: index==0,text: Text("asdkha"), duration: Duration(seconds: 2), icon: Icons.home, curve: Curves.bounceOut, debug: false, gap: 10, color: blueColor,),
               NavButton(onTap: (){
+                HapticFeedback.lightImpact();
                 setState(() {
                   index = 0;
                 });
-              }, isActive: index==0, text: "Home", icon: Icons.home,),
+              }, isActive: index==0, text: "Home",textSize: 16, icon: Icons.home, iconSize: 24, curve: Curves.easeIn,),
               NavButton(onTap: (){
+                HapticFeedback.lightImpact();
                 setState(() {
                   index = 1;
                 });
-              }, isActive: index==1, text: "Matches", icon: Icons.sports_volleyball_rounded,),
+              }, isActive: index==1, text: "Matches",textSize: 16, icon: Icons.sports_volleyball_rounded,iconSize: 24, curve: Curves.easeIn,),
               NavButton(onTap: (){
+                HapticFeedback.lightImpact();
                 setState(() {
                   index = 2;
                 });
-              }, isActive: index==2, text: "Players", icon: Icons.sports_handball_outlined,),
+              }, isActive: index==2, text: "Players",textSize: 16, icon: Icons.sports_handball_outlined, iconSize: 24, curve: Curves.easeIn,),
               NavButton(onTap: (){
+                HapticFeedback.lightImpact();
                 setState(() {
                   index = 3;
                 });
-              }, isActive: index==3, text: "Gallery", icon: Icons.photo),
+              }, isActive: index==3, text: "Gallery",textSize: 16, icon: Icons.photo, iconSize: 24, curve: Curves.easeIn,),
               NavButton(onTap: () {
+                HapticFeedback.lightImpact();
                 setState(() {
                   index = 4;
                 });
-              }, isActive: index==4, text: "Teams", icon: Icons.people,),
+              }, isActive: index==4, text: "Teams",textSize: 16, icon: Icons.people, iconSize: 24, curve: Curves.easeIn,),
               NavButton(onTap: () async {
+                HapticFeedback.lightImpact();
                 bool _isLoggedIn = await checkLoginState();
                 setState(() {
                   index = 5;
                   isLoggedIn = _isLoggedIn;
 
                 });
-              }, isActive: index==5, text: "Profile", icon: Icons.person,),
+              }, isActive: index==5, text: "Profile",textSize: 16, icon: Icons.person, iconSize: 24, curve: Curves.easeIn,),
             ],
           ),
 

@@ -1,17 +1,15 @@
 import 'dart:convert';
-import 'dart:math';
-
 import 'package:animated_icon/animated_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:iism/SchedulePage/widgets/widgets.dart';
 import '../../SchedulePage/models/MatchesModel.dart';
 import '../../api.dart';
 import '../../widgets/widgets.dart';
-import '../pages/home_page.dart';
 import '../../utils.dart';
+import 'LiveNowHighlightCard.dart';
+
 class LiveNowHighLight extends StatefulWidget {
-  LiveNowHighLight({super.key});
+  const LiveNowHighLight({super.key});
 
   @override
   State<LiveNowHighLight> createState() => _LiveNowHighLightState();
@@ -19,10 +17,8 @@ class LiveNowHighLight extends StatefulWidget {
 
 class _LiveNowHighLightState extends State<LiveNowHighLight> {
   String chipSportValue = "Cricket";
-
   bool _isLoading = false;
-
-  double livenowHeight = 50;
+  double livenowHeight = 0;
 
   List<dynamic> _matches = [];
 
@@ -34,8 +30,6 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
     setState(() {
       chipSportValue = sport;
       _matches.clear();
-      // _page = 1;
-      // _hasMore = true;
     });
     await _fetchMatches(sportsTableMap[chipSportValue]!);
   }
@@ -48,16 +42,13 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
-          // liveMatchesLength = data['data'];
           _liveMatchesLength[0] = data['data'][0][1];
           _liveMatchesLength[1] = data['data'][1][1];
           _liveMatchesLength[2] = data['data'][2][1];
           _liveMatchesLength[3] = data['data'][3][1];
           _liveMatchesLength[4] = data['data'][4][1];
           _liveMatchesLength[5] = data['data'][5][1];
-          print("###3 ${_liveMatchesLength}");
         });
-        // print("###1 ${data['data']}");
       } else {
 
         print('Failed to load matches');
@@ -85,16 +76,15 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
             livenowHeight = 0;
           }
           else if(len == 1){
-            livenowHeight = 54;
+            livenowHeight = 58;
           }
           else if(len == 2){
-            livenowHeight = 100;
+            livenowHeight = 116;
           }
           else{
-            livenowHeight = 166;
+            livenowHeight = 174;
           }
         });
-        print("### ${_matches.length}");
       } else {
 
         print('Failed to load matches');
@@ -122,7 +112,7 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: EdgeInsets.only(top: 28.0, bottom: 8.0),
+          padding: const EdgeInsets.only(top: 28.0, bottom: 8.0),
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -141,39 +131,39 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
         ),
 
         Padding(
-          padding: const EdgeInsets.only(left: 0.0, bottom: 5),
+          padding: const EdgeInsets.all(3.0),
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
               children: [
                 if(_liveMatchesLength[0]>0) customChips1("Cricket", Icons.sports_cricket,chipSportValue=="Cricket",() async {await onChipTap("Cricket");}),
-                const SizedBox(width: 8.0),
+                const SizedBox(width: 6.0),
                 if(_liveMatchesLength[1]>0) customChips1("VolleyBall", Icons.sports_volleyball,chipSportValue=="VolleyBall", () async {await onChipTap("VolleyBall");}),
-                const SizedBox(width: 8.0),
+                const SizedBox(width: 6.0),
                 if(_liveMatchesLength[2]>0) customChips1("BasketBall", Icons.sports_basketball,chipSportValue=="BasketBall",() async {await onChipTap("BasketBall");}),
-                const SizedBox(width: 8.0),
+                const SizedBox(width: 6.0),
                 if(_liveMatchesLength[3]>0) customChips1("Hockey", Icons.sports_hockey,chipSportValue=="Hockey", () async {await onChipTap("Hockey");}),
-                const SizedBox(width: 8.0),
+                const SizedBox(width: 6.0),
                 if(_liveMatchesLength[4]>0) customChips1("Lawn Tennis", Icons.sports_tennis,chipSportValue=="Lawn Tennis",() async {await onChipTap("Lawn Tennis");}),
-                const SizedBox(width: 8.0),
+                const SizedBox(width: 6.0),
                 if(_liveMatchesLength[5]>0) customChips1("Table Tennis", Icons.sports_tennis,chipSportValue=="Table Tennis", () async {await onChipTap("Table Tennis");}),
               ],
             ),
           ),
         ),
-        // LiveNowCard(match: BasketballMatchModel.fromJson(_matches[0])),
+        const SizedBox(height: 6),
         SizedBox(
           height: livenowHeight,
-          // width: 200,
           child: ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            padding: EdgeInsets.zero,
             itemCount: _matches.length,
             itemBuilder: (context, index) {
               if (index >= _matches.length) {
                 return const Center(child: CircularProgressIndicator());
               }
               var match = _matches[index];
-              String sport = match['sport'];
               LiveNowMatchModel matchModel = LiveNowMatchModel.fromJson(match);
               return LiveNowCard(match: matchModel);
             },
@@ -182,7 +172,7 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
       ],
     );
     } else {
-      return Container();
+      return const SizedBox.shrink();
     }
   }
 }
@@ -190,15 +180,15 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
 Widget customChips1(String sport, IconData icon, bool isActive, Function() onTap){
   return Container(
     decoration: BoxDecoration(
-      color: isActive? Colors.blue.shade300: Colors.grey.shade200,
+      color: isActive? yellowColor: Colors.grey.shade200,
       borderRadius: BorderRadius.circular(30.0),
-      border: Border.all(color: isActive? Colors.blue.shade400:Colors.grey.shade300),
+      border: Border.all(color: isActive? darkYellowColor : Colors.grey.shade200),
     ),
     child: Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        splashColor: Colors.blue,
+        splashColor: yellowColor,
         borderRadius: BorderRadius.circular(30.0),
         child: Padding(
           padding: const EdgeInsets.only(left: 6.0, right: 6.0, top: 3.0, bottom: 3.0),
@@ -206,16 +196,9 @@ Widget customChips1(String sport, IconData icon, bool isActive, Function() onTap
             mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(width: 3.0),
-              Icon(icon, color: isActive? Colors.white: Colors.grey, size: 22.0),
+              Icon(icon, color: isActive? Colors.white: Colors.grey, size: 20.0),
               const SizedBox(width: 3.0),
-              if(isActive) Text(sport,
-                style: TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.w500,
-                    color: isActive? Colors.white:Colors.grey.shade600,
-                    fontFamily: 'Aptos'
-                ),
-              ),
+              if(isActive) customText(sport, 15, FontWeight.w600, isActive? whiteColor:Colors.grey.shade500, 1),
               if(isActive) const SizedBox(width: 3.0),
             ],
           ),

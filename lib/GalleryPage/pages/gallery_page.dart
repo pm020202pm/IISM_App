@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../SchedulePage/widgets/widgets.dart';
 import '../../utils.dart';
@@ -16,12 +17,13 @@ class GalleryPage extends StatefulWidget {
 class _GalleryPageState extends State<GalleryPage> {
   // final TextEditingController _searchController = TextEditingController();
   String _searchQuery = "";
-  final int _itemsPerPage = 15;
+  int _itemsPerPage = 15;
   final String _sortCriteria = 'Sport';
   DocumentSnapshot? _lastDocument;
   bool _hasMore = true;
   bool _isLoading = false;
   final List<QueryDocumentSnapshot> _scheduleDocs = [];
+  int gridCount = 3;
 
   @override
   void initState() {
@@ -118,16 +120,34 @@ class _GalleryPageState extends State<GalleryPage> {
     return Scaffold(
       backgroundColor: dark? Colors.black : Colors.white,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(90.0),
+        preferredSize: const Size.fromHeight(75.0),
         child: AppBar(
           backgroundColor: Colors.transparent,
-          title: null,
           flexibleSpace: Padding(
-            padding: const EdgeInsets.only(top: 30.0, left: 16, right: 16),
+            padding: const EdgeInsets.only(top: 60.0, left: 16, right: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                pageTitleText("Gallery"),
+                Row(
+                  children: [
+                    pageTitleText("Gallery"),
+                    IconButton(
+                      padding: const EdgeInsets.all(0),
+                      icon: Icon(Icons.grid_3x3), onPressed: (){
+                      setState(() {
+                        gridCount = 3;
+                      });
+                    },),
+                    IconButton(icon: Icon(Icons.grid_4x4), onPressed: (){
+                      setState(() {
+                        gridCount = 4;
+                        _itemsPerPage = 30;
+                        _fetchMoreData();
+                      });
+                    },),
+
+                  ],
+                ),
                 // Row(
                 //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 //   children: [
@@ -156,67 +176,42 @@ class _GalleryPageState extends State<GalleryPage> {
       ),
       body: NotificationListener<ScrollNotification>(
         onNotification: (scrollInfo) {
-          if (!_isLoading &&
-              _hasMore &&
-              scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+          if (!_isLoading && _hasMore && scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
             _fetchMoreData();
             return true;
           }
           return false;
         },
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3, // 3 items per row
-            crossAxisSpacing: 10.0, // Spacing between columns
-            mainAxisSpacing: 10.0,  // Spacing between rows
-            childAspectRatio: 1, // Adjust the aspect ratio as needed
-          ),
-          padding: const EdgeInsets.all(16.0),
-          itemCount: _scheduleDocs.length + (_hasMore ? 1 : 0),
-          itemBuilder: (context, index) {
-            if (index >= _scheduleDocs.length) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            var data = _scheduleDocs[index].data() as Map<String, dynamic>;
-            bool _isImageLoaded = false;
-
-            return GestureDetector(
-              onTap: () => _openFullScreenImageViewer(index),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(12.0),
-                child: Stack(
-                  children: [
-                    Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(
-                        color: Colors.grey[300],
-                      ),
-                    ),
-                    Image.network(
-                      data['ImageUrl'],
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: MasonryGridView.count(
+            crossAxisCount: gridCount,
+            itemCount: _scheduleDocs.length + (_hasMore ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index >= _scheduleDocs.length) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              var data = _scheduleDocs[index].data() as Map<String, dynamic>;
+              return GestureDetector(
+                onTap: () => _openFullScreenImageViewer(index),
+                child: Container(
+                  height: (index % 3+1) * 70,
+                  // width: 100,
+                  margin: const EdgeInsets.all(1.0),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8.0),
+                    color: Colors.grey.shade200,
+                    image: DecorationImage(
+                      image: NetworkImage(data['ImageUrl']),
                       fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: double.infinity,
-                      loadingBuilder: (BuildContext context, Widget child,
-                          ImageChunkEvent? loadingProgress) {
-                        if (loadingProgress == null) {
-                          // Image is fully loaded
-                          _isImageLoaded = true;
-                          return child;
-                        } else {
-                          return const SizedBox(); // Return an empty widget to keep the shimmer visible while loading
-                        }
-                      },
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
-      ),
-    );
+    ));
+
   }
 }

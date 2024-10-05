@@ -19,101 +19,54 @@ class PlayersPage extends StatefulWidget {
 class _PlayersPageState extends State<PlayersPage> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = "";
-  String _sortCriteria = 'Name'; // Default sort criteria
-  final int _itemsPerPage = 8;
-  DocumentSnapshot? _lastDocument;
   bool _hasMore = true;
   bool _isLoading = false;
   final List<QueryDocumentSnapshot> _scheduleDocs = [];
   List<dynamic> _players = [];
 
+  int _page = 1;
+  final int _limit = 8; // Default limit
+  String chipSportValue = "Cricket";
+
   @override
   void initState() {
     super.initState();
-    fetchPlayers();
-    _fetchMoreData();
+    _fetchPlayers();
   }
 
   void _filterSchedule(String query) {
     setState(() {
-      _searchQuery = query.toLowerCase();
+      _searchQuery = query;
+      _players.clear();
       _scheduleDocs.clear();
-      _lastDocument = null;
       _hasMore = true;
-      _fetchMoreData();
+      _page = 1;
+      _fetchPlayers();
     });
   }
-
-
-  Future<void> fetchPlayers() async {
-    String getPlayersUrl = "$apiBaseUrl/players";
-    final response = await http.get(Uri.parse(getPlayersUrl));
-    if(response.statusCode == 200) {
-      final data = json.decode(response.body);
-      _players.addAll(data);
-      setState(() {});
-      print(_players[0]);
-    } else {
-      print("Failed to fetch players");
-    }
-  }
-
-  Future<void> _fetchMoreData() async {
+  Future<void> _fetchPlayers() async {
     if (_isLoading || !_hasMore) return;
 
     setState(() {
       _isLoading = true;
     });
-
-    Query query = FirebaseFirestore.instance.collection('players').orderBy(_sortCriteria).limit(_itemsPerPage);
-    if (_lastDocument != null) {
-      query = query.startAfterDocument(_lastDocument!);
-    }
-    List<QueryDocumentSnapshot> mergedDocs = [];
-
-    if (_searchQuery.isNotEmpty) {
-      Query query1 = query.where('Name', isGreaterThanOrEqualTo: _searchQuery).where('Name', isLessThanOrEqualTo: '${_searchQuery}\uf8ff');
-      Query query2 = query.where('College', isGreaterThanOrEqualTo: _searchQuery).where('College', isLessThanOrEqualTo: '${_searchQuery}\uf8ff');
-      // Execute both queries
-      QuerySnapshot querySnapshot1 = await query1.get();
-      QuerySnapshot querySnapshot2 = await query2.get();
-
-      // Merge results and remove duplicates
-      Set<String> documentIds = Set();
-
-      for (var doc in querySnapshot1.docs) {
-        if (!documentIds.contains(doc.id)) {
-          mergedDocs.add(doc);
-          documentIds.add(doc.id);
-        }
+    final String apiUrl = '$apiBaseUrl/players?page=$_page&limit=$_limit&search=$_searchQuery';
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          _players.addAll(data['players']);
+          _page++;
+          if (data['players'].length < _limit) {
+            _hasMore = false;
+          }
+        });
+      } else {
+        errorSnackMsg('Failed to load matches');
       }
-
-      for (var doc in querySnapshot2.docs) {
-        if (!documentIds.contains(doc.id)) {
-          mergedDocs.add(doc);
-          documentIds.add(doc.id);
-        }
-      }
-
-      // query = query.where('Sport', isGreaterThanOrEqualTo: _searchQuery).where('Sport', isLessThanOrEqualTo: '${_searchQuery}\uf8ff');
-    }
-    if (mergedDocs.isNotEmpty) {
-      _lastDocument = mergedDocs.last;
-      _scheduleDocs.addAll(mergedDocs);
-      if (mergedDocs.length < _itemsPerPage) {
-        _hasMore = false;
-      }
-    }
-
-    QuerySnapshot querySnapshot = await query.get();
-    if (querySnapshot.docs.isNotEmpty) {
-      _lastDocument = querySnapshot.docs.last;
-      _scheduleDocs.addAll(querySnapshot.docs);
-      if (querySnapshot.docs.length < _itemsPerPage) {
-        _hasMore = false;
-      }
-    } else {
-      _hasMore = false;
+    } catch (e) {
+      errorSnackMsg('Error fetching matches: $e');
     }
 
     setState(() {
@@ -131,67 +84,15 @@ class _PlayersPageState extends State<PlayersPage> {
           backgroundColor: Colors.transparent,
           title: null,
           flexibleSpace: Padding(
-            padding: const EdgeInsets.only(top: 30.0, left: 16, right: 16),
+            padding: const EdgeInsets.only(top: 60.0, left: 16, right: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 pageTitleText("Players"),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      // width: 115,
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          menuWidth: 115,
-                          value: _sortCriteria,
-                          elevation: 10,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              _sortCriteria = newValue!;
-                              _scheduleDocs.clear();
-                              _lastDocument = null;
-                              _hasMore = true;
-                              _fetchMoreData();
-                            });
-                          },
-                          items: <String>['Name', 'Sport','Gender', 'RollNo', 'College'].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Container(
-                                width: 85,
-                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  gradient: LinearGradient(
-                                    colors: [Colors.blue.shade200, Colors.blue.shade400],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    const SizedBox(width: 10),
-                                    Text(
-                                      value,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
                     Expanded(
                       child: Container(
                         // width: 220,
@@ -219,10 +120,8 @@ class _PlayersPageState extends State<PlayersPage> {
       ),
       body: NotificationListener<ScrollNotification>(
         onNotification: (scrollInfo) {
-          if (!_isLoading &&
-              _hasMore &&
-              scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
-            _fetchMoreData();
+          if (!_isLoading && _hasMore && scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+            _fetchPlayers();
             return true;
           }
           return false;

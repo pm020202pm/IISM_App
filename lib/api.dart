@@ -1,2 +1,2 @@
-String apiBaseUrl = "http://172.23.20.203:3000/api";
+String apiBaseUrl = "http://192.168.29.176:3000/api";
 String getLiveMatchesApi = "/getLiveMatches";

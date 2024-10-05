@@ -186,7 +186,7 @@ class _LoginPageState extends State<LoginPage> {
           automaticallyImplyLeading: false,
           backgroundColor: Colors.transparent,
           flexibleSpace: Padding(
-              padding: const EdgeInsets.only(top: 30.0, left: 16, right: 16),
+              padding: const EdgeInsets.only(top: 60.0, left: 16, right: 16),
               child: pageTitleText("Login")
           ),
         ),
@@ -259,7 +259,18 @@ class _LoginPageState extends State<LoginPage> {
                   isLoading
                       ? const CircularProgressIndicator()
                       : octagonalButton(isOTPSent? "Submit" : "Send OTP",12,17, Colors.green.shade300, Colors.green.shade800, () async {
-                    if(!isOTPSent){
+                        if(emailController.text.isEmpty) {
+                          Fluttertoast.showToast(
+                              msg: "Please enter email",
+                              toastLength: Toast.LENGTH_SHORT,
+                              timeInSecForIosWeb: 2,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 16.0
+                          );
+                          return;
+                        }
+                    if(!isOTPSent) {
                       await sendOTP(emailController.text);
                     } else {
                       await registerPlayer(tmpEmail, emailController.text);

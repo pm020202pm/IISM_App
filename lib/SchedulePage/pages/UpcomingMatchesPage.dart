@@ -3,9 +3,11 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 
 import '../../api.dart';
+import '../../utils.dart';
 import '../models/MatchesModel.dart';
 import '../widgets/SortBySearch.dart';
 import '../widgets/UpcomingMatchCard.dart';
+import '../widgets/widgets.dart';
 
 class UpcomingMatchesPage extends StatefulWidget {
   final TextEditingController searchController;
@@ -26,6 +28,7 @@ class _UpcomingMatchesPageState extends State<UpcomingMatchesPage> {
   String _order = 'ASC'; // Default order
   String _sortCriteria = 'Time'; // Default sort criteria for the dropdown
   String _searchQuery = ''; // Default search query
+  String chipSportValue = "All";
 
   @override
   void initState() {
@@ -43,6 +46,7 @@ class _UpcomingMatchesPageState extends State<UpcomingMatchesPage> {
       final response = await http.get(Uri.parse(apiUrl));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+        print(data['matches']);
         setState(() {
           _matches.addAll(data['matches']);
           _page++;
@@ -101,11 +105,45 @@ class _UpcomingMatchesPageState extends State<UpcomingMatchesPage> {
     });
   }
 
+  Future<void> onChipTap(String sport) async {
+    setState(() {
+      chipSportValue = sport;
+      _matches.clear();
+      _page = 1;
+      _hasMore = true;
+    });
+    await _fetchMatches();
+    // await _fetchMatches(sportsTableMap[chipSportValue]!);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         SortBySearch(changeSortCriteria: _changeSortCriteria, searchController: widget.searchController, filterSchedule: _filterSchedule, sortCriteria: _sortCriteria),
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0, bottom: 10),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                customChips("All", Icons.spoke,chipSportValue=="All",() async {await onChipTap("All");}),
+                const SizedBox(width: 8.0),
+                customChips("Cricket", Icons.sports_cricket,chipSportValue=="Cricket",() async {await onChipTap("Cricket");}),
+                const SizedBox(width: 8.0),
+                customChips("VolleyBall", Icons.sports_volleyball,chipSportValue=="VolleyBall", () async {await onChipTap("VolleyBall");}),
+                const SizedBox(width: 8.0),
+                customChips("BasketBall", Icons.sports_basketball,chipSportValue=="BasketBall",() async {await onChipTap("BasketBall");}),
+                const SizedBox(width: 8.0),
+                customChips("Hockey", Icons.sports_hockey,chipSportValue=="Hockey", () async {await onChipTap("Hockey");}),
+                const SizedBox(width: 8.0),
+                customChips("Lawn Tennis", Icons.sports_tennis,chipSportValue=="Lawn Tennis",() async {await onChipTap("Lawn Tennis");}),
+                const SizedBox(width: 8.0),
+                customChips("Table Tennis", Icons.sports_tennis,chipSportValue=="Table Tennis", () async {await onChipTap("Table Tennis");}),
+              ],
+            ),
+          ),
+        ),
         Expanded(
           child: NotificationListener<ScrollNotification>(
             onNotification: (ScrollNotification scrollInfo) {
@@ -119,12 +157,22 @@ class _UpcomingMatchesPageState extends State<UpcomingMatchesPage> {
               itemBuilder: (context, index) {
                 if (index >= _matches.length) return const Center(child: CircularProgressIndicator());
                 UpcomingMatchesModel model = UpcomingMatchesModel.fromJson(_matches[index]);
-                return UpcomingMatchCard(match: model);
+                if(index<_matches.length-1) return UpcomingMatchCard(match: model);
+                if(index==_matches.length-1) {
+                  return Column(
+                  children: [
+                    UpcomingMatchCard(match: model),
+                    const SizedBox(height: 70.0),
+                  ],
+                );
+                }
+                // return if(index<=_matches.length) UpcomingMatchCard(match: model);
+
               },
             ),
           ),
         ),
-        const SizedBox(height: 100.0)
+        // const SizedBox(height: 100.0)
       ],
     );
   }

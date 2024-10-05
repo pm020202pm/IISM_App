@@ -50,33 +50,6 @@ class _TeamsPageState extends State<TeamsPage> {
       query = query.startAfterDocument(_lastDocument!);
     }
     List<QueryDocumentSnapshot> mergedDocs = [];
-
-    // if (_searchQuery.isNotEmpty) {
-    //   Query query1 = query.where('Name', isGreaterThanOrEqualTo: _searchQuery).where('Name', isLessThanOrEqualTo: '${_searchQuery}\uf8ff');
-    //   Query query2 = query.where('College', isGreaterThanOrEqualTo: _searchQuery).where('College', isLessThanOrEqualTo: '${_searchQuery}\uf8ff');
-    //   // Execute both queries
-    //   QuerySnapshot querySnapshot1 = await query1.get();
-    //   QuerySnapshot querySnapshot2 = await query2.get();
-    //
-    //   // Merge results and remove duplicates
-    //   Set<String> documentIds = Set();
-    //
-    //   for (var doc in querySnapshot1.docs) {
-    //     if (!documentIds.contains(doc.id)) {
-    //       mergedDocs.add(doc);
-    //       documentIds.add(doc.id);
-    //     }
-    //   }
-    //
-    //   for (var doc in querySnapshot2.docs) {
-    //     if (!documentIds.contains(doc.id)) {
-    //       mergedDocs.add(doc);
-    //       documentIds.add(doc.id);
-    //     }
-    //   }
-    //
-    //   // query = query.where('Sport', isGreaterThanOrEqualTo: _searchQuery).where('Sport', isLessThanOrEqualTo: '${_searchQuery}\uf8ff');
-    // }
     if (mergedDocs.isNotEmpty) {
       _lastDocument = mergedDocs.last;
       _scheduleDocs.addAll(mergedDocs);
@@ -111,7 +84,7 @@ class _TeamsPageState extends State<TeamsPage> {
           backgroundColor: Colors.transparent,
           title: null,
           flexibleSpace: Padding(
-            padding: const EdgeInsets.only(top: 30.0, left: 16, right: 16),
+            padding: const EdgeInsets.only(top: 60.0, left: 16, right: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

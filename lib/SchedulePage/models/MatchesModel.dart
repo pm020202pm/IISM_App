@@ -6,6 +6,7 @@ class UpcomingMatchesModel {
   final String matchDate;
   final String matchTime;
   final String venue;
+  final String sport;
   // final String matchType;
   // final String matchStatus;
 
@@ -15,6 +16,7 @@ class UpcomingMatchesModel {
       required this.matchDate,
       required this.matchTime,
       required this.venue,
+      required this.sport,
       // this.matchType,
       // this.matchStatus
       });
@@ -31,6 +33,7 @@ class UpcomingMatchesModel {
       matchDate: formattedDate,
       matchTime: formattedTime,
       venue: json['venue'],
+      sport: json['sport'],
       // matchType: json['matchType'],
       // matchStatus: json['matchStatus'],
     );

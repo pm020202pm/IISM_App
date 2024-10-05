@@ -352,7 +352,10 @@
 //   }
 // }
 
+import 'package:animated_icon/animated_icon.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:iism/ProfilePage/pages/profile_page.dart';
 import '../../utils.dart';
 import '../../widgets/widgets.dart';
 import 'LiveMatchesPage.dart';
@@ -392,13 +395,68 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
         child: AppBar(
           backgroundColor: dark? Colors.black : Colors.white,
           flexibleSpace: Padding(
-            padding: const EdgeInsets.only(top: 30.0, left: 16, right: 16),
+            padding: const EdgeInsets.only(top: 60.0, left: 16, right: 16),
             child: pageTitleText('Matches'),
           ),
           bottom: TabBar(
             controller: _tabController,
+            indicatorColor: yellowColor,
+            labelColor: yellowColor,
+            enableFeedback: true,
+            onTap: (int index) {
+              HapticFeedback.lightImpact();
+            },
+            // indicator: BoxDecoration(
+            //   color: yellowColor,
+            //   borderRadius: BorderRadius.circular(20),
+            // ),
             tabs: const [
-              Tab(text: 'Live'),
+              // Container(
+              //   padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+              //   decoration: BoxDecoration(
+              //     color: yellowColor,
+              //     borderRadius: BorderRadius.circular(20),
+              //   ),
+              //   child: Row(
+              //     mainAxisSize: MainAxisSize.min,
+              //     children: [
+              //       const Text('Live'),
+              //       const SizedBox(width: 5),
+              //       // AnimateIcon(
+              //       //   key: UniqueKey(),
+              //       //   onTap: () {},
+              //       //   iconType: IconType.continueAnimation,
+              //       //   height: 18,
+              //       //   width: 18,
+              //       //   color: Colors.red,
+              //       //   animateIcon: AnimateIcons.liveVideo,
+              //       // ),
+              //     ],
+              //   ),
+              // ),
+
+
+              Tab(
+                text: 'Live',
+                // child: AnimateIcon(
+                //   key: UniqueKey(),
+                //   onTap: () {},
+                //   iconType: IconType.continueAnimation,
+                //   height: 25,
+                //   width: 40,
+                //   color: Colors.red,
+                //   animateIcon: AnimateIcons.liveVideo,
+                // ),
+                  // icon: AnimateIcon(
+                  //   key: UniqueKey(),
+                  //   onTap: () {},
+                  //   iconType: IconType.continueAnimation,
+                  //   height: 25,
+                  //   width: 40,
+                  //   color: Colors.red,
+                  //   animateIcon: AnimateIcons.liveVideo,
+                  // )
+              ),
               Tab(text: 'Upcoming'),
               Tab(text: 'Results'),
             ],
