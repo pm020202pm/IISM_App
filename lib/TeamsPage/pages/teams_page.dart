@@ -1,9 +1,12 @@
+
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
-import '../../SchedulePage/widgets/widgets.dart';
+import 'package:flutter/services.dart';
 import '../../utils.dart';
 import '../../widgets/widgets.dart';
+// import 'package:flutter/services.dart' show ByteData, rootBundle;
+import 'package:excel/excel.dart' as exl;
 
 class TeamsPage extends StatefulWidget {
   const TeamsPage({super.key});
@@ -13,65 +16,39 @@ class TeamsPage extends StatefulWidget {
 }
 
 class _TeamsPageState extends State<TeamsPage> {
-  // final TextEditingController _searchController = TextEditingController();
-  // String _searchQuery = "";
-  String _sortCriteria = 'Position';
-  final int _itemsPerPage = 10;
-  DocumentSnapshot? _lastDocument;
-  bool _hasMore = true;
+   final TextEditingController _searchController = TextEditingController();
   bool _isLoading = false;
-  final List<QueryDocumentSnapshot> _scheduleDocs = [];
+  List<Map<String, dynamic>> head=[];
 
   @override
   void initState() {
     super.initState();
-    _fetchMoreData();
+    loadExcelData();
   }
 
-  // void _filterSchedule(String query) {
-  //   setState(() {
-  //     _searchQuery = query.toLowerCase();
-  //     _scheduleDocs.clear();
-  //     _lastDocument = null;
-  //     _hasMore = true;
-  //     _fetchMoreData();
-  //   });
-  // }
+  Future<void> loadExcelData() async {
+    final ByteData data = await rootBundle.load('assets/files/heads.xlsx');
 
-  Future<void> _fetchMoreData() async {
-    if (_isLoading || !_hasMore) return;
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    Query query = FirebaseFirestore.instance.collection('teams').orderBy(_sortCriteria).limit(_itemsPerPage);
-    if (_lastDocument != null) {
-      query = query.startAfterDocument(_lastDocument!);
-    }
-    List<QueryDocumentSnapshot> mergedDocs = [];
-    if (mergedDocs.isNotEmpty) {
-      _lastDocument = mergedDocs.last;
-      _scheduleDocs.addAll(mergedDocs);
-      if (mergedDocs.length < _itemsPerPage) {
-        _hasMore = false;
+    final List<int> bytes = data.buffer.asUint8List();
+    final exl.Excel excel = exl.Excel.decodeBytes(bytes);
+    for (var table in excel.tables.keys) {
+      final sheet = excel.tables[table];
+      if (sheet == null) continue;
+      for (int rowIndex = 1; rowIndex < sheet.maxRows; rowIndex++) {
+        Map<String, dynamic> dataMap = {};
+        for (int colIndex = 0; colIndex < 4; colIndex++) {
+          var cellValue = sheet.rows[rowIndex][colIndex]?.value;
+          String header = sheet.rows[0][colIndex]?.value.toString() ?? 'Column_$colIndex';
+          if(header!='Date') {
+            dataMap[header] = cellValue.toString().toLowerCase();
+          } else {
+            dataMap[header] = cellValue.toString();
+          }
+        }
+        head.add(dataMap);
       }
+      setState(() {});
     }
-
-    QuerySnapshot querySnapshot = await query.get();
-    if (querySnapshot.docs.isNotEmpty) {
-      _lastDocument = querySnapshot.docs.last;
-      _scheduleDocs.addAll(querySnapshot.docs);
-      if (querySnapshot.docs.length < _itemsPerPage) {
-        _hasMore = false;
-      }
-    } else {
-      _hasMore = false;
-    }
-
-    setState(() {
-      _isLoading = false;
-    });
   }
 
   @override
@@ -79,152 +56,101 @@ class _TeamsPageState extends State<TeamsPage> {
     return Scaffold(
       backgroundColor: dark? Colors.black : Colors.white,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(140.0),
+        preferredSize: const Size.fromHeight(70.0),
         child: AppBar(
           backgroundColor: Colors.transparent,
           title: null,
           flexibleSpace: Padding(
             padding: const EdgeInsets.only(top: 60.0, left: 16, right: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                pageTitleText("Teams"),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: 130,
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          menuWidth: 120,
-                          value: _sortCriteria,
-                          elevation: 10,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              _sortCriteria = newValue!;
-                              _scheduleDocs.clear();
-                              _lastDocument = null;
-                              _hasMore = true;
-                              _fetchMoreData();
-                            });
-                          },
-                          items: <String>['Name', 'Position', 'RollNo'].map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Container(
-                                width: 100,
-                                padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  gradient: LinearGradient(
-                                    colors: [Colors.blue.shade200, Colors.blue.shade400],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
-                                ),
-                                child: Row(
-                                  children: [
-                                    const SizedBox(width: 10),
-                                    Text(
-                                      value,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                    // Container(
-                    //   width: 220,
-                    //   decoration: BoxDecoration(
-                    //     border: Border.all(color: Colors.grey),
-                    //     borderRadius: BorderRadius.circular(12),
-                    //   ),
-                    //   child: TextField(
-                    //     controller: _searchController,
-                    //     onChanged: _filterSchedule,
-                    //     decoration: const InputDecoration(
-                    //       hintText: "Search...",
-                    //       border: InputBorder.none,
-                    //       contentPadding: EdgeInsets.all(8.0),
-                    //     ),
-                    //   ),
-                    // ),
-                  ],
-                ),
-              ],
-            ),
+            child: pageTitleText("Teams"),
           ),
         ),
       ),
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (scrollInfo) {
-          if (!_isLoading &&
-              _hasMore &&
-              scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
-            _fetchMoreData();
-            return true;
-          }
-          return false;
-        },
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, // 2 items per row
-            crossAxisSpacing: 10.0, // Spacing between columns
-            mainAxisSpacing: 10.0,  // Spacing between rows
-            childAspectRatio: 1, // Adjust the aspect ratio as needed
-          ),
-          padding: const EdgeInsets.all(16.0),
-          itemCount: _scheduleDocs.length + (_hasMore ? 1 : 0),
-          itemBuilder: (context, index) {
-            if (index >= _scheduleDocs.length) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            var data = _scheduleDocs[index].data() as Map<String, dynamic>;
-            return Card(
-              elevation: 2.0,
-              margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      formatName(data['Name']),
-                      // '${data['Name']}',
-                      style: const TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8.0),
-                    Text('${data['RollNo']}'),
-                    Text('${data['Email']}'),
-                    // Text('Email: ${data['Email']}'),
-                    // Text('Gender: ${data['Gender']}'),
-                    // Text('Phone No: ${data['PhoneNo']}'),
-                    // Text('College: ${data['College']}'),
-                    Text('Position: ${formatName(data['Position'])}'),
-                  ],
-                ),
-              ),
-            );
-          },
+      body: GridView.builder(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 14.0,
+          mainAxisSpacing: 18.0,
+          childAspectRatio:0.75,
         ),
+        padding: const EdgeInsets.all(16.0),
+        itemCount: head.length,
+        itemBuilder: (context, index) {
+          if (index >= head.length) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return TeamsCard(data: head[index]);
+        },
       )
       ,
     );
   }
 }
+
+
+class TeamsCard extends StatelessWidget {
+  const TeamsCard({super.key, this.data});
+  final dynamic data;
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: (){},
+      child: ClipPath(
+        clipper: OctagonClipper(padding: 30),
+        child: Container(
+            padding: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              border: Border.all(color: darkBlueColor, width: 1),
+            ),
+            child: Container(
+              color: yellowColor.withOpacity(0.6),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  // mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ClipPath(
+                      clipper: OctagonClipper(padding: 15),
+                        child: Image.asset('assets/images/person.png', fit: BoxFit.cover,)
+                    ),
+                    const SizedBox(height: 10),
+                    customText(formatName(data['Name']), 16, FontWeight.w700 , darkBlueColor, 1.3),
+                    customText(formatName(data['Position']), 12, FontWeight.w600 , darkBlueColor.withOpacity(0.8), 1.3),
+                  ],
+                ),
+              ),
+            )
+        ),
+      ),
+    );
+  }
+}
+
+class OctagonClipper1 extends CustomClipper<Path> {
+  final double padding;
+  final double containerWidth;
+  OctagonClipper1({required this.containerWidth, required this.padding});
+  @override
+  Path getClip(Size size) {
+    final Path path = Path();
+    final double width = size.width;
+    // final double width = containerWidth;
+    final double height = containerWidth;
+
+    // const double padding = 20; // Adjust this value to modify the octagon cut
+
+    path.moveTo(0, 0); // Top-left cut
+    path.lineTo(width - padding, 0); // Top-right cut
+    path.lineTo(width, padding); // Right-top cut
+    path.lineTo(width, height); // Right-bottom cut
+    path.lineTo(padding, height); // Bottom-left cut
+    path.lineTo(0, height - padding); // Left-bottom cut
+    path.close(); // Close the path
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
+

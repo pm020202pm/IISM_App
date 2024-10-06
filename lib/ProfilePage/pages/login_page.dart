@@ -132,38 +132,17 @@ class _LoginPageState extends State<LoginPage> {
           'otp' : otp
         }),
       );
-      String body = response.body;
-      Fluttertoast.showToast(
-          msg: body,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0
-      );
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         dynamic player = data['player'];
-        ParticipantModel playerModel = ParticipantModel(
-          id: player['id'].toString()??'',
-          name: player['name']?? '',
-          email: player['email']?? '',
-          gender: player['gender']?? '',
-          photo: player['photo']?? '',
-          sport: player['sport']?? '',
-          team: player['team']?? '',
-          id_generation: player['id_generation']?? '',
-          contact: player['contact']??'',
-          hall_name: player['hall_name'].toString()?? '',
-        );
+        ParticipantModel playerModel = ParticipantModel.fromJson(player);
         await saveLoginState(playerModel);
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const DashBoard(index: 5)));
       } else {
-        print('Failed to register');
+        errorSnackMsg('Unable to complete action. Please try again.');
       }
     } catch (e) {
-      print('Error registering OTP: $e');
+      errorSnackMsg('Error in sending request');
     }
     setState(() {
       isLoading=false;
