@@ -1,362 +1,12 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:flutter/material.dart';
-// import 'package:iism/utils.dart';
-// import 'package:intl/intl.dart';
-//
-// class SchedulePage extends StatefulWidget {
-//   const SchedulePage({super.key});
-//
-//   @override
-//   _SchedulePageState createState() => _SchedulePageState();
-// }
-//
-// class _SchedulePageState extends State<SchedulePage> {
-//   final TextEditingController _searchController = TextEditingController();
-//   String _searchQuery = "";
-//   String _sortCriteria = 'Date'; // Default sort criteria
-//   final int _itemsPerPage = 7;
-//   DocumentSnapshot? _lastDocument;
-//   bool _hasMore = true;
-//   bool _isLoading = false;
-//   final List<QueryDocumentSnapshot> _scheduleDocs = [];
-//
-//   @override
-//   void initState() {
-//     super.initState();
-//     _fetchMoreData();
-//   }
-//
-//   void _filterSchedule(String query) {
-//     setState(() {
-//       _searchQuery = query.toLowerCase();
-//       _scheduleDocs.clear();
-//       _lastDocument = null;
-//       _hasMore = true;
-//       _fetchMoreData();
-//     });
-//   }
-//
-//   Future<void> _fetchMoreData() async {
-//     if (_isLoading || !_hasMore) return;
-//
-//     setState(() {
-//       _isLoading = true;
-//     });
-//
-//     Query query = FirebaseFirestore.instance
-//         .collection('schedule')
-//         .orderBy(_sortCriteria) // Adjust query to sort by selected criteria
-//         .limit(_itemsPerPage);
-//
-//     if (_lastDocument != null) {
-//       query = query.startAfterDocument(_lastDocument!);
-//     }
-//     List<QueryDocumentSnapshot> mergedDocs = [];
-//
-//     if (_searchQuery.isNotEmpty) {
-//       Query query1 = query.where('Sport', isGreaterThanOrEqualTo: _searchQuery).where('Sport', isLessThanOrEqualTo: '${_searchQuery}\uf8ff');
-//       Query query2 = query.where('Team1', isGreaterThanOrEqualTo: _searchQuery).where('Team1', isLessThanOrEqualTo: '${_searchQuery}\uf8ff');
-//       // Execute both queries
-//       QuerySnapshot querySnapshot1 = await query1.get();
-//       QuerySnapshot querySnapshot2 = await query2.get();
-//
-//       // Merge results and remove duplicates
-//       Set<String> documentIds = Set();
-//
-//       for (var doc in querySnapshot1.docs) {
-//         if (!documentIds.contains(doc.id)) {
-//           mergedDocs.add(doc);
-//           documentIds.add(doc.id);
-//         }
-//       }
-//
-//       for (var doc in querySnapshot2.docs) {
-//         if (!documentIds.contains(doc.id)) {
-//           mergedDocs.add(doc);
-//           documentIds.add(doc.id);
-//         }
-//       }
-//
-//       // query = query.where('Sport', isGreaterThanOrEqualTo: _searchQuery).where('Sport', isLessThanOrEqualTo: '${_searchQuery}\uf8ff');
-//     }
-//     if (mergedDocs.isNotEmpty) {
-//       _lastDocument = mergedDocs.last;
-//       _scheduleDocs.addAll(mergedDocs);
-//       if (mergedDocs.length < _itemsPerPage) {
-//         _hasMore = false;
-//       }
-//     }
-//
-//     QuerySnapshot querySnapshot = await query.get();
-//     if (querySnapshot.docs.isNotEmpty) {
-//       _lastDocument = querySnapshot.docs.last;
-//       _scheduleDocs.addAll(querySnapshot.docs);
-//       if (querySnapshot.docs.length < _itemsPerPage) {
-//         _hasMore = false;
-//       }
-//     } else {
-//       _hasMore = false;
-//     }
-//
-//     setState(() {
-//       _isLoading = false;
-//     });
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: PreferredSize(
-//         preferredSize: const Size.fromHeight(120.0),
-//         child: AppBar(
-//           backgroundColor: Colors.transparent,
-//           title: null,
-//           flexibleSpace: Padding(
-//             padding: const EdgeInsets.only(top: 30.0, left: 16, right: 16),
-//             child: Column(
-//               children: [
-//                 Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                   children: [
-//                     const Text("Matches", style: TextStyle(fontSize: 40)),
-//                     TextButton(onPressed: () {}, child: Text("Fixture")),
-//                   ],
-//                 ),
-//                 Row(
-//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                   children: [
-//                     // const SizedBox(width: 8),
-//                     Container(
-//                       width: 132,
-//                       // padding: const EdgeInsets.symmetric(horizontal: 12.0),
-//                       decoration: BoxDecoration(
-//                         color: Colors.transparent,
-//                         borderRadius: BorderRadius.circular(30.0),
-//                         // border: Border.all(color: Colors.grey),
-//                       ),
-//                       child: DropdownButtonHideUnderline(
-//                         child: DropdownButton<String>(
-//                           menuWidth: 132,
-//                           value: _sortCriteria,
-//                           // icon: const Icon(Icons.arrow_downward, color: Colors.black),
-//                           // iconSize: 22,
-//                           // dropdownColor: Colors.transparent,
-//                           elevation: 10,
-//                           // style: const TextStyle(color: Colors.black, fontSize: 18),
-//                           onChanged: (String? newValue) {
-//                             setState(() {
-//                               _sortCriteria = newValue!;
-//                               _scheduleDocs.clear();
-//                               _lastDocument = null;
-//                               _hasMore = true;
-//                               _fetchMoreData();
-//                             });
-//                           },
-//                           items: <String>['Date', 'Sport', 'Time', 'Venue'].map<DropdownMenuItem<String>>((String value) {
-//                             return DropdownMenuItem<String>(
-//                               value: value,
-//                               child: Container(
-//                                 width: 100,
-//                                 padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
-//                                 decoration: BoxDecoration(
-//                                   borderRadius: BorderRadius.circular(8.0),
-//                                   gradient: LinearGradient(
-//                                     colors: [Colors.blue.shade200, Colors.blue.shade400],
-//                                     begin: Alignment.topLeft,
-//                                     end: Alignment.bottomRight,
-//                                   ),
-//                                 ),
-//                                 child: Row(
-//                                   children: [
-//                                     Icon(
-//                                       value == 'Date' ? Icons.date_range :
-//                                       value == 'Sport' ? Icons.sports :
-//                                       value == 'Time' ? Icons.access_time :
-//                                       Icons.location_on,
-//                                       color: Colors.white,
-//                                     ),
-//                                     const SizedBox(width: 10),
-//                                     Text(
-//                                       value,
-//                                       style: const TextStyle(
-//                                         color: Colors.white,
-//                                         fontWeight: FontWeight.bold,
-//                                       ),
-//                                     ),
-//                                   ],
-//                                 ),
-//                               ),
-//                             );
-//                           }).toList(),
-//                         ),
-//                       ),
-//                     ),
-//                     Container(
-//                       width: 220,
-//                       decoration: BoxDecoration(
-//                         border: Border.all(color: Colors.grey),
-//                         borderRadius: BorderRadius.circular(12),
-//                       ),
-//                       child: TextField(
-//                         controller: _searchController,
-//                         onChanged: _filterSchedule,
-//                         decoration: const InputDecoration(
-//                           hintText: "Search...",
-//                           border: InputBorder.none,
-//                           contentPadding: EdgeInsets.all(8.0),
-//                         ),
-//                       ),
-//                     ),
-//                   ],
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//       body: NotificationListener<ScrollNotification>(
-//         onNotification: (scrollInfo) {
-//           if (!_isLoading &&
-//               _hasMore &&
-//               scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
-//             _fetchMoreData();
-//             return true;
-//           }
-//           return false;
-//         },
-//         child: ListView.builder(
-//           // shrinkWrap: true,
-//           itemCount: _scheduleDocs.length + (_hasMore ? 1 : 0),
-//           itemBuilder: (context, index) {
-//             if (index >= _scheduleDocs.length) {
-//               return Center(child: CircularProgressIndicator());
-//             }
-//             var data = _scheduleDocs[index].data() as Map<String, dynamic>;
-//             DateTime date = DateTime.parse(data['Date']);
-//             String formattedDate = DateFormat('d MMMM').format(date);
-//             DateTime dateTime = DateFormat('HH:mm').parse(data['Time']);
-//             String formattedTime = DateFormat('h:mm a').format(dateTime);
-//
-//             return Card(
-//               elevation: 4.0,
-//               margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-//               child: Stack(
-//                 alignment: Alignment.bottomCenter,
-//                 children: [
-//                   ClipRRect(
-//                     borderRadius: BorderRadius.circular(12.0),
-//                       child: Image.asset("assets/images/cricket.png",)),
-//                   Padding(
-//                     padding: const EdgeInsets.all(12.0),
-//                     child: Row(
-//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                       crossAxisAlignment: CrossAxisAlignment.start,
-//                       children: [
-//                         Padding(
-//                           padding: const EdgeInsets.only(left: 10),
-//                           child: Column(
-//                             children: [
-//                               Container(
-//                                 padding: EdgeInsets.all(5.0),
-//                                 decoration: BoxDecoration(
-//                                   color: Colors.white,
-//                                   borderRadius: BorderRadius.circular(70),
-//
-//                                 ),
-//                                   child: Image.asset('assets/images/iitk.png', width: 55.0, height: 55.0)
-//                               ),
-//                               Text(
-//                                 '${data['Team1'].toUpperCase()}',
-//                                 style: TextStyle(
-//                                   fontSize: 15.0,
-//                                   fontWeight: FontWeight.w900,
-//                                     color: Colors.grey.shade800,
-//                                   fontFamily: 'Aptos'
-//                                 ),
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                         Column(
-//                           mainAxisAlignment: MainAxisAlignment.start,
-//                           children: [
-//                             Text('${formattedTime}',
-//                               style: TextStyle(
-//                                   fontSize: 15.0,
-//                                   fontWeight: FontWeight.w900,
-//                                   color: Colors.grey.shade900,
-//                                   fontFamily: 'Aptos',
-//                                 height: 1.4,
-//                               ),
-//                             ),
-//                             Text('${formattedDate}',
-//                               style: TextStyle(
-//                                   fontSize: 13.0,
-//                                   fontWeight: FontWeight.w700,
-//                                   color: Colors.grey.shade700,
-//                                   fontFamily: 'Aptos',
-//                                 height: 1,
-//                               ),
-//                             ),
-//                             Text('${data['Venue']}',
-//                               style: TextStyle(
-//                                   fontSize: 13.0,
-//                                   fontWeight: FontWeight.w600,
-//                                   color: Colors.grey.shade700,
-//                                   fontFamily: 'Aptos',
-//                                 height: 1,
-//                               ),
-//                             ),
-//                           ],
-//                         ),
-//                         Padding(
-//                           padding: const EdgeInsets.only(right: 10),
-//                           child: Column(
-//                             children: [
-//                               Column(
-//                                 children: [
-//                                   Container(
-//                                       padding: EdgeInsets.all(5.0),
-//                                       decoration: BoxDecoration(
-//                                         color: Colors.white,
-//                                         borderRadius: BorderRadius.circular(70),
-//
-//                                       ),
-//                                       child: Image.asset('assets/images/iitb.png', width: 55.0, height: 55.0)
-//                                   ),
-//                                   Text(
-//                                     '${data['Team1'].toUpperCase()}',
-//                                     style: TextStyle(
-//                                         fontSize: 15.0,
-//                                         fontWeight: FontWeight.w900,
-//                                         color: Colors.grey.shade800,
-//                                         fontFamily: 'Aptos'
-//                                     ),
-//
-//                                   ),
-//                                 ],
-//                               ),
-//                             ],
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             );
-//           },
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-import 'package:animated_icon/animated_icon.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:iism/api.dart';
+import 'package:iism/utils.dart';
 import 'package:flutter/services.dart';
-import 'package:iism/ProfilePage/pages/profile_page.dart';
-import '../../utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../widgets/widgets.dart';
 import 'LiveMatchesPage.dart';
 import 'ResultsMatchesPage.dart';
@@ -364,19 +14,51 @@ import 'UpcomingMatchesPage.dart';
 import '../widgets/widgets.dart';
 
 class SchedulePage extends StatefulWidget {
+  const SchedulePage({super.key});
+
   @override
   _SchedulePageState createState() => _SchedulePageState();
 }
 
 class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  final TextEditingController _liveSearchController = TextEditingController();
-  final TextEditingController _upcomingSearchController = TextEditingController();
   final TextEditingController _resultsSearchController = TextEditingController();
+  ///
+  final TextEditingController searchController = TextEditingController();
+  bool isSearching = false;
+  int currentIndex = 0;
+  List<bool> hasMore = [true, true, true];
+  List<List<dynamic>> matches = [[], [], []];
+  List<String> apiUrls = [
+    'getLiveMatches',
+    'matches',
+    'getCompletedMatches',
+  ];
+
+  List<int> pages = [1, 1, 1];
+  List<bool> isLoading = [false, false, false];
+  List<String> chipValue= ['Cricket', 'All', 'Cricket'];
+
+  //
+  final int _limit = 6;
+  bool _hasMore = true;
+  String _searchQuery = '';
+
+  Future<void> searchFun(String value) async {
+    setState(() {
+      _searchQuery = value;
+      matches[currentIndex].clear();
+      pages[currentIndex] = 1;
+      hasMore[currentIndex] = true;
+    });
+    await _fetchMatches(sportsTableMap[chipValue[currentIndex]]!);
+  }
+
 
   @override
   void initState() {
     super.initState();
+    _fetchMatches(sportsTableMap[chipValue[currentIndex]]!);
     _tabController = TabController(length: 3, vsync: this);
   }
 
@@ -384,6 +66,56 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
   void dispose() {
     _tabController.dispose();
     super.dispose();
+  }
+
+  Widget search(){
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: blueColor),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: searchController,
+              // onChanged: filterSchedule,
+              decoration: const InputDecoration(
+                hintText: "Search...",
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.all(8.0),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(3.0),
+            child: InkWell(
+              onTap: (){searchFun(searchController.text);},
+              child: Container(
+                width: 42,
+                height: 42,
+                decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: yellowColor),
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                child: Icon(Icons.check, color: yellowColor,),
+
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<void> onChipTap(String sport) async {
+    setState(() {
+      chipValue[currentIndex] = sport;
+      matches[currentIndex].clear();
+      pages[currentIndex] = 1;
+      hasMore[currentIndex] = true;
+    });
+    await _fetchMatches(sportsTableMap[chipValue[currentIndex]]!);
   }
 
   @override
@@ -396,7 +128,21 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
           backgroundColor: dark? Colors.black : Colors.white,
           flexibleSpace: Padding(
             padding: const EdgeInsets.only(top: 60.0, left: 16, right: 16),
-            child: pageTitleText('Matches'),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    !isSearching
+                    ? pageTitleText('Matches')
+                    : Expanded(child: search()),
+                    // const Spacer(),
+                    IconButton(onPressed: (){
+                      setState(() {
+                        isSearching = !isSearching;
+                        searchController.clear();
+                      });
+                    }, icon: Icon(isSearching? Icons.close_rounded : Icons.search, color: isSearching? Colors.red:yellowColor, size: 30,)),
+                  ],
+                )
           ),
           bottom: TabBar(
             controller: _tabController,
@@ -404,73 +150,102 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
             labelColor: yellowColor,
             enableFeedback: true,
             onTap: (int index) {
+              currentIndex = index;
               HapticFeedback.lightImpact();
+              if(matches[currentIndex].isEmpty) _fetchMatches(sportsTableMap[chipValue[currentIndex]]!);
+              setState(() {});
             },
-            // indicator: BoxDecoration(
-            //   color: yellowColor,
-            //   borderRadius: BorderRadius.circular(20),
-            // ),
             tabs: const [
-              // Container(
-              //   padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-              //   decoration: BoxDecoration(
-              //     color: yellowColor,
-              //     borderRadius: BorderRadius.circular(20),
-              //   ),
-              //   child: Row(
-              //     mainAxisSize: MainAxisSize.min,
-              //     children: [
-              //       const Text('Live'),
-              //       const SizedBox(width: 5),
-              //       // AnimateIcon(
-              //       //   key: UniqueKey(),
-              //       //   onTap: () {},
-              //       //   iconType: IconType.continueAnimation,
-              //       //   height: 18,
-              //       //   width: 18,
-              //       //   color: Colors.red,
-              //       //   animateIcon: AnimateIcons.liveVideo,
-              //       // ),
-              //     ],
-              //   ),
-              // ),
-
-
-              Tab(
-                text: 'Live',
-                // child: AnimateIcon(
-                //   key: UniqueKey(),
-                //   onTap: () {},
-                //   iconType: IconType.continueAnimation,
-                //   height: 25,
-                //   width: 40,
-                //   color: Colors.red,
-                //   animateIcon: AnimateIcons.liveVideo,
-                // ),
-                  // icon: AnimateIcon(
-                  //   key: UniqueKey(),
-                  //   onTap: () {},
-                  //   iconType: IconType.continueAnimation,
-                  //   height: 25,
-                  //   width: 40,
-                  //   color: Colors.red,
-                  //   animateIcon: AnimateIcons.liveVideo,
-                  // )
-              ),
+              Tab(text: 'Live'),
               Tab(text: 'Upcoming'),
               Tab(text: 'Results'),
             ],
           ),
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
+      body: Column(
         children: [
-          LiveMatchesPage(searchController: _liveSearchController),
-          UpcomingMatchesPage(searchController: _upcomingSearchController),
-          MatchResultsPage(searchController: _resultsSearchController),
+          Padding(
+            padding: const EdgeInsets.only(left:16, bottom: 10, top: 10),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  if(currentIndex==1) customChips("All", Icons.spoke,chipValue[currentIndex]=="All",() async {await onChipTap("All");}),
+                  if(currentIndex==1) const SizedBox(width: 8.0),
+                  customChips("Cricket", Icons.sports_cricket,chipValue[currentIndex]=="Cricket",() async {await onChipTap("Cricket");}),
+                  const SizedBox(width: 8.0),
+                  customChips("VolleyBall", Icons.sports_volleyball,chipValue[currentIndex]=="VolleyBall", () async {await onChipTap("VolleyBall");}),
+                  const SizedBox(width: 8.0),
+                  customChips("BasketBall", Icons.sports_basketball,chipValue[currentIndex]=="BasketBall",() async {await onChipTap("BasketBall");}),
+                  const SizedBox(width: 8.0),
+                  customChips("Hockey", Icons.sports_hockey,chipValue[currentIndex]=="Hockey", () async {await onChipTap("Hockey");}),
+                  const SizedBox(width: 8.0),
+                  customChips("Lawn Tennis", Icons.sports_tennis,chipValue[currentIndex]=="Lawn Tennis",() async {await onChipTap("Lawn Tennis");}),
+                  const SizedBox(width: 8.0),
+                  customChips("Table Tennis", Icons.sports_tennis,chipValue[currentIndex]=="Table Tennis", () async {await onChipTap("Table Tennis");}),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            child: NotificationListener(
+              onNotification: (ScrollNotification scrollInfo) {
+                if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent && !isLoading[currentIndex]) {
+                  _fetchMatches(sportsTableMap[chipValue[currentIndex]]!);
+                }
+                return false;
+              },
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  // LiveMatchesPage(searchController: _liveSearchController),
+                  LiveMatchesPage(matches: matches[currentIndex],),
+                  UpcomingMatchesPage(matches: matches[currentIndex],),
+                  MatchResultsPage(matches: matches[currentIndex],),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
+  }
+
+  Future<void> _fetchMatches(String sportTableName) async {
+    if (isLoading[currentIndex] || !_hasMore) return;
+    setState(() {isLoading[currentIndex] = true;});
+    final String apiUrl = '$apiBaseUrl/${apiUrls[currentIndex]}?page=${pages[currentIndex]}&limit=$_limit&sortBy=time&order=ASC&search=$_searchQuery&sportTableName=$sportTableName';
+
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        setState(() {
+          matches[currentIndex].addAll(data['matches']);
+          pages[currentIndex]++;
+          if (data['matches'].length < _limit) {
+            hasMore[currentIndex] = false;
+          }
+        });
+      } else {
+        print('Failed to load matches');
+      }
+    } catch (e) {
+      print('Error fetching matches: $e');
+    }
+    setState(() {isLoading[currentIndex] = false;});
+  }
+}
+
+Future<void> openLocationUrl(String locationUrl) async {
+  if (Platform.isAndroid || Platform.isIOS) {
+    if (await canLaunchUrl(Uri.parse(locationUrl))) {
+      await launchUrl(Uri.parse(locationUrl), mode: LaunchMode.externalApplication);
+    } else {
+      Fluttertoast.showToast(msg: 'Could not open location.');
+    }
+  } else {
+    Fluttertoast.showToast(msg: 'Could not open location');
   }
 }

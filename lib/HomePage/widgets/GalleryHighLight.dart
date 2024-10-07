@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:iism/SchedulePage/widgets/widgets.dart';
 import 'package:iism/utils.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../DashBoard/pages/dashboard.dart';
 import '../../widgets/widgets.dart';
 
 class GalleryHighLight extends StatelessWidget {

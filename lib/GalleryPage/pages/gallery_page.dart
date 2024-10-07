@@ -120,7 +120,7 @@ class _GalleryPageState extends State<GalleryPage> {
     return Scaffold(
       backgroundColor: dark? Colors.black : Colors.white,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(75.0),
+        preferredSize: const Size.fromHeight(95.0),
         child: AppBar(
           backgroundColor: Colors.transparent,
           flexibleSpace: Padding(

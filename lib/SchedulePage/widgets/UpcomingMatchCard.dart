@@ -4,6 +4,8 @@ import 'package:iism/utils.dart';
 
 import '../../widgets/widgets.dart';
 import '../models/MatchesModel.dart';
+import '../pages/LiveMatchesPage.dart';
+import '../pages/schedule_page.dart';
 class UpcomingMatchCard extends StatelessWidget {
   final UpcomingMatchesModel match;
   const UpcomingMatchCard({super.key, required this.match});
@@ -27,19 +29,16 @@ class UpcomingMatchCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 5),
-                  child: verticalLogoWithCollegeName(match.team1, 50, 50),
-                ),
+                verticalLogoWithCollegeName(match.team1, 45, 45),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Row(
                       children: [
-                        customText(match.matchTime, 15, FontWeight.w900, darkBlueColor, 1.4),
+                        customText(match.matchTime, 14, FontWeight.w900, darkBlueColor, 1.4),
                         Container(
                           margin: const EdgeInsets.symmetric(horizontal: 5),
-                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
                           decoration: BoxDecoration(
                             color: blueColor,
                             borderRadius: BorderRadius.circular(5),
@@ -59,7 +58,7 @@ class UpcomingMatchCard extends StatelessWidget {
                       ],
                     ),
                     if(size.width<500)InkWell(
-                      onTap:(){},
+                      onTap:(){openLocationUrl("https://maps.app.goo.gl/G9m3EkGGWUKzQfLk9");},
                       child: Row(
                         children: [
                           customText(match.venue, 11, FontWeight.w600, Colors.green.shade700, 2),
@@ -69,10 +68,7 @@ class UpcomingMatchCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 5),
-                  child: verticalLogoWithCollegeName(match.team2, 50, 50),
-                ),
+                verticalLogoWithCollegeName(match.team2, 45, 45),
               ],
             ),
           ),

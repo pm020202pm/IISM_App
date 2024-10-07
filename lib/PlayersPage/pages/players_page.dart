@@ -44,6 +44,7 @@ class _PlayersPageState extends State<PlayersPage> {
       _fetchPlayers();
     });
   }
+
   Future<void> _fetchPlayers() async {
     if (_isLoading || !_hasMore) return;
 
@@ -66,7 +67,7 @@ class _PlayersPageState extends State<PlayersPage> {
         errorSnackMsg('Failed to load matches');
       }
     } catch (e) {
-      errorSnackMsg('Error fetching matches: $e');
+      errorSnackMsg('Error fetching players list');
     }
 
     setState(() {
@@ -79,7 +80,7 @@ class _PlayersPageState extends State<PlayersPage> {
     return Scaffold(
       backgroundColor: dark? Colors.black : Colors.white,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(140.0),
+        preferredSize: const Size.fromHeight(150.0),
         child: AppBar(
           backgroundColor: Colors.transparent,
           title: null,

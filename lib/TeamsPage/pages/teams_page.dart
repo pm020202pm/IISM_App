@@ -16,17 +16,15 @@ class TeamsPage extends StatefulWidget {
 }
 
 class _TeamsPageState extends State<TeamsPage> {
-   final TextEditingController _searchController = TextEditingController();
-  bool _isLoading = false;
-  List<Map<String, dynamic>> head=[];
 
   @override
   void initState() {
     super.initState();
-    loadExcelData();
+    if(head!=[]) loadExcelData();
   }
 
   Future<void> loadExcelData() async {
+    print('Loading excel data');
     final ByteData data = await rootBundle.load('assets/files/heads.xlsx');
 
     final List<int> bytes = data.buffer.asUint8List();
@@ -56,7 +54,7 @@ class _TeamsPageState extends State<TeamsPage> {
     return Scaffold(
       backgroundColor: dark? Colors.black : Colors.white,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(70.0),
+        preferredSize: const Size.fromHeight(80.0),
         child: AppBar(
           backgroundColor: Colors.transparent,
           title: null,
@@ -66,21 +64,24 @@ class _TeamsPageState extends State<TeamsPage> {
           ),
         ),
       ),
-      body: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 14.0,
-          mainAxisSpacing: 18.0,
-          childAspectRatio:0.75,
+      body: Padding(
+        padding: const EdgeInsets.only(bottom: 50),
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 14.0,
+            mainAxisSpacing: 18.0,
+            childAspectRatio:0.68,
+          ),
+          padding: const EdgeInsets.all(16.0),
+          itemCount: head.length,
+          itemBuilder: (context, index) {
+            if (index >= head.length) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            return TeamsCard(data: head[index]);
+          },
         ),
-        padding: const EdgeInsets.all(16.0),
-        itemCount: head.length,
-        itemBuilder: (context, index) {
-          if (index >= head.length) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          return TeamsCard(data: head[index]);
-        },
       )
       ,
     );
@@ -93,6 +94,7 @@ class TeamsCard extends StatelessWidget {
   final dynamic data;
   @override
   Widget build(BuildContext context) {
+    List<String> names = splitName(data['Name']);
     return InkWell(
       onTap: (){},
       child: ClipPath(
@@ -107,15 +109,17 @@ class TeamsCard extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
-                  // mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     ClipPath(
                       clipper: OctagonClipper(padding: 15),
-                        child: Image.asset('assets/images/person.png', fit: BoxFit.cover,)
+                        child: Image.asset('assets/headPhotos/${names[0]}.jpg', fit: BoxFit.cover,)
                     ),
                     const SizedBox(height: 10),
-                    customText(formatName(data['Name']), 16, FontWeight.w700 , darkBlueColor, 1.3),
-                    customText(formatName(data['Position']), 12, FontWeight.w600 , darkBlueColor.withOpacity(0.8), 1.3),
+                    customText(names[0].toUpperCase(), 15, FontWeight.w700 , darkBlueColor, 1),
+                    if(names.length>1)customText(names[1].toUpperCase(), 12, FontWeight.w700 , darkBlueColor, 1),
+                    // if(names.length>2)customText(names[2].toUpperCase(), 12, FontWeight.w700 , darkBlueColor, 1),
+                    customText(formatName(data['Position']), 12, FontWeight.w600 , darkBlueColor.withOpacity(0.8), 1.4),
                   ],
                 ),
               ),
@@ -125,6 +129,17 @@ class TeamsCard extends StatelessWidget {
     );
   }
 }
+
+
+List<String> splitName(String name) {
+  List<String> names = name.split(' ');
+  return names;
+}
+List<String> splitPosition(String name) {
+  List<String> names = name.split(',');
+  return names;
+}
+
 
 class OctagonClipper1 extends CustomClipper<Path> {
   final double padding;

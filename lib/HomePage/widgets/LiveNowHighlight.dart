@@ -19,11 +19,8 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
   String chipSportValue = "Cricket";
   bool _isLoading = false;
   double livenowHeight = 0;
-
   List<dynamic> _matches = [];
-
   List<int> _liveMatchesLength = List.filled(6, 0);
-
   List<dynamic> liveMatchesLength=[];
 
   Future<void> onChipTap(String sport) async {
@@ -38,19 +35,37 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
     final String apiUrl = '$apiBaseUrl/getTablesLength';
     try {
       final response = await http.get(Uri.parse(apiUrl));
-      print("###2 ${response.statusCode}");
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        setState(() {
+        // setState(() {
           _liveMatchesLength[0] = data['data'][0][1];
           _liveMatchesLength[1] = data['data'][1][1];
           _liveMatchesLength[2] = data['data'][2][1];
           _liveMatchesLength[3] = data['data'][3][1];
           _liveMatchesLength[4] = data['data'][4][1];
           _liveMatchesLength[5] = data['data'][5][1];
-        });
+        // });
+        String _chipSportValue = chipSportValue;
+        if(_liveMatchesLength[0]>0){
+          _chipSportValue = "Cricket";
+        }
+        else if(_liveMatchesLength[1]>0){
+          _chipSportValue = "VolleyBall";
+        }
+        else if(_liveMatchesLength[2]>0){
+          _chipSportValue = "BasketBall";
+        }
+        else if(_liveMatchesLength[3]>0){
+          _chipSportValue = "Hockey";
+        }
+        else if(_liveMatchesLength[4]>0){
+          _chipSportValue = "Lawn Tennis";
+        }
+        else if(_liveMatchesLength[5]>0){
+          _chipSportValue = "Table Tennis";
+        }
+        await onChipTap(_chipSportValue);
       } else {
-
         print('Failed to load matches');
       }
     } catch (e) {
@@ -101,7 +116,6 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
   @override
   void initState() {
     getLiveMatchesLength();
-    onChipTap(chipSportValue);
     super.initState();
   }
 
@@ -130,25 +144,24 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
           ),
         ),
 
-        Padding(
-          padding: const EdgeInsets.all(3.0),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: [
-                if(_liveMatchesLength[0]>0) customChips1("Cricket", Icons.sports_cricket,chipSportValue=="Cricket",() async {await onChipTap("Cricket");}),
-                const SizedBox(width: 6.0),
-                if(_liveMatchesLength[1]>0) customChips1("VolleyBall", Icons.sports_volleyball,chipSportValue=="VolleyBall", () async {await onChipTap("VolleyBall");}),
-                const SizedBox(width: 6.0),
-                if(_liveMatchesLength[2]>0) customChips1("BasketBall", Icons.sports_basketball,chipSportValue=="BasketBall",() async {await onChipTap("BasketBall");}),
-                const SizedBox(width: 6.0),
-                if(_liveMatchesLength[3]>0) customChips1("Hockey", Icons.sports_hockey,chipSportValue=="Hockey", () async {await onChipTap("Hockey");}),
-                const SizedBox(width: 6.0),
-                if(_liveMatchesLength[4]>0) customChips1("Lawn Tennis", Icons.sports_tennis,chipSportValue=="Lawn Tennis",() async {await onChipTap("Lawn Tennis");}),
-                const SizedBox(width: 6.0),
-                if(_liveMatchesLength[5]>0) customChips1("Table Tennis", Icons.sports_tennis,chipSportValue=="Table Tennis", () async {await onChipTap("Table Tennis");}),
-              ],
-            ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              if(_liveMatchesLength[0]>0) customChips1("Cricket", Icons.sports_cricket,chipSportValue=="Cricket",() async {if(chipSportValue!='Cricket') await onChipTap("Cricket");}),
+              if(_liveMatchesLength[1]>0) const SizedBox(width: 6.0),
+              if(_liveMatchesLength[1]>0) customChips1("VolleyBall", Icons.sports_volleyball,chipSportValue=="VolleyBall", () async {if(chipSportValue!='VolleyBall') await onChipTap("VolleyBall");}),
+              if(_liveMatchesLength[2]>0) const SizedBox(width: 6.0),
+              if(_liveMatchesLength[2]>0) customChips1("BasketBall", Icons.sports_basketball,chipSportValue=="BasketBall",() async {if(chipSportValue!='BasketBall') await onChipTap("BasketBall");}),
+              if(_liveMatchesLength[3]>0) const SizedBox(width: 6.0),
+              if(_liveMatchesLength[3]>0) customChips1("Hockey", Icons.sports_hockey,chipSportValue=="Hockey", () async {if(chipSportValue!='Hockey') await onChipTap("Hockey");}),
+              if(_liveMatchesLength[4]>0) const SizedBox(width: 6.0),
+              if(_liveMatchesLength[4]>0) customChips1("Lawn Tennis", Icons.sports_tennis,chipSportValue=="Lawn Tennis",() async {if(chipSportValue!='Lawn Tennis') await onChipTap("Lawn Tennis");}),
+              if(_liveMatchesLength[5]>0) const SizedBox(width: 6.0),
+              if(_liveMatchesLength[5]>0) customChips1("Table Tennis", Icons.sports_tennis,chipSportValue=="Table Tennis", () async {if(chipSportValue!='Table Tennis') await onChipTap("Table Tennis");}),
+            ],
           ),
         ),
         const SizedBox(height: 6),

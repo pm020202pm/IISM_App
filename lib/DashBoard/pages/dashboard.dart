@@ -25,6 +25,8 @@ class DashBoard extends StatefulWidget {
 class _DashBoardState extends State<DashBoard> {
   int index = 0;
   bool isLoggedIn = false;
+  double navBarTextSize = 15;
+  double iconSize = 22;
 
   late ParticipantModel savedPlayer;
   void setGalleryPage() {
@@ -86,10 +88,12 @@ class _DashBoardState extends State<DashBoard> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    print("width: ${size.width}");
     return Scaffold(
-      body: (index == 0) ?
-      HomePage(onTap: setGalleryPage,) :
-      (index == 1)
+      body: (index == 0)
+          ? HomePage(onTap: setGalleryPage,)
+          : (index == 1)
           ? SchedulePage()
           : (index == 2)
           ? const PlayersPage()
@@ -101,7 +105,7 @@ class _DashBoardState extends State<DashBoard> {
           ? (isLoggedIn) ? PlayerProfilePage(player: savedPlayer) : LoginPage(onTap: (){setProfilePage();},)
           : Container(),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.all(6),
+        padding: const EdgeInsets.all(10),
         child: Container(
           padding: const EdgeInsets.all(5),
           decoration: BoxDecoration(
@@ -126,31 +130,31 @@ class _DashBoardState extends State<DashBoard> {
                 setState(() {
                   index = 0;
                 });
-              }, isActive: index==0, text: "Home",textSize: 16, icon: Icons.home, iconSize: 24, curve: Curves.easeIn,),
+              }, isActive: index==0, text: "Home",textSize: navBarTextSize, icon: Icons.home, iconSize: iconSize, curve: Curves.easeIn,),
               NavButton(onTap: (){
                 HapticFeedback.lightImpact();
                 setState(() {
                   index = 1;
                 });
-              }, isActive: index==1, text: "Matches",textSize: 16, icon: Icons.sports_volleyball_rounded,iconSize: 24, curve: Curves.easeIn,),
+              }, isActive: index==1, text: "Matches",textSize: navBarTextSize, icon: Icons.sports_volleyball_rounded,iconSize: iconSize, curve: Curves.easeIn,),
               NavButton(onTap: (){
                 HapticFeedback.lightImpact();
                 setState(() {
                   index = 2;
                 });
-              }, isActive: index==2, text: "Players",textSize: 16, icon: Icons.sports_handball_outlined, iconSize: 24, curve: Curves.easeIn,),
+              }, isActive: index==2, text: "Players",textSize: navBarTextSize, icon: Icons.sports_handball_outlined, iconSize: iconSize, curve: Curves.easeIn,),
               NavButton(onTap: (){
                 HapticFeedback.lightImpact();
                 setState(() {
                   index = 3;
                 });
-              }, isActive: index==3, text: "Gallery",textSize: 16, icon: Icons.photo, iconSize: 24, curve: Curves.easeIn,),
+              }, isActive: index==3, text: "Gallery",textSize: navBarTextSize, icon: Icons.photo, iconSize: iconSize, curve: Curves.easeIn,),
               NavButton(onTap: () {
                 HapticFeedback.lightImpact();
                 setState(() {
                   index = 4;
                 });
-              }, isActive: index==4, text: "Teams",textSize: 16, icon: Icons.people, iconSize: 24, curve: Curves.easeIn,),
+              }, isActive: index==4, text: "Teams",textSize: navBarTextSize, icon: Icons.people, iconSize: iconSize, curve: Curves.easeIn,),
               NavButton(onTap: () async {
                 HapticFeedback.lightImpact();
                 bool _isLoggedIn = await checkLoginState();
@@ -159,7 +163,7 @@ class _DashBoardState extends State<DashBoard> {
                   isLoggedIn = _isLoggedIn;
 
                 });
-              }, isActive: index==5, text: "Profile",textSize: 16, icon: Icons.person, iconSize: 24, curve: Curves.easeIn,),
+              }, isActive: index==5, text: "Profile",textSize: navBarTextSize, icon: Icons.person, iconSize: iconSize, curve: Curves.easeIn,),
             ],
           ),
 

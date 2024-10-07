@@ -104,3 +104,15 @@ void errorSnackMsg(String message){
       fontSize: 16.0
   );
 }
+
+
+void successSnackMsg(String message){
+  Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      timeInSecForIosWeb: 3,
+      backgroundColor: Colors.green,
+      textColor: Colors.white,
+      fontSize: 16.0
+  );
+}
