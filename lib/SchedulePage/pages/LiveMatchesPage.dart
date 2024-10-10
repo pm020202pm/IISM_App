@@ -1,32 +1,37 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:lottie/lottie.dart';
+import '../../widgets/widgets.dart';
 import '../models/MatchesModel.dart';
 import '../widgets/LiveMatchCard.dart';
 
-class LiveMatchesPage extends StatefulWidget {
+class LiveMatchesPage extends StatelessWidget {
   final List<dynamic> matches;
-  const LiveMatchesPage({super.key, required this.matches});
+  final bool hasMore;
+  const LiveMatchesPage({super.key, required this.matches, required this.hasMore});
 
-  @override
-  _LiveMatchesPageState createState() => _LiveMatchesPageState();
-}
-
-class _LiveMatchesPageState extends State<LiveMatchesPage> {
 
   @override
   Widget build(BuildContext context) {
+    if(matches.isEmpty){
+      int randomNumber = (1+Random().nextInt(3));
+      return Column(
+        children: [
+          Lottie.asset('assets/lottie/loading/$randomNumber.json', width: 300),
+          customText('Nothing to show, check back later!', 14, FontWeight.w500, Colors.grey, 1),
+          const SizedBox(height: 20.0),
+        ],
+      );
+    }
     return Expanded(
       child: ListView.builder(
-        itemCount: widget.matches.length + (true ? 1 : 0),
+        itemCount: matches.length + (hasMore ? 1 : 0),
         itemBuilder: (context, index) {
-          if (index >= widget.matches.length) {return const Center(child: CircularProgressIndicator());}
-          var match = widget.matches[index];
+          if (index >= matches.length) {return const Center(child: CircularProgressIndicator());}
+          var match = matches[index];
           LiveNowMatchModel matchModel = LiveNowMatchModel.fromJson(match);
-          if(index<widget.matches.length-1) return LiveMatchCard(match: matchModel);
-          if(index==widget.matches.length-1) {
+          if(index<matches.length-1) return LiveMatchCard(match: matchModel);
+          if(index==matches.length-1) {
             return Column(
               children: [
                 LiveMatchCard(match: matchModel),
@@ -34,6 +39,7 @@ class _LiveMatchesPageState extends State<LiveMatchesPage> {
               ],
             );
           }
+          return Container();
         },
       ),
     );

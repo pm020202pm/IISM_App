@@ -1,12 +1,10 @@
-
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../utils.dart';
 import '../../widgets/widgets.dart';
-// import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'package:excel/excel.dart' as exl;
+
+import '../widgets/TeamsCard.dart';
 
 class TeamsPage extends StatefulWidget {
   const TeamsPage({super.key});
@@ -20,13 +18,11 @@ class _TeamsPageState extends State<TeamsPage> {
   @override
   void initState() {
     super.initState();
-    if(head!=[]) loadExcelData();
+    if(head.isEmpty) loadExcelData();
   }
 
   Future<void> loadExcelData() async {
-    print('Loading excel data');
     final ByteData data = await rootBundle.load('assets/files/heads.xlsx');
-
     final List<int> bytes = data.buffer.asUint8List();
     final exl.Excel excel = exl.Excel.decodeBytes(bytes);
     for (var table in excel.tables.keys) {
@@ -60,7 +56,7 @@ class _TeamsPageState extends State<TeamsPage> {
           title: null,
           flexibleSpace: Padding(
             padding: const EdgeInsets.only(top: 60.0, left: 16, right: 16),
-            child: pageTitleText("Teams"),
+            child: pageTitleText("Core Team"),
           ),
         ),
       ),
@@ -89,46 +85,7 @@ class _TeamsPageState extends State<TeamsPage> {
 }
 
 
-class TeamsCard extends StatelessWidget {
-  const TeamsCard({super.key, this.data});
-  final dynamic data;
-  @override
-  Widget build(BuildContext context) {
-    List<String> names = splitName(data['Name']);
-    return InkWell(
-      onTap: (){},
-      child: ClipPath(
-        clipper: OctagonClipper(padding: 30),
-        child: Container(
-            padding: const EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              border: Border.all(color: darkBlueColor, width: 1),
-            ),
-            child: Container(
-              color: yellowColor.withOpacity(0.6),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ClipPath(
-                      clipper: OctagonClipper(padding: 15),
-                        child: Image.asset('assets/headPhotos/${names[0]}.jpg', fit: BoxFit.cover,)
-                    ),
-                    const SizedBox(height: 10),
-                    customText(names[0].toUpperCase(), 15, FontWeight.w700 , darkBlueColor, 1),
-                    if(names.length>1)customText(names[1].toUpperCase(), 12, FontWeight.w700 , darkBlueColor, 1),
-                    // if(names.length>2)customText(names[2].toUpperCase(), 12, FontWeight.w700 , darkBlueColor, 1),
-                    customText(formatName(data['Position']), 12, FontWeight.w600 , darkBlueColor.withOpacity(0.8), 1.4),
-                  ],
-                ),
-              ),
-            )
-        ),
-      ),
-    );
-  }
-}
+
 
 
 List<String> splitName(String name) {

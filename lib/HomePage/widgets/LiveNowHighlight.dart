@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:animated_icon/animated_icon.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../../SchedulePage/models/MatchesModel.dart';
@@ -19,8 +20,8 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
   String chipSportValue = "Cricket";
   bool _isLoading = false;
   double livenowHeight = 0;
-  List<dynamic> _matches = [];
-  List<int> _liveMatchesLength = List.filled(6, 0);
+  final List<dynamic> _matches = [];
+  final List<int> _liveMatchesLength = List.filled(6, 0);
   List<dynamic> liveMatchesLength=[];
 
   Future<void> onChipTap(String sport) async {
@@ -66,10 +67,14 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
         }
         await onChipTap(_chipSportValue);
       } else {
-        print('Failed to load matches');
+        if (kDebugMode) {
+          print('Failed to load matches');
+        }
       }
     } catch (e) {
-      print('Error fetching matches: $e');
+      if (kDebugMode) {
+        print('Error fetching matches: $e');
+      }
     }
   }
 
@@ -102,10 +107,14 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
         });
       } else {
 
-        print('Failed to load matches');
+        if (kDebugMode) {
+          print('Failed to load matches');
+        }
       }
     } catch (e) {
-      print('Error fetching matches: $e');
+      if (kDebugMode) {
+        print('Error fetching matches: $e');
+      }
     }
 
     setState(() {
@@ -195,7 +204,7 @@ Widget customChips1(String sport, IconData icon, bool isActive, Function() onTap
     decoration: BoxDecoration(
       color: isActive? yellowColor: Colors.grey.shade200,
       borderRadius: BorderRadius.circular(30.0),
-      border: Border.all(color: isActive? darkYellowColor : Colors.grey.shade200),
+      border: Border.all(color: isActive? darkYellowColor : Colors.grey.shade400),
     ),
     child: Material(
       color: Colors.transparent,

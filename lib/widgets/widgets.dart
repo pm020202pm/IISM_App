@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:iism/TeamsPage/pages/teams_page.dart';
 import 'package:iism/utils.dart';
-Widget customText(String text, double fontSize, FontWeight fontWeight, Color color, double? height){
-  return Text(
-      text,
+import 'package:url_launcher/url_launcher.dart';
+import '../HomePage/widgets/ConnectWithUs.dart';
+
+Widget customText(String text, double fontSize, FontWeight fontWeight,
+    Color color, double? height) {
+  return Text(text,
       style: TextStyle(
         fontSize: fontSize,
         fontWeight: fontWeight,
         color: color,
         fontFamily: 'GlacialIndifference',
-        height: height??1,),
-      overflow: TextOverflow.ellipsis
-  );
+        height: height ?? 1,
+      ),
+      overflow: TextOverflow.ellipsis);
 }
 
-
-Widget pageTitleText(String text){
-  return customText(text, 42, FontWeight.w600, dark? Colors.grey.shade100 :Colors.grey.shade800, 1);
+Widget pageTitleText(String text) {
+  return customText(text, 42, FontWeight.w600,
+      dark ? Colors.grey.shade100 : Colors.grey.shade800, 1);
 }
 
 class OctagonClipper extends CustomClipper<Path> {
@@ -45,7 +50,7 @@ class OctagonClipper extends CustomClipper<Path> {
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
-Widget setScore(String setCount, String score1, String score2){
+Widget setScore(String setCount, String score1, String score2) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
     decoration: BoxDecoration(
@@ -60,24 +65,25 @@ Widget setScore(String setCount, String score1, String score2){
               color: Colors.white,
               borderRadius: BorderRadius.circular(7),
             ),
-            child: customText("Set $setCount", 11, FontWeight.w700, Colors.grey.shade800, 1)),
+            child: customText(
+                "Set $setCount", 11, FontWeight.w700, Colors.grey.shade800, 1)),
         Padding(
           padding: const EdgeInsets.all(2.0),
           child: Row(
             children: [
-              customText(score1, 14, FontWeight.w700, Colors.grey.shade800, 1.4),
+              customText(
+                  score1, 14, FontWeight.w700, Colors.grey.shade800, 1.4),
               customText(" : ", 13, FontWeight.w700, Colors.grey.shade700, 1.4),
               customText(score2, 14, FontWeight.w700, Colors.grey.shade800, 1),
             ],
           ),
         ),
-
       ],
     ),
   );
 }
 
-Widget score2(String score1, String score2){
+Widget score2(String score1, String score2) {
   return Container(
     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
     decoration: BoxDecoration(
@@ -94,25 +100,228 @@ Widget score2(String score1, String score2){
   );
 }
 
-void errorSnackMsg(String message){
+void errorSnackMsg(String message) {
   Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
       timeInSecForIosWeb: 2,
       backgroundColor: Colors.red,
       textColor: Colors.white,
-      fontSize: 16.0
-  );
+      fontSize: 16.0);
 }
 
-
-void successSnackMsg(String message){
+void successSnackMsg(String message) {
   Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_SHORT,
       timeInSecForIosWeb: 3,
       backgroundColor: Colors.green,
       textColor: Colors.white,
-      fontSize: 16.0
+      fontSize: 16.0);
+}
+
+void enlargeImg(
+    BuildContext context, double width, String imgUrl, Widget widget) {
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(builder: (context, state) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Stack(
+                alignment: Alignment.bottomRight,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 25),
+                    child: ClipPath(
+                      clipper: OctagonClipper(padding: 20),
+                      child: Container(
+                        color: darkYellowColor,
+                        width: width,
+                        child: ClipPath(
+                          clipper: OctagonClipper(padding: 24),
+                          child: Container(
+                            margin: const EdgeInsets.all(2),
+                            color: Colors.grey.shade200,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  ClipPath(
+                                      clipper: OctagonClipper(padding: 16),
+                                      child: Hero(
+                                          tag: imgUrl,
+                                          child: Image.network(
+                                            imgUrl,
+                                            width: width,
+                                          ))),
+                                  const SizedBox(
+                                    height: 17,
+                                  ),
+                                  widget,
+                                  const SizedBox(height: 15)
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          );
+        });
+      });
+}
+
+void enlargeCoreTeamCard(BuildContext context, dynamic data) {
+  List<String> names = splitName(data['Name']);
+  double iconSize = 25;
+  showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return StatefulBuilder(builder: (context, state) {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(60),
+                child: Material(
+                  color: Colors.transparent,
+                  child: Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: [
+                      Column(
+                        children: [
+                          ClipPath(
+                            clipper: OctagonClipper(padding: 30),
+                            child: Container(
+                                padding: const EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: darkBlueColor, width: 1),
+                                ),
+                                child: Container(
+                                  color: yellowColor,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        ClipPath(
+                                            clipper: OctagonClipper(padding: 15),
+                                            child: Image.asset(
+                                              'assets/headPhotos/${names[0]}.jpg',
+                                              fit: BoxFit.cover,
+                                            )),
+                                        const SizedBox(height: 20),
+                                        customText(names[0].toUpperCase(), 18, FontWeight.w700, darkBlueColor, 1.2),
+                                        if (names.length > 1)customText(names[1].toUpperCase(), 15, FontWeight.w700, darkBlueColor, 1.6),
+                                        // if(names.length>2)customText(names[2].toUpperCase(), 12, FontWeight.w700 , darkBlueColor, 1),
+                                        customText(
+                                            formatName(data['Position']),
+                                            15,
+                                            FontWeight.w600,
+                                            darkBlueColor.withOpacity(0.8),
+                                            1.9),
+                                        customText(
+                                            data['Email'].toLowerCase(),
+                                            13,
+                                            FontWeight.w600,
+                                            darkBlueColor.withOpacity(0.8),
+                                            1.4),
+                                        const SizedBox(
+                                          height: 30,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )),
+                          ),
+                          const SizedBox(height: 12,),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            width: 40,
+                            height: 40,
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: InkWell(
+                              onTap: () {
+                                launchUrl(
+                                    Uri.parse(
+                                        'https://www.instagram.com/interiit_sports2024/'),
+                                    mode: LaunchMode.externalApplication);
+                              },
+                              child: GradientIcon(
+                                icon: FontAwesomeIcons
+                                    .instagram, // Use FontAwesome icon
+                                size: iconSize, // Set the size of the icon
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    Color(0xFF833AB4), // Purple
+                                    Color(0xFFC13584), // Pink
+                                    Color(0xFFF56040), // Orange
+                                    Color(0xFFFCAF45), // Yellow
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 11,
+                          ),
+                          mediaIcons(FontAwesomeIcons.facebook, Colors.blue, 25, ""),
+                          const SizedBox(
+                            width: 11,
+                          ),
+                          mediaIcons(FontAwesomeIcons.linkedin, Colors.blue.shade800, 25, ""),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          );
+        });
+      });
+}
+
+Widget mediaIcons(IconData icon, Color iconColor, double iconSize, String url) {
+  return Container(
+    alignment: Alignment.center,
+    width: 40,
+    height: 40,
+    padding: const EdgeInsets.all(5),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(30),
+    ),
+    child: InkWell(
+        onTap: () {
+          launchUrl(
+              Uri.parse(url),
+              mode: LaunchMode.externalApplication);
+        },
+        child: Icon(
+          icon,
+          color: iconColor,
+          size: iconSize,
+        )),
   );
 }

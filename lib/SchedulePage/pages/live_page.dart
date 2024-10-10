@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../../HomePage/pages/home_page.dart';
 import '../../widgets/widgets.dart';
 import '../models/MatchesModel.dart';
-import '../widgets/widgets.dart';
 class LivePage extends StatelessWidget {
   const LivePage({super.key, required this.match});
   final LiveNowMatchModel match;
@@ -43,7 +40,7 @@ class LivePage extends StatelessWidget {
                               child: Image.asset('assets/logo/${match.team1}.png', width: 20, height: 20)
                           ),
                           const SizedBox(width: 5,),
-                          Container(
+                          SizedBox(
                               width: 110,
                               child: customText(match.team1!.toUpperCase(), 14, FontWeight.w900, Colors.grey.shade800,1.9)),
                         ],

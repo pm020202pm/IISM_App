@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:iism/DashBoard/pages/dashboard.dart';
 import 'package:iism/ProfilePage/pages/profile_page.dart';
-import 'package:iism/SchedulePage/widgets/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../api.dart';
 import '../../utils.dart';
@@ -21,11 +19,12 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
 
-  TextEditingController emailController = TextEditingController();
+  TextEditingController textController = TextEditingController();
   bool isOTPSent = false;
   bool isRegistering = false;
   String tmpEmail = '';
   bool isLoading=false;
+  FocusNode focusNode = FocusNode();
 
   Future<void> sendOTP(String emailId) async {
     setState(() {
@@ -45,15 +44,22 @@ class _LoginPageState extends State<LoginPage> {
       if (response.statusCode == 200) {
         setState(() {
           tmpEmail = emailId;
-          emailController.clear();
+          textController.clear();
           isOTPSent = true;
+          focusNode.unfocus();
+          Future.delayed(const Duration(milliseconds: 100), () {
+            focusNode.requestFocus();
+          });
         });
-        print("OTP sent successfully");
-      } else {
-        print('Failed to send OTP');
+        successSnackMsg('OTP sent successfully');
+      } else if(response.statusCode == 404) {
+        errorSnackMsg('You are not an authentic user');
+      }
+      else {
+        errorSnackMsg('Unable to complete action. Please try again.');
       }
     } catch (e) {
-      print('Error sending OTP: $e');
+      errorSnackMsg('Error in sending OTP');
     }
     setState(() {
       isLoading=false;
@@ -73,47 +79,6 @@ class _LoginPageState extends State<LoginPage> {
     await prefs.setString('contact', player.contact);
     await prefs.setString('hall_name', player.hall_name);
     await prefs.setBool('isLoggedIn', true);
-  }
-
-  Future<void> loginPlayer(String emailId, String otp) async {
-    String apiUrl = '$apiBaseUrl/auth/login';
-    try {
-      final response = await http.post(
-        Uri.parse(apiUrl),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'contact': emailId,
-          'otp' : otp
-        }),
-      );
-      print(response.statusCode);
-      print(response.body);
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        dynamic player = data['player'];
-        ParticipantModel playerModel = ParticipantModel(
-          id: player['id'].toString()??'',
-          name: player['name']?? '',
-          email: player['email']?? '',
-          gender: player['gender']?? '',
-          photo: player['photo']?? '',
-          sport: player['sport']?? '',
-          team: player['team']?? '',
-          id_generation: player['id_generation']?? '',
-          contact: player['contact']??'',
-          hall_name: player['hall_name'].toString()?? '',
-        );
-        await saveLoginState(playerModel);
-        widget.onTap();
-        // Navigator.push(context, MaterialPageRoute(builder: (context) => const MyHomePage(index: 5,)));
-      } else {
-        print('Failed to verify OTP');
-      }
-    } catch (e) {
-      print('Error verifying OTP: $e');
-    }
   }
 
   Future<void> registerPlayer(String emailId, String otp) async {
@@ -137,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
         dynamic player = data['player'];
         ParticipantModel playerModel = ParticipantModel.fromJson(player);
         await saveLoginState(playerModel);
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const DashBoard(index: 5)));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const DashBoard(index: 5))).then((value) => successSnackMsg('Login successful'));
       } else {
         errorSnackMsg('Unable to complete action. Please try again.');
       }
@@ -151,8 +116,38 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-
     super.initState();
+  }
+
+  Widget inputField(){
+    return ClipPath(
+      clipper: OctagonClipper(padding: 10),
+      child: Container(
+        decoration: BoxDecoration(
+            border: Border.all(color: blueColor),
+            color: blueColor
+        ),
+        child: ClipPath(
+          clipper: OctagonClipper(padding: 10),
+          child: Container(
+            color: Colors.white,
+            child: TextField(
+              focusNode: focusNode,
+              style: TextStyle(color: dark? Colors.white:Colors.grey.shade800, fontFamily: 'GlacialIndifference', fontSize: 14),
+              controller: textController,
+              keyboardType: isOTPSent? TextInputType.number: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.all(8),
+                labelStyle: TextStyle(color: dark? Colors.grey.shade100 : Colors.grey.shade800, fontFamily: 'GlacialIndifference', fontSize: 14),
+                // labelText: isOTPSent? 'OTP' : 'Email',
+                hintText: isOTPSent? 'Enter OTP' : 'Enter Email',
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -160,7 +155,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       backgroundColor:  dark? Colors.black : Colors.white,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80.0),
+        preferredSize: const Size.fromHeight(90.0),
         child: AppBar(
           automaticallyImplyLeading: false,
           backgroundColor: Colors.transparent,
@@ -170,92 +165,39 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              //   children: [
-              //     Container(
-              //       width: 100,
-              //       padding: const EdgeInsets.all(4),
-              //       decoration: BoxDecoration(
-              //           color: isRegistering? Colors.grey.shade100 : Colors.green.shade700,
-              //           borderRadius: BorderRadius.circular(30),
-              //         border: Border.all(color: isRegistering? Colors.green.shade300 : Colors.grey.shade700, width: 1)
-              //       ),
-              //       child: TextButton(
-              //         onPressed: () {
-              //           setState(() {
-              //             isRegistering = false;
-              //             isOTPSent = false;
-              //           });
-              //         },
-              //         child: customText("Login", 16, FontWeight.w500, isRegistering? Colors.green.shade300 : Colors.grey.shade100, 1),
-              //       ),
-              //     ),
-              //     const SizedBox(width: 12,),
-              //     Container(
-              //       width: 100,
-              //       padding: const EdgeInsets.all(4),
-              //       decoration: BoxDecoration(
-              //           color: !isRegistering? Colors.grey.shade100 : Colors.green.shade700,
-              //           borderRadius: BorderRadius.circular(30),
-              //           border: Border.all(color: !isRegistering? Colors.green.shade300 : Colors.grey.shade700, width: 1)
-              //
-              //       ),
-              //       child: TextButton(
-              //         onPressed: () {
-              //           setState(() {
-              //             isRegistering = true;
-              //             isOTPSent = false;
-              //           });
-              //         },
-              //         child: customText("Register", 16, FontWeight.w500, isRegistering? Colors.grey.shade100 : Colors.green.shade300, 1),
-              //       ),
-              //     ),
-              //   ],
-              // ),
-              // const SizedBox(height: 10,),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      style: TextStyle(color: dark? Colors.white:Colors.grey.shade800, fontFamily: 'GlacialIndifference', fontSize: 14),
-                      controller: emailController,
-                      decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        labelStyle: TextStyle(color: dark? Colors.grey.shade100 : Colors.grey.shade800, fontFamily: 'GlacialIndifference', fontSize: 14),
-                        labelText: isOTPSent? 'OTP' : 'Email',
-                        hintText: isOTPSent? 'Enter OTP' : '',
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 5,),
-                  isLoading
-                      ? const CircularProgressIndicator()
-                      : octagonalButton(isOTPSent? "Submit" : "Send OTP",12,17, Colors.green.shade300, Colors.green.shade800, () async {
-                        if(emailController.text.isEmpty) {
-                          Fluttertoast.showToast(
-                              msg: "Please enter email",
-                              toastLength: Toast.LENGTH_SHORT,
-                              timeInSecForIosWeb: 2,
-                              backgroundColor: Colors.red,
-                              textColor: Colors.white,
-                              fontSize: 16.0
-                          );
-                          return;
-                        }
-                    if(!isOTPSent) {
-                      await sendOTP(emailController.text);
-                    } else {
-                      await registerPlayer(tmpEmail, emailController.text);
-                    }
-                  }),
-                ],
+              const SizedBox(height: 50,),
+              Image.asset('assets/logo/IIT Kanpur.png', height: 170, fit: BoxFit.fitHeight,),
+              const SizedBox(height: 60,),
+              Text('Login is only meant for Inter IIT Sports Meet\'24 Participants.\nOthers kindly ignore.', style: TextStyle(color: dark? Colors.white:Colors.grey.shade600, fontFamily: 'GlacialIndifference', fontSize: 12, fontWeight: FontWeight.w500,), textAlign: TextAlign.center,),
+              const SizedBox(height: 30,),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(child: inputField()),
+                    const SizedBox(width: 10,),
+                    isLoading
+                        ? const CircularProgressIndicator()
+                        : octagonalButton(isOTPSent? "Submit" : "Send OTP",12,18, Colors.green.shade300, Colors.green.shade800, () async {
+                          if(textController.text.isEmpty) {
+                            errorSnackMsg('Please enter email');
+                            return;
+                          }
+                          if(!isOTPSent) {
+                            await sendOTP(textController.text);
+                          } else {
+                            await registerPlayer(tmpEmail, textController.text);
+                          }
+                        }),
+                  ],
+                ),
               ),
               if(isOTPSent) Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -270,7 +212,7 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () async {
                       setState(() {
                         isOTPSent = false;
-                        emailController.text = tmpEmail;
+                        textController.text = tmpEmail;
                       });
                     },
                     child: const Text("Change email"),

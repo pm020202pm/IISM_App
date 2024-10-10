@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iism/widgets/widgets.dart';
 class BigCard extends StatelessWidget {
-  BigCard({Key? key, required this.imageUrl, required this.name, required this.imageHeight, required this.imageWidth, this.position, required this.text, required this.subName, this.color, required this.radius, required this.clubName, required this.fit}) : super(key: key);
+  BigCard({super.key, required this.imageUrl, required this.name, required this.imageHeight, required this.imageWidth, this.position, required this.text, required this.subName, this.color, required this.radius, required this.clubName, required this.fit});
   final String imageUrl;
   final String name;
   final String subName;

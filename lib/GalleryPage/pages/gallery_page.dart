@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:shimmer/shimmer.dart';
-import '../../SchedulePage/widgets/widgets.dart';
 import '../../utils.dart';
 import '../../widgets/widgets.dart';
 import 'full_screen_image_page.dart';
@@ -16,7 +14,7 @@ class GalleryPage extends StatefulWidget {
 
 class _GalleryPageState extends State<GalleryPage> {
   // final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = "";
+  final String _searchQuery = "";
   int _itemsPerPage = 15;
   final String _sortCriteria = 'Sport';
   DocumentSnapshot? _lastDocument;
@@ -43,16 +41,6 @@ class _GalleryPageState extends State<GalleryPage> {
     );
   }
 
-  void _filterSchedule(String query) {
-    setState(() {
-      _searchQuery = query.toLowerCase();
-      _scheduleDocs.clear();
-      _lastDocument = null;
-      _hasMore = true;
-      _fetchMoreData();
-    });
-  }
-
   Future<void> _fetchMoreData() async {
     if (_isLoading || !_hasMore) return;
 
@@ -68,13 +56,13 @@ class _GalleryPageState extends State<GalleryPage> {
     List<QueryDocumentSnapshot> mergedDocs = [];
 
     if (_searchQuery.isNotEmpty) {
-      Query query1 = query.where('Sport', isGreaterThanOrEqualTo: _searchQuery).where('Sport', isLessThanOrEqualTo: '${_searchQuery}\uf8ff');
-      Query query2 = query.where('Caption', isGreaterThanOrEqualTo: _searchQuery).where('Caption', isLessThanOrEqualTo: '${_searchQuery}\uf8ff');
+      Query query1 = query.where('Sport', isGreaterThanOrEqualTo: _searchQuery).where('Sport', isLessThanOrEqualTo: '$_searchQuery\uf8ff');
+      Query query2 = query.where('Caption', isGreaterThanOrEqualTo: _searchQuery).where('Caption', isLessThanOrEqualTo: '$_searchQuery\uf8ff');
 
       QuerySnapshot querySnapshot1 = await query1.get();
       QuerySnapshot querySnapshot2 = await query2.get();
 
-      Set<String> documentIds = Set();
+      Set<String> documentIds = {};
 
       for (var doc in querySnapshot1.docs) {
         if (!documentIds.contains(doc.id)) {
@@ -120,55 +108,69 @@ class _GalleryPageState extends State<GalleryPage> {
     return Scaffold(
       backgroundColor: dark? Colors.black : Colors.white,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(95.0),
+        preferredSize: const Size.fromHeight(90.0),
         child: AppBar(
           backgroundColor: Colors.transparent,
           flexibleSpace: Padding(
             padding: const EdgeInsets.only(top: 60.0, left: 16, right: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
               children: [
+                pageTitleText("Gallery"),
+                const Spacer(),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    pageTitleText("Gallery"),
-                    IconButton(
-                      padding: const EdgeInsets.all(0),
-                      icon: Icon(Icons.grid_3x3), onPressed: (){
-                      setState(() {
-                        gridCount = 3;
-                      });
-                    },),
-                    IconButton(icon: Icon(Icons.grid_4x4), onPressed: (){
-                      setState(() {
-                        gridCount = 4;
-                        _itemsPerPage = 30;
-                        _fetchMoreData();
-                      });
-                    },),
-
+                    InkWell(
+                      onTap: (){
+                        setState(() {
+                          gridCount = 3;
+                        });
+                      },
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            height: 20,
+                            width: 20,
+                            decoration: BoxDecoration(
+                              // color: Colors.red,
+                              borderRadius: BorderRadius.circular(3),
+                              border: Border.all(color: gridCount==3? blueColor: Colors.grey, width: 2),
+                            ),
+                          ),
+                          Icon(Icons.grid_3x3, color: gridCount==3? blueColor: Colors.grey,),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    InkWell(
+                      onTap: (){
+                        setState(() {
+                          gridCount = 4;
+                          _itemsPerPage = 30;
+                          _fetchMoreData();
+                        });
+                      },
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            height: 24,
+                            width: 24,
+                            decoration: BoxDecoration(
+                              // color: Colors.red,
+                              borderRadius: BorderRadius.circular(3),
+                              border: Border.all(color: gridCount==4? blueColor: Colors.grey, width: 2),
+                            ),
+                          ),
+                          Icon(Icons.grid_4x4, color: gridCount==4? blueColor: Colors.grey, ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //   children: [
-                //     Container(
-                //       width: 320,
-                //       decoration: BoxDecoration(
-                //         border: Border.all(color: Colors.grey),
-                //         borderRadius: BorderRadius.circular(12),
-                //       ),
-                //       child: TextField(
-                //         controller: _searchController,
-                //         onChanged: _filterSchedule,
-                //         decoration: const InputDecoration(
-                //           hintText: "Search...",
-                //           border: InputBorder.none,
-                //           contentPadding: EdgeInsets.all(8.0),
-                //         ),
-                //       ),
-                //     ),
-                //   ],
-                // ),
               ],
             ),
           ),
@@ -197,7 +199,7 @@ class _GalleryPageState extends State<GalleryPage> {
                 child: Container(
                   height: (index % 3+1) * 70,
                   // width: 100,
-                  margin: const EdgeInsets.all(1.0),
+                  margin: const EdgeInsets.all(3.0),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8.0),
                     color: Colors.grey.shade200,

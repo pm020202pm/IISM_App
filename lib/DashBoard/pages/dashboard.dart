@@ -1,4 +1,5 @@
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:iism/ProfilePage/models/ParticipantModel.dart';
@@ -11,8 +12,7 @@ import 'package:iism/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../ProfilePage/pages/login_page.dart';
 import '../../ProfilePage/pages/profile_page.dart';
-import '../widgets/NavButton.dart';
-
+import '../widgets/nav_button.dart';
 
 class DashBoard extends StatefulWidget {
   const DashBoard({super.key, required this.index});
@@ -36,11 +36,11 @@ class _DashBoardState extends State<DashBoard> {
   }
 
   Future<void> setProfilePage() async {
-    ParticipantModel _player = await initialisePlayer();
+    ParticipantModel player = await initialisePlayer();
     setState(() {
       index = 5;
       isLoggedIn = true;
-      savedPlayer = _player;
+      savedPlayer = player;
     });
   }
 
@@ -65,12 +65,16 @@ class _DashBoardState extends State<DashBoard> {
   Future<bool> checkLoginState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-    print("isLoggedIn: $isLoggedIn");
+    if (kDebugMode) {
+      print("isLoggedIn: $isLoggedIn");
+    }
     if(isLoggedIn){
-      print(prefs.getString('email'));
-      ParticipantModel _player = await initialisePlayer();
+      if (kDebugMode) {
+        print(prefs.getString('email'));
+      }
+      ParticipantModel player = await initialisePlayer();
       setState(() {
-        savedPlayer = _player;
+        savedPlayer = player;
       });
     }
     return isLoggedIn;
@@ -88,13 +92,11 @@ class _DashBoardState extends State<DashBoard> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    print("width: ${size.width}");
     return Scaffold(
       body: (index == 0)
           ? HomePage(onTap: setGalleryPage,)
           : (index == 1)
-          ? SchedulePage()
+          ? const SchedulePage()
           : (index == 2)
           ? const PlayersPage()
           : (index == 3)
@@ -102,6 +104,7 @@ class _DashBoardState extends State<DashBoard> {
           : (index == 4)
           ? const TeamsPage()
           : (index == 5)
+          // ? FeedbackPage()
           ? (isLoggedIn) ? PlayerProfilePage(player: savedPlayer) : LoginPage(onTap: (){setProfilePage();},)
           : Container(),
       floatingActionButton: Padding(
@@ -157,13 +160,18 @@ class _DashBoardState extends State<DashBoard> {
               }, isActive: index==4, text: "Teams",textSize: navBarTextSize, icon: Icons.people, iconSize: iconSize, curve: Curves.easeIn,),
               NavButton(onTap: () async {
                 HapticFeedback.lightImpact();
-                bool _isLoggedIn = await checkLoginState();
+                bool isLogged = await checkLoginState();
                 setState(() {
                   index = 5;
-                  isLoggedIn = _isLoggedIn;
-
+                  isLoggedIn = isLogged;
                 });
               }, isActive: index==5, text: "Profile",textSize: navBarTextSize, icon: Icons.person, iconSize: iconSize, curve: Curves.easeIn,),
+              // NavButton(onTap: () {
+              //   HapticFeedback.lightImpact();
+              //   setState(() {
+              //     index = 5;
+              //   });
+              // }, isActive: index==5, text: "",textSize: navBarTextSize, icon: Icons.feedback_rounded, iconSize: iconSize, curve: Curves.easeIn,),
             ],
           ),
 

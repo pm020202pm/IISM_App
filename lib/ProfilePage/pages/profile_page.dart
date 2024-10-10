@@ -21,7 +21,8 @@ class PlayerProfilePage extends StatelessWidget {
     await prefs.remove('id_generation');
     await prefs.remove('contact');
     await prefs.remove('hall_name');
-    await prefs.setBool('isLoggedIn', false);
+    await prefs.setBool('isLoggedIn', false).then((value) => successSnackMsg("Logged out successfully"));
+
   }
 
   @override

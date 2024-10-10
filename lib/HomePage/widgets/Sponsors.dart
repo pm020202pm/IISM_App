@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import '../../SchedulePage/widgets/widgets.dart';
 import '../../utils.dart';
 import '../../widgets/widgets.dart';
 

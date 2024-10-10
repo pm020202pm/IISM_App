@@ -19,11 +19,11 @@ String formatName(String name) {
 }
 
 Map<String, String> sportsTableMap = {
-  'All': 'allmatches',
-  'Cricket': 'crickettable',
-  'VolleyBall': 'volleyballtable',
-  'BasketBall': 'basketballtable',
-  'Lawn Tennis': 'lawntennistable',
-  'Hockey': 'hockeytable',
-  'Table Tennis': 'tabletennistable',
+  'All': 'all',
+  'Cricket': 'cricket',
+  'VolleyBall': 'volleyball',
+  'BasketBall': 'basketball',
+  'Lawn Tennis': 'lawntennis',
+  'Hockey': 'hockey',
+  'Table Tennis': 'tabletennis',
 };

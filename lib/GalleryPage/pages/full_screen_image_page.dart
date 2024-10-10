@@ -7,11 +7,11 @@ class FullScreenImageViewer extends StatefulWidget {
   final String sortCriteria;
 
   const FullScreenImageViewer({
-    Key? key,
+    super.key,
     required this.initialDocs,
     required this.initialIndex,
     required this.sortCriteria,
-  }) : super(key: key);
+  });
 
   @override
   _FullScreenImageViewerState createState() => _FullScreenImageViewerState();

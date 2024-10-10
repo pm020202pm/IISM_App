@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:iism/HomePage/widgets/ConnectWithUs.dart';
 import 'package:iism/HomePage/widgets/CopyrightFooter.dart';
 import 'package:iism/HomePage/widgets/GalleryHighLight.dart';
-import 'package:iism/HomePage/widgets/Sponsors.dart';
 import '../../widgets/widgets.dart';
 import '../widgets/LiveNowHighlight.dart';
 import '../../utils.dart';
 import '../../widgets/big_card.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({super.key, required this.onTap});
+  const HomePage({super.key, required this.onTap});
   final Function() onTap;
 
   @override
@@ -118,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                       padding: const EdgeInsets.only(top: 140, bottom: 80, left: 80, right: 80),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(15),
-                          child: Image.asset('assets/logo/iismlogo3.png')),
+                          child: Image.asset('assets/logo/logo.png')),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,

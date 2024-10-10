@@ -1,12 +1,12 @@
 import 'dart:convert';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:iism/PlayersPage/widgets/PlayerCard.dart';
 import 'package:iism/ProfilePage/models/ParticipantModel.dart';
 import 'package:iism/api.dart';
 import 'package:iism/utils.dart';
 import 'package:http/http.dart' as http;
-import '../../SchedulePage/widgets/widgets.dart';
+import '../../SchedulePage/pages/schedule_page.dart';
 import '../../widgets/widgets.dart';
 
 class PlayersPage extends StatefulWidget {
@@ -17,12 +17,13 @@ class PlayersPage extends StatefulWidget {
 }
 
 class _PlayersPageState extends State<PlayersPage> {
-  final TextEditingController _searchController = TextEditingController();
+  final TextEditingController searchController = TextEditingController();
   String _searchQuery = "";
   bool _hasMore = true;
   bool _isLoading = false;
-  final List<QueryDocumentSnapshot> _scheduleDocs = [];
-  List<dynamic> _players = [];
+  final List<dynamic> _players = [];
+  bool isSearching = false;
+
 
   int _page = 1;
   final int _limit = 8; // Default limit
@@ -34,15 +35,25 @@ class _PlayersPageState extends State<PlayersPage> {
     _fetchPlayers();
   }
 
-  void _filterSchedule(String query) {
+  // void _filterSchedule(String query) {
+  //   setState(() {
+  //     _searchQuery = query;
+  //     _players.clear();
+  //     _scheduleDocs.clear();
+  //     _hasMore = true;
+  //     _page = 1;
+  //     _fetchPlayers();
+  //   });
+  // }
+
+  Future<void> searchFun(String value) async {
     setState(() {
-      _searchQuery = query;
+      _searchQuery = value;
       _players.clear();
-      _scheduleDocs.clear();
-      _hasMore = true;
       _page = 1;
-      _fetchPlayers();
+      _hasMore = true;
     });
+    await _fetchPlayers();
   }
 
   Future<void> _fetchPlayers() async {
@@ -77,42 +88,79 @@ class _PlayersPageState extends State<PlayersPage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: dark? Colors.black : Colors.white,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(150.0),
+        preferredSize: const Size.fromHeight(90.0),
         child: AppBar(
-          backgroundColor: Colors.transparent,
-          title: null,
+          backgroundColor: dark ? Colors.black : Colors.white,
           flexibleSpace: Padding(
-            padding: const EdgeInsets.only(top: 60.0, left: 16, right: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            padding: const EdgeInsets.only(top:60),
+            child: Stack(
+              alignment: Alignment.topCenter,
               children: [
-                pageTitleText("Players"),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        // width: 220,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: TextField(
-                          controller: _searchController,
-                          onChanged: _filterSchedule,
-                          decoration: const InputDecoration(
-                            hintText: "Search...",
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.all(8.0),
+                AnimatedPositioned(
+                  right: isSearching ? 0 : -size.width,
+                  top: 0,
+                  bottom: 0,
+                  left: isSearching ? -size.width : 0,
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeInOut,
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                        child: SizedBox(
+                          width: size.width-32,
+                          child: Row(
+                            children: [
+                              pageTitleText('Players'),
+                              SizedBox(width: size.width-228.5,),
+                              OctagonalIconButton(
+                                onTap: () {
+                                  setState(() {
+                                    HapticFeedback.lightImpact();
+                                    isSearching = !isSearching;
+                                    searchController.clear();
+                                  });
+                                },
+                                icon: Icons.search,
+                                iconColor: blueColor,
+                                bgColor: blueColor,
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                        child: SizedBox(
+                          width: size.width-32,
+                          child: Row(
+                            children: [
+                              Expanded(child: search()),
+                              const SizedBox(width: 15,),
+                              OctagonalIconButton(
+                                onTap: () async {
+                                  if(searchController.text.isNotEmpty) await searchFun('');
+                                  setState(() {
+                                    HapticFeedback.lightImpact();
+                                    isSearching = !isSearching;
+                                    searchController.clear();
+                                  });
+
+                                },
+                                icon: Icons.close_rounded,
+                                iconColor: Colors.red,
+                                bgColor: Colors.red.shade500,
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  )
                 ),
               ],
             ),
@@ -142,59 +190,57 @@ class _PlayersPageState extends State<PlayersPage> {
             }
             var player = _players[index];
             ParticipantModel playerModel = ParticipantModel.fromJson(player);
-            return Card(
-              elevation: 2.0,
-              margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-              child: Padding(
-                padding: const EdgeInsets.all(6.0),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(8.0),
-                        child: Image.asset('assets/images/person.png', fit: BoxFit.cover)),
-                    const SizedBox(width: 15.0),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          formatName(playerModel.name),
-                          style: const TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                            height: 1
-                          ),
-
-                        ),
-                        Text(playerModel.gender,
-                          style: TextStyle(
-                              color: Colors.grey.shade800,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w600,
-                              height: 1
-                          ),
-                        ),
-                        Text(playerModel.email,
-                          style: TextStyle(
-                              color: Colors.grey.shade800,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w600,
-                              height: 1.1
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
+            return PlayerCard(playerModel: playerModel);
           },
         ),
       )
       ,
+    );
+  }
+
+  Widget search() {
+    return ClipPath(
+      clipper: OctagonClipper(padding: 10),
+      child: Container(
+        height: 48,
+        decoration: BoxDecoration(
+          border: Border.all(color: blueColor),
+          color: blueColor,
+        ),
+        child: ClipPath(
+          clipper: OctagonClipper(padding: 10),
+          child: Container(
+            width: 100,
+            color: Colors.white,
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    onSubmitted: (val) async {
+                      await searchFun(searchController.text);
+                    },
+                    controller: searchController,
+                    decoration: const InputDecoration(
+                      hintText: "Search...",
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.all(6.0),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(3),
+                  child: OctagonalIconButton(
+                      onTap: () async {await searchFun(searchController.text);},
+                      icon: Icons.check_rounded,
+                      iconColor: yellowColor,
+                      bgColor: yellowColor
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

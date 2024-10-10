@@ -5,12 +5,10 @@ import '../../widgets/widgets.dart';
 import '../models/MatchesModel.dart';
 import '../pages/live_page.dart';
 import '../pages/schedule_page.dart';
-import 'UpcomingMatchCard.dart';
 
-
-class LiveMatchCard extends StatelessWidget {
+class CompletedMatchCard extends StatelessWidget {
   final LiveNowMatchModel match;
-  const LiveMatchCard({super.key, required this.match});
+  const CompletedMatchCard({super.key, required this.match});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +27,7 @@ class LiveMatchCard extends StatelessWidget {
             Container(
               width: size.width-horizontalPadding*2,
               decoration: BoxDecoration(
-                color: Colors.red.shade400,
+                color: Colors.grey.shade400,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.grey.shade300,
@@ -68,16 +66,16 @@ class LiveMatchCard extends StatelessWidget {
                               ),
                             if(match.sport=='hockey')
                               liveHockey(),
-                            const SizedBox(height: 3,),
-                            InkWell(
-                              onTap:(){openLocationUrl("https://maps.app.goo.gl/G9m3EkGGWUKzQfLk9");},
-                              child: Row(
-                                children: [
-                                  customText(match.venue!, 11, FontWeight.w600, Colors.grey.shade700, 2),
-                                  Icon(Icons.location_on_outlined, color: Colors.green.shade700, size: 15,)
-                                ],
-                              ),
-                            ),
+                            // const SizedBox(height: 3,),
+                            // InkWell(
+                            //   onTap:(){openLocationUrl("https://maps.app.goo.gl/G9m3EkGGWUKzQfLk9");},
+                            //   child: Row(
+                            //     children: [
+                            //       customText(match.venue!, 11, FontWeight.w600, Colors.grey.shade700, 2),
+                            //       Icon(Icons.location_on_outlined, color: Colors.green.shade700, size: 15,)
+                            //     ],
+                            //   ),
+                            // ),
                           ],
                         ),
                         verticalLogoWithCollegeName(match.team2!, 45, 45),
@@ -91,11 +89,11 @@ class LiveMatchCard extends StatelessWidget {
               clipper: OctagonClipper3(padding: 12),
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
-                color: Colors.red.shade400,
+                color: Colors.grey.shade400,
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    customText('Live', 14, FontWeight.w600, whiteColor, 1),
+                    customText('Ended at 9:25 PM', 12, FontWeight.w600, whiteColor, 1),
                   ],
                 ),
               ),
@@ -117,9 +115,9 @@ class LiveMatchCard extends StatelessWidget {
             customText('${match.overs.toString()}/20', 11, FontWeight.w600, Colors.grey.shade700, 1.5),
           ],
         ),
-        const SizedBox(width: 10,),
-        customText("VS", 16, FontWeight.w700, Colors.red.shade400, 1),
-        const SizedBox(width: 10,),
+        const SizedBox(width: 12,),
+        customText("VS", 18, FontWeight.w700, Colors.red.shade400, 1),
+        const SizedBox(width: 12,),
         Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
@@ -144,9 +142,10 @@ class LiveMatchCard extends StatelessWidget {
     );
   }
 }
-// class LiveMatchCard extends StatelessWidget {
+
+// class CompletedMatchCard extends StatelessWidget {
 //   final LiveNowMatchModel match;
-//   const LiveMatchCard({super.key, required this.match});
+//   const CompletedMatchCard({super.key, required this.match});
 //
 //   @override
 //   Widget build(BuildContext context) {
@@ -174,13 +173,13 @@ class LiveMatchCard extends StatelessWidget {
 //                       // Volleyball, basketball, table tennis, lawn tennis
 //                       if(match.sport=='volleyball' || match.sport == 'basketball' || match.sport == 'table tennis' || match.sport=='lawn tennis')
 //                         Row(
-//                         children: [
-//                           Padding(
-//                             padding: const EdgeInsets.all(3.0),
-//                             child: setScore(1.toString(),match.set1Score1.toString() , match.set1Score2.toString()),
-//                           ),
-//                         ],
-//                       ),
+//                           children: [
+//                             Padding(
+//                               padding: const EdgeInsets.all(3.0),
+//                               child: setScore(1.toString(),match.set1Score1.toString() , match.set1Score2.toString()),
+//                             ),
+//                           ],
+//                         ),
 //                       if(match.sport=='hockey')
 //                         liveHockey(),
 //                       const SizedBox(height: 3,),
@@ -203,12 +202,12 @@ class LiveMatchCard extends StatelessWidget {
 //           Container(
 //             alignment: Alignment.center,
 //             height: 21,
-//             width: 60,
+//             width: 125,
 //             decoration: BoxDecoration(
-//               color: Colors.red.shade400,
+//               color: Colors.grey.shade400,
 //               borderRadius: BorderRadius.circular(30),
 //             ),
-//             child: customText("Live", 14, FontWeight.w600, Colors.white, 1),
+//             child: customText("Ended at 9:45 PM", 12, FontWeight.w500, Colors.white, 1),
 //           ),
 //         ],
 //       ),

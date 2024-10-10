@@ -81,6 +81,52 @@ Widget customChips(String sport, IconData icon, bool isActive, Function() onTap)
   );
 }
 
+
+Widget customChip2(String sport, IconData icon, bool isActive, Function() onTap){
+  return ClipPath(
+    clipper: OctagonClipper(padding: 8),
+    child: Container(
+      decoration: BoxDecoration(
+        color: isActive? darkYellowColor: Colors.grey.shade300,
+        // borderRadius: BorderRadius.circular(30.0),
+        border: Border.all(color: isActive? darkYellowColor : Colors.grey.shade300),
+      ),
+      child: ClipPath(
+        clipper: OctagonClipper(padding: 8),
+        child: Container(
+          color: isActive? yellowColor: Colors.grey.shade200,
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onTap,
+              splashColor: yellowColor,
+              borderRadius: BorderRadius.circular(30.0),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 3.0, bottom: 3.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(icon, color: isActive? Colors.white: Colors.grey, size: 15.0),
+                    const SizedBox(width: 3.0),
+                    Text(sport,
+                      style: TextStyle(
+                          fontSize: 13.0,
+                          fontWeight: FontWeight.w600,
+                          color: isActive? Colors.white:Colors.grey.shade500,
+                          fontFamily: 'GlacialIndifference'
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
 Widget customChips1(String sport, IconData icon, bool isActive, Function() onTap){
   return Container(
     decoration: BoxDecoration(

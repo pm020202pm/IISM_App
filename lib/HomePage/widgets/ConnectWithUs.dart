@@ -1,4 +1,6 @@
 
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -20,7 +22,7 @@ class ConnectWithUs extends StatelessWidget {
           child: GradientIcon(
             icon: FontAwesomeIcons.instagram, // Use FontAwesome icon
             size: iconSize, // Set the size of the icon
-            gradient: LinearGradient(
+            gradient: const LinearGradient(
               colors: [
                 Color(0xFF833AB4), // Purple
                 Color(0xFFC13584), // Pink
@@ -35,11 +37,33 @@ class ConnectWithUs extends StatelessWidget {
         const SizedBox(width: 11,),
         Icon(FontAwesomeIcons.facebook, color: Colors.blue, size: iconSize,),
         const SizedBox(width: 10,),
-        Icon(FontAwesomeIcons.twitter, color: Colors.blue, size: iconSize,),
+        InkWell(
+          onTap: (){
+            launchUrl(
+                Uri.parse('https://x.com/interiit_sports'),
+                mode: LaunchMode.externalApplication
+            );
+          },
+            child: Icon(FontAwesomeIcons.xTwitter, color: Colors.grey.shade200, size: iconSize,)),
         const SizedBox(width: 8,),
-        Icon(FontAwesomeIcons.youtube,color: Colors.red.shade600, size: iconSize,),
+        InkWell(
+          onTap:(){
+            launchUrl(
+                Uri.parse('https://www.youtube.com/@InterIIT_SportsMeet2024'),
+                mode: LaunchMode.externalApplication
+            );
+          },
+            child: Icon(FontAwesomeIcons.youtube,color: Colors.red.shade600, size: iconSize,)),
         const SizedBox(width: 14,),
-        Icon(FontAwesomeIcons.linkedin, color: Colors.blue.shade800, size: iconSize,),
+        InkWell(
+          onTap: () {
+            launchUrl(
+                Uri.parse('https://www.linkedin.com/company/inter-iit-sports-meet-2024/mycompany/'),
+                mode: LaunchMode.externalApplication
+            );
+          },
+            child: Icon(FontAwesomeIcons.linkedin, color: Colors.blue.shade800, size: iconSize,)
+        ),
 
 
       ],
