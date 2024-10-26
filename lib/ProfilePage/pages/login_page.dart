@@ -86,6 +86,7 @@ class _LoginPageState extends State<LoginPage> {
       isLoading=true;
     });
     String apiUrl = '$apiBaseUrl/auth/register';
+
     try {
       final response = await http.post(
         Uri.parse(apiUrl),
@@ -152,74 +153,80 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor:  dark? Colors.black : Colors.white,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(90.0),
-        child: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.transparent,
-          flexibleSpace: Padding(
-              padding: const EdgeInsets.only(top: 60.0, left: 16, right: 16),
-              child: pageTitleText("Login")
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor:  dark? Colors.black : Colors.white,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(90.0),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            flexibleSpace: Container(
+              alignment: Alignment.centerLeft,
+              height: 80,
+              child: Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 16),
+                  child: pageTitleText("Login")
+              ),
+            ),
           ),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 50,),
-              Image.asset('assets/logo/IIT Kanpur.png', height: 170, fit: BoxFit.fitHeight,),
-              const SizedBox(height: 60,),
-              Text('Login is only meant for Inter IIT Sports Meet\'24 Participants.\nOthers kindly ignore.', style: TextStyle(color: dark? Colors.white:Colors.grey.shade600, fontFamily: 'GlacialIndifference', fontSize: 12, fontWeight: FontWeight.w500,), textAlign: TextAlign.center,),
-              const SizedBox(height: 30,),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                // const SizedBox(height: 50,),
+                Image.asset('assets/logo/IIT Kanpur.png', height: 150, fit: BoxFit.fitHeight,),
+                const SizedBox(height: 40,),
+                Text('Login is only meant for Inter IIT Sports Meet\'24 Participants.\nOthers kindly ignore.', style: TextStyle(color: dark? Colors.white:Colors.grey.shade600, fontFamily: 'GlacialIndifference', fontSize: 12, fontWeight: FontWeight.w500,), textAlign: TextAlign.center,),
+                const SizedBox(height: 30,),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      Expanded(child: inputField()),
+                      const SizedBox(width: 10,),
+                      isLoading
+                          ? const CircularProgressIndicator()
+                          : octagonalButton(isOTPSent? "Submit" : "Send OTP",12,18, Colors.green.shade300, Colors.green.shade800, () async {
+                            if(textController.text.isEmpty) {
+                              errorSnackMsg('Please enter email');
+                              return;
+                            }
+                            if(!isOTPSent) {
+                              await sendOTP(textController.text);
+                            } else {
+                              await registerPlayer(tmpEmail, textController.text);
+                            }
+                          }),
+                    ],
+                  ),
+                ),
+                if(isOTPSent) Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(child: inputField()),
-                    const SizedBox(width: 10,),
-                    isLoading
-                        ? const CircularProgressIndicator()
-                        : octagonalButton(isOTPSent? "Submit" : "Send OTP",12,18, Colors.green.shade300, Colors.green.shade800, () async {
-                          if(textController.text.isEmpty) {
-                            errorSnackMsg('Please enter email');
-                            return;
-                          }
-                          if(!isOTPSent) {
-                            await sendOTP(textController.text);
-                          } else {
-                            await registerPlayer(tmpEmail, textController.text);
-                          }
-                        }),
+                    TextButton(
+                      onPressed: () async {
+                          await sendOTP(tmpEmail);
+                      },
+                      child: const Text("Resend"),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        setState(() {
+                          isOTPSent = false;
+                          textController.text = tmpEmail;
+                        });
+                      },
+                      child: const Text("Change email"),
+                    ),
                   ],
                 ),
-              ),
-              if(isOTPSent) Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () async {
-                        await sendOTP(tmpEmail);
-                    },
-                    child: const Text("Resend"),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      setState(() {
-                        isOTPSent = false;
-                        textController.text = tmpEmail;
-                      });
-                    },
-                    child: const Text("Change email"),
-                  ),
-                ],
-              ),
-            ],
+                SizedBox(height: 100,)
+              ],
+            ),
           ),
         ),
       ),

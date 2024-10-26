@@ -47,39 +47,44 @@ class _TeamsPageState extends State<TeamsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: dark? Colors.black : Colors.white,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80.0),
-        child: AppBar(
-          backgroundColor: Colors.transparent,
-          title: null,
-          flexibleSpace: Padding(
-            padding: const EdgeInsets.only(top: 60.0, left: 16, right: 16),
-            child: pageTitleText("Core Team"),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: dark? Colors.black : Colors.white,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(70),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            flexibleSpace: Container(
+              alignment: Alignment.centerLeft,
+              height: 80,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                child: pageTitleText("Core Team"),
+              ),
+            ),
           ),
         ),
+        body: Padding(
+          padding: const EdgeInsets.only(bottom: 50),
+          child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 14.0,
+              mainAxisSpacing: 18.0,
+              childAspectRatio:0.68,
+            ),
+            padding: const EdgeInsets.all(16.0),
+            itemCount: head.length,
+            itemBuilder: (context, index) {
+              if (index >= head.length) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              return TeamsCard(data: head[index]);
+            },
+          ),
+        )
+        ,
       ),
-      body: Padding(
-        padding: const EdgeInsets.only(bottom: 50),
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 14.0,
-            mainAxisSpacing: 18.0,
-            childAspectRatio:0.68,
-          ),
-          padding: const EdgeInsets.all(16.0),
-          itemCount: head.length,
-          itemBuilder: (context, index) {
-            if (index >= head.length) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            return TeamsCard(data: head[index]);
-          },
-        ),
-      )
-      ,
     );
   }
 }

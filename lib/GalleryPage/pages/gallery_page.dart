@@ -105,115 +105,128 @@ class _GalleryPageState extends State<GalleryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: dark? Colors.black : Colors.white,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(90.0),
-        child: AppBar(
-          backgroundColor: Colors.transparent,
-          flexibleSpace: Padding(
-            padding: const EdgeInsets.only(top: 60.0, left: 16, right: 16),
-            child: Row(
-              children: [
-                pageTitleText("Gallery"),
-                const Spacer(),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    InkWell(
-                      onTap: (){
-                        setState(() {
-                          gridCount = 3;
-                        });
-                      },
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            height: 20,
-                            width: 20,
-                            decoration: BoxDecoration(
-                              // color: Colors.red,
-                              borderRadius: BorderRadius.circular(3),
-                              border: Border.all(color: gridCount==3? blueColor: Colors.grey, width: 2),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: dark? Colors.black : Colors.white,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(70),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            flexibleSpace: Container(
+              alignment: Alignment.center,
+              height: 80,
+              child: Row(
+                children: [
+                  const SizedBox(width: 16,),
+                  pageTitleText("Gallery"),
+                  const Spacer(),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      InkWell(
+                        onTap: (){
+                          setState(() {
+                            gridCount = 3;
+                          });
+                        },
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              height: 20,
+                              width: 20,
+                              decoration: BoxDecoration(
+                                // color: Colors.red,
+                                borderRadius: BorderRadius.circular(3),
+                                border: Border.all(color: gridCount==3? blueColor: Colors.grey, width: 2),
+                              ),
                             ),
-                          ),
-                          Icon(Icons.grid_3x3, color: gridCount==3? blueColor: Colors.grey,),
-                        ],
+                            Icon(Icons.grid_3x3, color: gridCount==3? blueColor: Colors.grey,),
+                          ],
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    InkWell(
-                      onTap: (){
-                        setState(() {
-                          gridCount = 4;
-                          _itemsPerPage = 30;
-                          _fetchMoreData();
-                        });
-                      },
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Container(
-                            alignment: Alignment.center,
-                            height: 24,
-                            width: 24,
-                            decoration: BoxDecoration(
-                              // color: Colors.red,
-                              borderRadius: BorderRadius.circular(3),
-                              border: Border.all(color: gridCount==4? blueColor: Colors.grey, width: 2),
+                      const SizedBox(width: 12),
+                      InkWell(
+                        onTap: (){
+                          setState(() {
+                            gridCount = 4;
+                            _itemsPerPage = 30;
+                            _fetchMoreData();
+                          });
+                        },
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              alignment: Alignment.center,
+                              height: 24,
+                              width: 24,
+                              decoration: BoxDecoration(
+                                // color: Colors.red,
+                                borderRadius: BorderRadius.circular(3),
+                                border: Border.all(color: gridCount==4? blueColor: Colors.grey, width: 2),
+                              ),
                             ),
-                          ),
-                          Icon(Icons.grid_4x4, color: gridCount==4? blueColor: Colors.grey, ),
-                        ],
+                            Icon(Icons.grid_4x4, color: gridCount==4? blueColor: Colors.grey, ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                  const SizedBox(width: 16,),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (scrollInfo) {
-          if (!_isLoading && _hasMore && scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
-            _fetchMoreData();
-            return true;
-          }
-          return false;
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: MasonryGridView.count(
-            crossAxisCount: gridCount,
-            itemCount: _scheduleDocs.length + (_hasMore ? 1 : 0),
-            itemBuilder: (context, index) {
-              if (index >= _scheduleDocs.length) {
-                return const Center(child: CircularProgressIndicator());
+        body: RefreshIndicator(
+          onRefresh: () async {
+            _lastDocument = null;
+            _hasMore = true;
+            _scheduleDocs.clear();
+            await _fetchMoreData();
+          },
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (scrollInfo) {
+              if (!_isLoading && _hasMore && scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+                _fetchMoreData();
+                return true;
               }
-              var data = _scheduleDocs[index].data() as Map<String, dynamic>;
-              return GestureDetector(
-                onTap: () => _openFullScreenImageViewer(index),
-                child: Container(
-                  height: (index % 3+1) * 70,
-                  // width: 100,
-                  margin: const EdgeInsets.all(3.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    color: Colors.grey.shade200,
-                    image: DecorationImage(
-                      image: NetworkImage(data['ImageUrl']),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              );
+              return false;
             },
-          ),
-        ),
-    ));
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: MasonryGridView.count(
+                crossAxisCount: gridCount,
+                itemCount: _scheduleDocs.length + (_hasMore ? 1 : 0),
+                itemBuilder: (context, index) {
+                  if (index >= _scheduleDocs.length) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  var data = _scheduleDocs[index].data() as Map<String, dynamic>;
+                  return GestureDetector(
+                    onTap: () => _openFullScreenImageViewer(index),
+                    child: Container(
+                      height: (index % 3+1) * 70,
+                      // width: 100,
+                      margin: const EdgeInsets.all(3.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8.0),
+                        color: Colors.grey.shade200,
+                        image: DecorationImage(
+                          image: NetworkImage(data['ImageUrl']),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+              ),
+        )),
+    );
 
   }
 }

@@ -27,75 +27,80 @@ class PlayerProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: dark? Colors.black : Colors.white,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100),
-        child: AppBar(
-          backgroundColor: Colors.transparent,
-          flexibleSpace: Padding(
-            padding: const EdgeInsets.only(top: 60.0, left: 16, right: 16),
-            child: pageTitleText("My Profile")
-          ),
-        ),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: dark? Colors.black : blueColor,
-              borderRadius: const BorderRadius.only(topRight: Radius.circular(25), bottomRight: Radius.circular(25)),
-              boxShadow: [
-                BoxShadow(
-                  color: dark? Colors.green.shade900 :Colors.green.shade300.withOpacity(0.4),
-                  spreadRadius: 2,
-                  blurRadius: 4,
-                  offset: const Offset(0, 1),
-                ),
-              ],
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(35.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                      child: Image.network(player.id_generation, width: 200, height: 200, fit: BoxFit.cover)),
-                  const SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        customText(player.name.toUpperCase(), 20, FontWeight.w600, dark? Colors.grey.shade100: whiteColor, 1.8),
-                        customText(player.email, 14, FontWeight.w500, dark? Colors.grey.shade100: whiteColor, 1.4),
-                        customText(player.gender, 14, FontWeight.w500, dark? Colors.grey.shade100: whiteColor, 1.4),
-                        customText("IIT KANPUR", 14, FontWeight.w500, dark? Colors.grey.shade100: whiteColor, 1.4),
-                        customText("Volleyball", 14, FontWeight.w500, dark? Colors.grey.shade100: whiteColor, 1.4),
-                        const SizedBox(height: 30),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            octagonalButton(" Edit ",12, 12,Colors.purple.shade400, Colors.purple.shade800,(){}),
-                            const SizedBox(width: 10),
-                            octagonalButton("Logout",12,12,Colors.red.shade400, Colors.red.shade700, () async {
-                              await logout().then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const DashBoard(index: 5))));
-                            }),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: dark? Colors.black : Colors.white,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(70),
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            flexibleSpace: Container(
+              alignment: Alignment.centerLeft,
+              height: 80,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16),
+                child: pageTitleText("My Profile")
               ),
             ),
           ),
-          const SizedBox(height: 120),
-        ],
+        ),
+        body: Padding(
+          padding: const EdgeInsets.only(bottom: 60),
+          child: Center(
+            child: Container(
+              decoration: BoxDecoration(
+                color: dark? Colors.black : blueColor,
+                borderRadius: BorderRadius.circular(25),
+                boxShadow: [
+                  BoxShadow(
+                    color: dark? Colors.green.shade900 :blueColor.withOpacity(0.4),
+                    spreadRadius: 2,
+                    blurRadius: 4,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(35.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  // crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                        child: Image.network(player.id_generation, width: 250, height: 250, fit: BoxFit.cover)),
+                    const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          customText(player.name.toUpperCase(), 20, FontWeight.w600, dark? Colors.grey.shade100: whiteColor, 1.8),
+                          customText(player.email, 14, FontWeight.w500, dark? Colors.grey.shade100: whiteColor, 1.4),
+                          customText(player.gender, 14, FontWeight.w500, dark? Colors.grey.shade100: whiteColor, 1.4),
+                          customText("IIT KANPUR", 14, FontWeight.w500, dark? Colors.grey.shade100: whiteColor, 1.4),
+                          customText("Volleyball", 14, FontWeight.w500, dark? Colors.grey.shade100: whiteColor, 1.4),
+                          const SizedBox(height: 30),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              octagonalButton(" Edit ",12, 12,Colors.purple.shade400, Colors.purple.shade800,(){}),
+                              const SizedBox(width: 10),
+                              octagonalButton("Logout",12,12,Colors.red.shade400, Colors.red.shade700, () async {
+                                await logout().then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const DashBoard(index: 5))));
+                              }),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

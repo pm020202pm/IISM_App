@@ -74,221 +74,233 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      backgroundColor: dark ? Colors.black : Colors.white,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(90.0),
-        child: AppBar(
-          backgroundColor: dark ? Colors.black : Colors.white,
-          flexibleSpace: Padding(
-            padding: const EdgeInsets.only(top:60),
-            child: Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                AnimatedPositioned(
-                  right: isSearching ? 0 : -size.width,
-                  top: 0,
-                  bottom: 0,
-                  left: isSearching ? -size.width : 0,
-                  duration: const Duration(milliseconds: 250),
-                  curve: Curves.easeInOut,
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                        child: SizedBox(
-                          width: size.width-32,
-                          child: Row(
-                            children: [
-                              pageTitleText('Matches'),
-                              const Spacer(),
-                              OctagonalIconButton(
-                                onTap: () {
-                                  setState(() {
-                                    HapticFeedback.lightImpact();
-                                    isSearching = !isSearching;
-                                    searchController.clear();
-                                  });
-                                },
-                                icon: Icons.search,
-                                iconColor: blueColor,
-                                bgColor: blueColor,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                        child: SizedBox(
-                          width: size.width-32,
-                          child: Row(
-                            children: [
-                              Expanded(child: search()),
-                              const SizedBox(width: 15,),
-                              OctagonalIconButton(
-                                onTap: () async {
-                                  if(searchController.text.isNotEmpty) await searchFun('');
-                                  setState(() {
-                                    HapticFeedback.lightImpact();
-                                    isSearching = !isSearching;
-                                    searchController.clear();
-                                  });
-
-                                },
-                                icon: Icons.close_rounded,
-                                iconColor: Colors.red,
-                                bgColor: Colors.red.shade500,
-                              ),
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  )
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: ClipPath(
-              clipper: OctagonClipper3(padding: 10),
-              child: SizedBox(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    InkWell(
-                      onTap: (){
-                        HapticFeedback.lightImpact();
-                        setState(() {
-                          currentIndex = 0;
-                        });
-                        if(matches[currentIndex].isEmpty) {_fetchMatches(sportsTableMap[chipValue[currentIndex]]!);}
-                      },
-                      child: AnimatedContainer(
-                        curve: Curves.easeInOut,
-                        padding: EdgeInsets.all((currentIndex==0) ? tabPadding : 8.0),
-                        duration: const Duration(milliseconds: 300),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: (currentIndex==0) ? yellowColor : Colors.grey.shade300,
-                        ),
-                        child: customText("Live Now", (currentIndex==0) ? 18 : 15, FontWeight.w600, (currentIndex==0) ? Colors.white :Colors.grey.shade600, 1),
-                      ),
-                    ),
-                    const SizedBox(width: 3.0),
-                    InkWell(
-                      onTap: (){
-                        HapticFeedback.lightImpact();
-                        setState(() {
-                          currentIndex = 1;
-                        });
-                        if(matches[currentIndex].isEmpty) {
-                          _fetchMatches(sportsTableMap[chipValue[currentIndex]]!);
-                        }
-                      },
-                      child: AnimatedContainer(
-                        curve: Curves.easeInOut,
-                        padding: EdgeInsets.all((currentIndex==1) ? tabPadding : 8.0),
-                        duration: const Duration(milliseconds: 300),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: (currentIndex==1) ? yellowColor : Colors.grey.shade300,
-                        ),
-                        child: customText("Upcoming", (currentIndex==1) ? 18 : 15, FontWeight.w600, (currentIndex==1) ? Colors.white :Colors.grey.shade600, 1),
-                      ),
-                    ),
-                    const SizedBox(width: 3.0),
-                    InkWell(
-                      onTap: (){
-                        HapticFeedback.lightImpact();
-                        setState(() {
-                          currentIndex = 2;
-                        });
-                        if(matches[currentIndex].isEmpty) {
-                          _fetchMatches(sportsTableMap[chipValue[currentIndex]]!);
-                        }
-                      },
-                      child: AnimatedContainer(
-                        curve: Curves.easeInOut,
-                        padding: EdgeInsets.all((currentIndex==2) ? tabPadding : 8.0),
-                        duration: const Duration(milliseconds: 300),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: (currentIndex==2) ? yellowColor : Colors.grey.shade300,
-                          // borderRadius: BorderRadius.circular(50),
-                        ),
-                        child: customText(" Results ", (currentIndex==2) ? 18 : 15, FontWeight.w600, (currentIndex==2) ? Colors.white :Colors.grey.shade600, 1),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          const Divider(),
-          Padding(
-            padding: const EdgeInsets.only(left: 16, bottom: 10, top: 10, right: 10),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: dark ? Colors.black : Colors.white,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(70),
+          child: AppBar(
+            backgroundColor: dark ? Colors.black : Colors.white,
+            flexibleSpace: SizedBox(
+              height: 80,
+              child: Stack(
+                alignment: Alignment.topCenter,
                 children: [
-                  if (currentIndex == 1)
-                    customChip2("All", Icons.spoke, chipValue[currentIndex] == "All", () async {
-                      await onChipTap("All");
-                    }),
-                  if (currentIndex == 1) const SizedBox(width: 8.0),
-                  customChip2("Cricket", Icons.sports_cricket, chipValue[currentIndex] == "Cricket", () async {
-                    await onChipTap("Cricket");
-                  }),
-                  const SizedBox(width: 8.0),
-                  customChip2("VolleyBall", Icons.sports_volleyball, chipValue[currentIndex] == "VolleyBall", () async {
-                    await onChipTap("VolleyBall");
-                  }),
-                  const SizedBox(width: 8.0),
-                  customChip2("BasketBall", Icons.sports_basketball, chipValue[currentIndex] == "BasketBall", () async {
-                    await onChipTap("BasketBall");
-                  }),
-                  const SizedBox(width: 8.0),
-                  customChip2("Hockey", Icons.sports_hockey, chipValue[currentIndex] == "Hockey", () async {
-                    await onChipTap("Hockey");
-                  }),
-                  const SizedBox(width: 8.0),
-                  customChip2("Lawn Tennis", Icons.sports_tennis, chipValue[currentIndex] == "Lawn Tennis", () async {
-                    await onChipTap("Lawn Tennis");
-                  }),
-                  const SizedBox(width: 8.0),
-                  customChip2("Table Tennis", Icons.sports_tennis, chipValue[currentIndex] == "Table Tennis", () async {
-                    await onChipTap("Table Tennis");
-                  }),
+                  AnimatedPositioned(
+                    right: isSearching ? 0 : -size.width,
+                    top: 0,
+                    bottom: 0,
+                    left: isSearching ? -size.width : 0,
+                    duration: const Duration(milliseconds: 250),
+                    curve: Curves.easeInOut,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                          child: SizedBox(
+                            width: size.width-32,
+                            child: Row(
+                              children: [
+                                pageTitleText('Matches'),
+                                const Spacer(),
+                                OctagonalIconButton(
+                                  onTap: () {
+                                    setState(() {
+                                      HapticFeedback.lightImpact();
+                                      isSearching = !isSearching;
+                                      searchController.clear();
+                                    });
+                                  },
+                                  icon: Icons.search,
+                                  iconColor: blueColor,
+                                  bgColor: blueColor,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                          child: SizedBox(
+                            width: size.width-32,
+                            child: Row(
+                              children: [
+                                Expanded(child: search()),
+                                const SizedBox(width: 15,),
+                                OctagonalIconButton(
+                                  onTap: () async {
+                                    if(searchController.text.isNotEmpty) await searchFun('');
+                                    setState(() {
+                                      HapticFeedback.lightImpact();
+                                      isSearching = !isSearching;
+                                      searchController.clear();
+                                    });
+
+                                  },
+                                  icon: Icons.close_rounded,
+                                  iconColor: Colors.red,
+                                  bgColor: Colors.red.shade500,
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    )
+                  ),
                 ],
               ),
             ),
           ),
-          Expanded(
-            child: NotificationListener(
-              onNotification: (ScrollNotification scrollInfo) {
-                if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent && !isLoading[currentIndex]) {
-                  _fetchMatches(sportsTableMap[chipValue[currentIndex]]!);
-                }
-                return false;
-              },
-              child: currentIndex == 0
-                  ? LiveMatchesPage(matches: matches[currentIndex], hasMore: hasMore[currentIndex])
-                  : currentIndex == 1
-                  ? UpcomingMatchesPage(matches: matches[currentIndex], hasMore: hasMore[currentIndex])
-                  : MatchResultsPage(matches: matches[currentIndex], hasMore: hasMore[currentIndex]),
-            ),
+        ),
+        body: RefreshIndicator(
+          onRefresh: () async {
+            setState(() {
+              matches[currentIndex].clear();
+              pages[currentIndex] = 1;
+              hasMore[currentIndex] = true;
+            });
+            await _fetchMatches(sportsTableMap[chipValue[currentIndex]]!);
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: ClipPath(
+                  clipper: OctagonClipper3(padding: 10),
+                  child: SizedBox(
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          onTap: (){
+                            HapticFeedback.lightImpact();
+                            setState(() {
+                              currentIndex = 0;
+                            });
+                            if(matches[currentIndex].isEmpty) {_fetchMatches(sportsTableMap[chipValue[currentIndex]]!);}
+                          },
+                          child: AnimatedContainer(
+                            curve: Curves.easeInOut,
+                            padding: EdgeInsets.all((currentIndex==0) ? tabPadding : 8.0),
+                            duration: const Duration(milliseconds: 300),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: (currentIndex==0) ? yellowColor : Colors.grey.shade300,
+                            ),
+                            child: customText("Live Now", (currentIndex==0) ? 18 : 15, FontWeight.w600, (currentIndex==0) ? Colors.white :Colors.grey.shade600, 1),
+                          ),
+                        ),
+                        const SizedBox(width: 3.0),
+                        InkWell(
+                          onTap: (){
+                            HapticFeedback.lightImpact();
+                            setState(() {
+                              currentIndex = 1;
+                            });
+                            if(matches[currentIndex].isEmpty) {
+                              _fetchMatches(sportsTableMap[chipValue[currentIndex]]!);
+                            }
+                          },
+                          child: AnimatedContainer(
+                            curve: Curves.easeInOut,
+                            padding: EdgeInsets.all((currentIndex==1) ? tabPadding : 8.0),
+                            duration: const Duration(milliseconds: 300),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: (currentIndex==1) ? yellowColor : Colors.grey.shade300,
+                            ),
+                            child: customText("Upcoming", (currentIndex==1) ? 18 : 15, FontWeight.w600, (currentIndex==1) ? Colors.white :Colors.grey.shade600, 1),
+                          ),
+                        ),
+                        const SizedBox(width: 3.0),
+                        InkWell(
+                          onTap: (){
+                            HapticFeedback.lightImpact();
+                            setState(() {
+                              currentIndex = 2;
+                            });
+                            if(matches[currentIndex].isEmpty) {
+                              _fetchMatches(sportsTableMap[chipValue[currentIndex]]!);
+                            }
+                          },
+                          child: AnimatedContainer(
+                            curve: Curves.easeInOut,
+                            padding: EdgeInsets.all((currentIndex==2) ? tabPadding : 8.0),
+                            duration: const Duration(milliseconds: 300),
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: (currentIndex==2) ? yellowColor : Colors.grey.shade300,
+                              // borderRadius: BorderRadius.circular(50),
+                            ),
+                            child: customText(" Results ", (currentIndex==2) ? 18 : 15, FontWeight.w600, (currentIndex==2) ? Colors.white :Colors.grey.shade600, 1),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              const Divider(),
+              Padding(
+                padding: const EdgeInsets.only(left: 16, bottom: 10, top: 10, right: 10),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      if (currentIndex == 1)
+                        customChip2("All", Icons.spoke, chipValue[currentIndex] == "All", () async {
+                          await onChipTap("All");
+                        }),
+                      if (currentIndex == 1) const SizedBox(width: 8.0),
+                      customChip2("Cricket", Icons.sports_cricket, chipValue[currentIndex] == "Cricket", () async {
+                        await onChipTap("Cricket");
+                      }),
+                      const SizedBox(width: 8.0),
+                      customChip2("VolleyBall", Icons.sports_volleyball, chipValue[currentIndex] == "VolleyBall", () async {
+                        await onChipTap("VolleyBall");
+                      }),
+                      const SizedBox(width: 8.0),
+                      customChip2("BasketBall", Icons.sports_basketball, chipValue[currentIndex] == "BasketBall", () async {
+                        await onChipTap("BasketBall");
+                      }),
+                      const SizedBox(width: 8.0),
+                      customChip2("Hockey", Icons.sports_hockey, chipValue[currentIndex] == "Hockey", () async {
+                        await onChipTap("Hockey");
+                      }),
+                      const SizedBox(width: 8.0),
+                      customChip2("Lawn Tennis", Icons.sports_tennis, chipValue[currentIndex] == "Lawn Tennis", () async {
+                        await onChipTap("Lawn Tennis");
+                      }),
+                      const SizedBox(width: 8.0),
+                      customChip2("Table Tennis", Icons.sports_tennis, chipValue[currentIndex] == "Table Tennis", () async {
+                        await onChipTap("Table Tennis");
+                      }),
+                    ],
+                  ),
+                ),
+              ),
+              Expanded(
+                child: NotificationListener(
+                  onNotification: (ScrollNotification scrollInfo) {
+                    if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent && !isLoading[currentIndex]) {
+                      _fetchMatches(sportsTableMap[chipValue[currentIndex]]!);
+                    }
+                    return false;
+                  },
+                  child: currentIndex == 0
+                      ? LiveMatchesPage(matches: matches[currentIndex], hasMore: hasMore[currentIndex])
+                      : currentIndex == 1
+                      ? UpcomingMatchesPage(matches: matches[currentIndex], hasMore: hasMore[currentIndex])
+                      : MatchResultsPage(matches: matches[currentIndex], hasMore: hasMore[currentIndex]),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

@@ -35,17 +35,6 @@ class _PlayersPageState extends State<PlayersPage> {
     _fetchPlayers();
   }
 
-  // void _filterSchedule(String query) {
-  //   setState(() {
-  //     _searchQuery = query;
-  //     _players.clear();
-  //     _scheduleDocs.clear();
-  //     _hasMore = true;
-  //     _page = 1;
-  //     _fetchPlayers();
-  //   });
-  // }
-
   Future<void> searchFun(String value) async {
     setState(() {
       _searchQuery = value;
@@ -89,112 +78,124 @@ class _PlayersPageState extends State<PlayersPage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      backgroundColor: dark? Colors.black : Colors.white,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(90.0),
-        child: AppBar(
-          backgroundColor: dark ? Colors.black : Colors.white,
-          flexibleSpace: Padding(
-            padding: const EdgeInsets.only(top:60),
-            child: Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                AnimatedPositioned(
-                  right: isSearching ? 0 : -size.width,
-                  top: 0,
-                  bottom: 0,
-                  left: isSearching ? -size.width : 0,
-                  duration: const Duration(milliseconds: 250),
-                  curve: Curves.easeInOut,
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                        child: SizedBox(
-                          width: size.width-32,
-                          child: Row(
-                            children: [
-                              pageTitleText('Players'),
-                              SizedBox(width: size.width-228.5,),
-                              OctagonalIconButton(
-                                onTap: () {
-                                  setState(() {
-                                    HapticFeedback.lightImpact();
-                                    isSearching = !isSearching;
-                                    searchController.clear();
-                                  });
-                                },
-                                icon: Icons.search,
-                                iconColor: blueColor,
-                                bgColor: blueColor,
-                              ),
-                            ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: dark? Colors.black : Colors.white,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(70),
+          child: AppBar(
+            backgroundColor: dark ? Colors.black : Colors.white,
+            flexibleSpace: Container(
+              height: 80,
+              child: Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  AnimatedPositioned(
+                    right: isSearching ? 0 : -size.width,
+                    top: 0,
+                    bottom: 0,
+                    left: isSearching ? -size.width : 0,
+                    duration: const Duration(milliseconds: 250),
+                    curve: Curves.easeInOut,
+                    child: Row(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                          child: SizedBox(
+                            width: size.width-32,
+                            child: Row(
+                              children: [
+                                pageTitleText('Players'),
+                                SizedBox(width: size.width-228.5,),
+                                OctagonalIconButton(
+                                  onTap: () {
+                                    setState(() {
+                                      HapticFeedback.lightImpact();
+                                      isSearching = !isSearching;
+                                      searchController.clear();
+                                    });
+                                  },
+                                  icon: Icons.search,
+                                  iconColor: blueColor,
+                                  bgColor: blueColor,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                        child: SizedBox(
-                          width: size.width-32,
-                          child: Row(
-                            children: [
-                              Expanded(child: search()),
-                              const SizedBox(width: 15,),
-                              OctagonalIconButton(
-                                onTap: () async {
-                                  if(searchController.text.isNotEmpty) await searchFun('');
-                                  setState(() {
-                                    HapticFeedback.lightImpact();
-                                    isSearching = !isSearching;
-                                    searchController.clear();
-                                  });
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                          child: SizedBox(
+                            width: size.width-32,
+                            child: Row(
+                              children: [
+                                Expanded(child: search()),
+                                const SizedBox(width: 15,),
+                                OctagonalIconButton(
+                                  onTap: () async {
+                                    if(searchController.text.isNotEmpty) await searchFun('');
+                                    setState(() {
+                                      HapticFeedback.lightImpact();
+                                      isSearching = !isSearching;
+                                      searchController.clear();
+                                    });
 
-                                },
-                                icon: Icons.close_rounded,
-                                iconColor: Colors.red,
-                                bgColor: Colors.red.shade500,
-                              ),
-                            ],
+                                  },
+                                  icon: Icons.close_rounded,
+                                  iconColor: Colors.red,
+                                  bgColor: Colors.red.shade500,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      )
-                    ],
-                  )
-                ),
-              ],
+                        )
+                      ],
+                    )
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-      body: NotificationListener<ScrollNotification>(
-        onNotification: (scrollInfo) {
-          if (!_isLoading && _hasMore && scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
-            _fetchPlayers();
-            return true;
-          }
-          return false;
-        },
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 1, // 2 items per row
-            crossAxisSpacing: 0.0, // Spacing between columns
-            mainAxisSpacing: 5.0,  // Spacing between rows
-            childAspectRatio: 4,
-          ),
-          padding: const EdgeInsets.all(8.0),
-          itemCount: _players.length + (_hasMore ? 1 : 0),
-          itemBuilder: (context, index) {
-            if (index >= _players.length) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            var player = _players[index];
-            ParticipantModel playerModel = ParticipantModel.fromJson(player);
-            return PlayerCard(playerModel: playerModel);
+        body: RefreshIndicator(
+          onRefresh: () async {
+            // setState(() {
+              _players.clear();
+              _page = 1;
+              _hasMore = true;
+            // });
+            await _fetchPlayers();
           },
-        ),
-      )
-      ,
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (scrollInfo) {
+              if (!_isLoading && _hasMore && scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+                _fetchPlayers();
+                return true;
+              }
+              return false;
+            },
+            child: GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 1, // 2 items per row
+                crossAxisSpacing: 0.0, // Spacing between columns
+                mainAxisSpacing: 5.0,  // Spacing between rows
+                childAspectRatio: 4,
+              ),
+              padding: const EdgeInsets.all(8.0),
+              itemCount: _players.length + (_hasMore ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index >= _players.length) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                var player = _players[index];
+                ParticipantModel playerModel = ParticipantModel.fromJson(player);
+                return PlayerCard(playerModel: playerModel);
+              },
+            ),
+          ),
+        )
+        ,
+      ),
     );
   }
 
