@@ -35,7 +35,9 @@ class LiveNowMatchModel {
   final int team1_wickets;
   final int team2_score  ;
   final int team2_wickets;
-  final double overs;
+  // final double overs;
+  final double team1_overs;
+  final double team2_overs;
 
 
   LiveNowMatchModel(
@@ -68,7 +70,8 @@ class LiveNowMatchModel {
         required this.team1_wickets,
         required this.team2_score,
         required this.team2_wickets,
-        required this.overs
+        required this.team1_overs,
+        required this.team2_overs
       });
 
   factory LiveNowMatchModel.fromJson(Map<String, dynamic> json) {
@@ -109,7 +112,8 @@ class LiveNowMatchModel {
         team1_wickets: int.parse(json['team1_wickets']??"0"),
         team2_score: int.parse(json['team2_score']??"0"),
         team2_wickets: int.parse(json['team2_wickets']??"0"),
-        overs: double.parse(json['overs']??"0.0")
+        team1_overs: double.parse(json['team1_overs']??"0.0"),
+        team2_overs: double.parse(json['team2_overs']??"0.0")
 
     );
   }

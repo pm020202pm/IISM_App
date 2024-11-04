@@ -8,7 +8,7 @@ class CopyrightFooter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: customText("© 2024 Inter-IIT Sports Meet. All rights reserved.", 12, FontWeight.normal, dark? Colors.grey.shade100: Colors.grey.shade600, 1),
+      child: customText("© 2024 Inter-IIT Sports Meet. All rights reserved.", 12, FontWeight.normal, dark? Colors.grey.shade100: Colors.grey.shade700, 1),
     );
   }
 }

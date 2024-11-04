@@ -39,14 +39,12 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
       final response = await http.get(Uri.parse(apiUrl));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        // setState(() {
-          _liveMatchesLength[0] = data['data'][0][1];
-          _liveMatchesLength[1] = data['data'][1][1];
-          _liveMatchesLength[2] = data['data'][2][1];
-          _liveMatchesLength[3] = data['data'][3][1];
-          _liveMatchesLength[4] = data['data'][4][1];
-          _liveMatchesLength[5] = data['data'][5][1];
-        // });
+        _liveMatchesLength[0] = data['data'][0][1];
+        _liveMatchesLength[1] = data['data'][1][1];
+        _liveMatchesLength[2] = data['data'][2][1];
+        _liveMatchesLength[3] = data['data'][3][1];
+        _liveMatchesLength[4] = data['data'][4][1];
+        _liveMatchesLength[5] = data['data'][5][1];
         String _chipSportValue = chipSportValue;
         if(_liveMatchesLength[0]>0){
           _chipSportValue = "Cricket";

@@ -6,8 +6,7 @@ import 'package:iism/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../HomePage/widgets/ConnectWithUs.dart';
 
-Widget customText(String text, double fontSize, FontWeight fontWeight,
-    Color color, double? height) {
+Widget customText(String text, double fontSize, FontWeight fontWeight, Color color, double? height) {
   return Text(text,
       style: TextStyle(
         fontSize: fontSize,

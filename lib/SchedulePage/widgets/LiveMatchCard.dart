@@ -115,7 +115,7 @@ class LiveMatchCard extends StatelessWidget {
           children: [
             customText('${match.team1_score.toString()}/${match.team1_wickets.toString()}', 16, FontWeight.w600, Colors.grey.shade700, 1),
             const SizedBox(height: 5),
-            customText('${match.overs.toString()}/20', 11, FontWeight.w600, Colors.grey.shade700, 1.5),
+            customText('${match.team1_overs.toString()}/20', 11, FontWeight.w600, Colors.grey.shade700, 1.5),
           ],
         ),
         const SizedBox(width: 10,),
@@ -126,7 +126,7 @@ class LiveMatchCard extends StatelessWidget {
           children: [
             customText('${match.team2_score.toString()}/${match.team2_wickets.toString()}', 16, FontWeight.w600, Colors.grey.shade700, 1),
             const SizedBox(height: 5),
-            customText('${match.overs.toString()}/20', 11, FontWeight.w600, Colors.grey.shade700, 1.5),
+            customText('${match.team2_overs.toString()}/20', 11, FontWeight.w600, Colors.grey.shade700, 1.5),
           ],
         ),
       ],

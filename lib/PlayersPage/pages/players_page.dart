@@ -174,13 +174,13 @@ class _PlayersPageState extends State<PlayersPage> {
               }
               return false;
             },
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 1, // 2 items per row
-                crossAxisSpacing: 0.0, // Spacing between columns
-                mainAxisSpacing: 5.0,  // Spacing between rows
-                childAspectRatio: 4,
-              ),
+            child: ListView.builder(
+              // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              //   crossAxisCount: 1, // 2 items per row
+              //   crossAxisSpacing: 0.0, // Spacing between columns
+              //   mainAxisSpacing: 5.0,  // Spacing between rows
+              //   childAspectRatio: 4,
+              // ),
               padding: const EdgeInsets.all(8.0),
               itemCount: _players.length + (_hasMore ? 1 : 0),
               itemBuilder: (context, index) {

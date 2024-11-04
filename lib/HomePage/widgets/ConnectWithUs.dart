@@ -6,7 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 class ConnectWithUs extends StatelessWidget {
   ConnectWithUs({super.key});
-  double iconSize = 30;
+  double iconSize = 25;
   @override
   Widget build(BuildContext context) {
     return Row(

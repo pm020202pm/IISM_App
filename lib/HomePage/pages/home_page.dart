@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:iism/HomePage/widgets/ConnectWithUs.dart';
 import 'package:iism/HomePage/widgets/CopyrightFooter.dart';
 import 'package:iism/HomePage/widgets/GalleryHighLight.dart';
+import 'package:iism/HomePage/widgets/MapWidget.dart';
 import '../../widgets/widgets.dart';
 import '../widgets/LiveNowHighlight.dart';
 import '../../utils.dart';
@@ -163,6 +164,8 @@ class _HomePageState extends State<HomePage> {
                 // const SizedBox(height: 20),
                 // const Sponsors(),
                 const SizedBox(height: 40),
+                const MapWidget(),
+                const SizedBox(height: 30),
                 Divider(color: darkYellowColor,),
                 ConnectWithUs(),
                 Divider(color: darkYellowColor,),
@@ -177,5 +180,8 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+
+
 
 
