@@ -104,7 +104,7 @@ class _HomePageState extends State<HomePage> {
         child: Container(
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [Colors.black, Colors.black,Colors.grey.shade100, yellowColor.withOpacity(0.6)],
+              colors: [Colors.black, Colors.black,Colors.grey.shade800,Colors.grey.shade200,Colors.grey.shade100, yellowColor.withOpacity(0.6)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -138,26 +138,26 @@ class _HomePageState extends State<HomePage> {
                     ),
                     customText("SPORTS MEET 2024", 30, FontWeight.bold, whiteColor, 1.2),
                     customText("IIT KANPUR", 30, FontWeight.bold, yellowColor, 1.2),
-                    const SizedBox(height: 200),
+                    const SizedBox(height: 100),
                   ],
                 ),
-                CarouselSlider(
-                  items: widgets,
-                  carouselController: carouselController,
-                  options: CarouselOptions(
-                    autoPlay: true,
-                      height: 200,
-                      scrollPhysics: const BouncingScrollPhysics(),
-                      enlargeCenterPage: true,
-                      viewportFraction: 0.84,
-                      onPageChanged: (index, reason) {
-                        // setState(() {
-                        //   currIndex = index;
-                        //   // print(currIndex);
-                        // });
-                      }),
-                ),
-                const SizedBox(height: 20,),
+                // CarouselSlider(
+                //   items: widgets,
+                //   carouselController: carouselController,
+                //   options: CarouselOptions(
+                //     autoPlay: true,
+                //       height: 200,
+                //       scrollPhysics: const BouncingScrollPhysics(),
+                //       enlargeCenterPage: true,
+                //       viewportFraction: 0.84,
+                //       onPageChanged: (index, reason) {
+                //         // setState(() {
+                //         //   currIndex = index;
+                //         //   // print(currIndex);
+                //         // });
+                //       }),
+                // ),
+                // const SizedBox(height: 20,),
                 const LiveNowHighLight(),
                 const SizedBox(height: 30),
                 GalleryHighLight(onTap: widget.onTap),

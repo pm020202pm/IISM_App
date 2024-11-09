@@ -180,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
                 // const SizedBox(height: 50,),
                 Image.asset('assets/logo/IIT Kanpur.png', height: 150, fit: BoxFit.fitHeight,),
                 const SizedBox(height: 40,),
-                Text('Login is only meant for Inter IIT Sports Meet\'24 Participants.\nOthers kindly ignore.', style: TextStyle(color: dark? Colors.white:Colors.grey.shade600, fontFamily: 'GlacialIndifference', fontSize: 12, fontWeight: FontWeight.w500,), textAlign: TextAlign.center,),
+                Text('Login is only meant for Inter IIT Sports Meet\'24 Participants.\nOthers may kindly ignore.', style: TextStyle(color: dark? Colors.white:Colors.grey.shade600, fontFamily: 'GlacialIndifference', fontSize: 12, fontWeight: FontWeight.w500,), textAlign: TextAlign.center,),
                 const SizedBox(height: 30,),
                 Padding(
                   padding: const EdgeInsets.all(8.0),

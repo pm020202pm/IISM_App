@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../utils.dart';
 import '../../widgets/widgets.dart';
@@ -41,6 +42,7 @@ class MapWidget extends StatelessWidget {
                     customMarker("Football Ground", const LatLng(26.506224127688213, 80.22945615864042)),
                     customMarker("Hockey Ground", const LatLng(26.506052791302025, 80.23025579226483)),
                     customMarker("Basketball Court", const LatLng(26.5085011950421, 80.23300520800755)),
+                    customMarker("Health Center", const LatLng(26.505202229402357, 80.2338527308791)),
                   ],
                 ),
               ],
@@ -49,6 +51,17 @@ class MapWidget extends StatelessWidget {
         ),
       ],
     );
+  }
+
+
+}
+void openGoogleMaps(double latitude, double longitude) async {
+  final googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+
+  if (await canLaunchUrl(Uri.parse(googleMapsUrl))) {
+    await launchUrl(Uri.parse(googleMapsUrl));
+  } else {
+    throw 'Could not open Google Maps';
   }
 }
 
@@ -68,7 +81,9 @@ Marker customMarker(String label, LatLng point){
               color: Colors.red.shade50,
               borderRadius: BorderRadius.circular(10.0),
             ),
-            child: Text(label, style: TextStyle(color: Colors.red.shade600, fontSize: 9.0))),
+            child: InkWell(
+              onTap: () => openGoogleMaps(point.latitude, point.longitude),
+                child: Text(label, style: TextStyle(color: Colors.red.shade600, fontSize: 9.0)))),
         const Icon(
           Icons.location_pin,
           color: Colors.red,

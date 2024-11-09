@@ -133,7 +133,7 @@ class PlayerProfilePage extends StatelessWidget {
                               const Icon(Icons.security, color: Colors.red, size: 20,),
                               const SizedBox(width: 5),
                               customText("Campus Security : ", 12, FontWeight.w800, Colors.white, 1),
-                              customText("1234567890", 12, FontWeight.w800, Colors.white, 1),
+                              customText("05126797999", 12, FontWeight.w800, Colors.white, 1),
                             ],
                           ),
                         ),
@@ -149,7 +149,7 @@ class PlayerProfilePage extends StatelessWidget {
                               const Icon(Icons.health_and_safety_outlined, color: Colors.green, size: 23,),
                               const SizedBox(width: 3),
                               customText("Health Center : ", 12, FontWeight.w800, Colors.white, 1),
-                              customText("1234567890", 12, FontWeight.w800, Colors.white, 1),
+                              customText("05126797769", 12, FontWeight.w800, Colors.white, 1),
                             ],
                           ),
                         )

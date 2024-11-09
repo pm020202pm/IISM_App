@@ -35,11 +35,12 @@ class PlayerCard extends StatelessWidget {
                           tag: playerModel.photo,
                           child: FadeInImage(
                             height: 60,
+                            width: 60,
                             fadeInDuration: const Duration(milliseconds: 100),
                             fadeOutDuration: const Duration(milliseconds: 100),
                             placeholder: const AssetImage('assets/files/shimmer.gif'),  // Placeholder image or GIF
                             image: NetworkImage(playerModel.photo),     // Actual image to be loaded
-                            fit: BoxFit.cover,                              // Adjust to your layout needs
+                            fit: BoxFit.cover,
                             placeholderFit: BoxFit.cover,                   // Adjust placeholder fit
                             )
                       )
