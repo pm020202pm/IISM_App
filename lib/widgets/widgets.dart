@@ -179,7 +179,13 @@ void enlargeImg(
 }
 
 void enlargeCoreTeamCard(BuildContext context, dynamic data) {
+  String instagramUrl = data['Instagram'];
+  String facebookUrl = data['Facebook'];
+  String linkedinUrl = data['Linkedin'];
   List<String> names = splitName(data['Name']);
+  print(instagramUrl);
+  print(facebookUrl);
+  print(linkedinUrl);
   double iconSize = 25;
   showDialog(
       context: context,
@@ -260,13 +266,11 @@ void enlargeCoreTeamCard(BuildContext context, dynamic data) {
                             child: InkWell(
                               onTap: () {
                                 launchUrl(
-                                    Uri.parse(
-                                        'https://www.instagram.com/interiit_sports2024/'),
+                                    Uri.parse(instagramUrl),
                                     mode: LaunchMode.externalApplication);
                               },
                               child: GradientIcon(
-                                icon: FontAwesomeIcons
-                                    .instagram, // Use FontAwesome icon
+                                icon: FontAwesomeIcons.instagram, // Use FontAwesome icon
                                 size: iconSize, // Set the size of the icon
                                 gradient: const LinearGradient(
                                   colors: [
@@ -284,11 +288,12 @@ void enlargeCoreTeamCard(BuildContext context, dynamic data) {
                           const SizedBox(
                             width: 11,
                           ),
-                          mediaIcons(FontAwesomeIcons.facebook, Colors.blue, 25, ""),
+                          if(names[0]=='priyanshu') mediaIcons(FontAwesomeIcons.github, Colors.black, 25, facebookUrl),
+                          if(facebookUrl!='na' && names[0]!='priyanshu') mediaIcons(FontAwesomeIcons.facebook, Colors.blue, 25, facebookUrl),
                           const SizedBox(
                             width: 11,
                           ),
-                          mediaIcons(FontAwesomeIcons.linkedin, Colors.blue.shade800, 25, ""),
+                          if(linkedinUrl!='na') mediaIcons(FontAwesomeIcons.linkedin, Colors.blue.shade800, 25, linkedinUrl),
                         ],
                       )
                     ],
