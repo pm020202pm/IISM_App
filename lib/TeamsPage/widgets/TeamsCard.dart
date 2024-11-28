@@ -10,6 +10,8 @@ class TeamsCard extends StatelessWidget {
   final dynamic data;
   @override
   Widget build(BuildContext context) {
+    print("data");
+    print(data);
     List<String> names = splitName(data['Name']);
     return InkWell(
       onTap: (){

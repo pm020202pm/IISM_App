@@ -30,7 +30,7 @@ class _TeamsPageState extends State<TeamsPage> {
       if (sheet == null) continue;
       for (int rowIndex = 1; rowIndex < sheet.maxRows; rowIndex++) {
         Map<String, dynamic> dataMap = {};
-        for (int colIndex = 0; colIndex < 4; colIndex++) {
+        for (int colIndex = 0; colIndex < 7; colIndex++) {
           var cellValue = sheet.rows[rowIndex][colIndex]?.value;
           String header = sheet.rows[0][colIndex]?.value.toString() ?? 'Column_$colIndex';
           if(header!='Date') {
