@@ -86,8 +86,8 @@ class PlayerProfilePage extends StatelessWidget {
                               Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  octagonalButton(" Edit ",12, 12,Colors.purple.shade400, Colors.purple.shade800,(){}),
-                                  const SizedBox(width: 10),
+                                  // octagonalButton(" Edit ",12, 12,Colors.purple.shade400, Colors.purple.shade800,(){}),
+                                  // const SizedBox(width: 10),
                                   octagonalButton("Logout",12,12,Colors.red.shade400, Colors.red.shade700, () async {
                                     await logout().then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const DashBoard(index: 5))));
                                   }),
@@ -100,63 +100,63 @@ class PlayerProfilePage extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10,),
-                Container(
-                  width: 290,
-                  decoration: BoxDecoration(
-                    color: dark? Colors.black : blueColor,
-                    borderRadius: BorderRadius.circular(25),
-                    boxShadow: [
-                      BoxShadow(
-                        color: dark? Colors.green.shade900 :blueColor.withOpacity(0.4),
-                        spreadRadius: 2,
-                        blurRadius: 4,
-                        offset: const Offset(0, 1),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      // crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: darkBlueColor,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.security, color: Colors.red, size: 20,),
-                              const SizedBox(width: 5),
-                              customText("Campus Security : ", 12, FontWeight.w800, Colors.white, 1),
-                              customText("05126797999", 12, FontWeight.w800, Colors.white, 1),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Container(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: darkBlueColor,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.health_and_safety_outlined, color: Colors.green, size: 23,),
-                              const SizedBox(width: 3),
-                              customText("Health Center : ", 12, FontWeight.w800, Colors.white, 1),
-                              customText("05126797769", 12, FontWeight.w800, Colors.white, 1),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
+                // const SizedBox(height: 10,),
+                // Container(
+                //   width: 290,
+                //   decoration: BoxDecoration(
+                //     color: dark? Colors.black : blueColor,
+                //     borderRadius: BorderRadius.circular(25),
+                //     boxShadow: [
+                //       BoxShadow(
+                //         color: dark? Colors.green.shade900 :blueColor.withOpacity(0.4),
+                //         spreadRadius: 2,
+                //         blurRadius: 4,
+                //         offset: const Offset(0, 1),
+                //       ),
+                //     ],
+                //   ),
+                //   child: Padding(
+                //     padding: const EdgeInsets.all(10.0),
+                //     child: Column(
+                //       mainAxisSize: MainAxisSize.min,
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       // crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         Container(
+                //           padding: const EdgeInsets.all(10),
+                //           decoration: BoxDecoration(
+                //             color: darkBlueColor,
+                //             borderRadius: BorderRadius.circular(20),
+                //           ),
+                //           child: Row(
+                //             children: [
+                //               const Icon(Icons.security, color: Colors.red, size: 20,),
+                //               const SizedBox(width: 5),
+                //               customText("Campus Security : ", 12, FontWeight.w800, Colors.white, 1),
+                //               customText("05126797999", 12, FontWeight.w800, Colors.white, 1),
+                //             ],
+                //           ),
+                //         ),
+                //         const SizedBox(height: 10),
+                //         Container(
+                //           padding: const EdgeInsets.all(10),
+                //           decoration: BoxDecoration(
+                //             color: darkBlueColor,
+                //             borderRadius: BorderRadius.circular(20),
+                //           ),
+                //           child: Row(
+                //             children: [
+                //               const Icon(Icons.health_and_safety_outlined, color: Colors.green, size: 23,),
+                //               const SizedBox(width: 3),
+                //               customText("Health Center : ", 12, FontWeight.w800, Colors.white, 1),
+                //               customText("05126797769", 12, FontWeight.w800, Colors.white, 1),
+                //             ],
+                //           ),
+                //         )
+                //       ],
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),

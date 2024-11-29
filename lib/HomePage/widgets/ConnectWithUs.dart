@@ -35,8 +35,6 @@ class ConnectWithUs extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 11,),
-        Icon(FontAwesomeIcons.facebook, color: Colors.blue, size: iconSize,),
-        const SizedBox(width: 10,),
         InkWell(
           onTap: (){
             launchUrl(
@@ -44,7 +42,7 @@ class ConnectWithUs extends StatelessWidget {
                 mode: LaunchMode.externalApplication
             );
           },
-            child: Icon(FontAwesomeIcons.xTwitter, color: Colors.grey.shade200, size: iconSize,)),
+            child: Icon(FontAwesomeIcons.xTwitter, color: Colors.black, size: iconSize,)),
         const SizedBox(width: 8,),
         InkWell(
           onTap:(){

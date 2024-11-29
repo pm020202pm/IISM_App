@@ -18,7 +18,7 @@ class MapWidget extends StatelessWidget {
           child: customText("Campus Map", 28, FontWeight.w600, dark? Colors.grey.shade100:Colors.grey.shade900, 1),
         ),
         Container(
-          height: 210,
+          height: 190,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20.0),
             // border: Border.all(color: Colors.black),
@@ -28,21 +28,24 @@ class MapWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.0),
             child: FlutterMap(
               options: const MapOptions(
-                initialCenter: LatLng(26.51120106373149, 80.23436940129587), // Initial map center
-                initialZoom: 14.2,
+                initialCenter: LatLng(26.5085011950421, 80.23300520800755), // Initial map center
+                initialZoom: 14.8,
+                minZoom: 14,
+                maxZoom: 16.2,
               ),
               children: [
                 TileLayer(
-                  urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                  subdomains: const ['a', 'b', 'c'],
+                  urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
                 ),
                 MarkerLayer(
                   markers: [
-                    customMarker("Main Sports Ground", const LatLng(26.509565227578577, 80.23389602086334)),
+                    customMarker("Cricket Ground", const LatLng(26.509565227578577, 80.23389602086334)),
+                    customMarker("Volleyball Court", const LatLng(26.508439967844815, 80.23187591524409)),
                     customMarker("Football Ground", const LatLng(26.506224127688213, 80.22945615864042)),
                     customMarker("Hockey Ground", const LatLng(26.506052791302025, 80.23025579226483)),
                     customMarker("Basketball Court", const LatLng(26.5085011950421, 80.23300520800755)),
                     customMarker("Health Center", const LatLng(26.505202229402357, 80.2338527308791)),
+                    customMarker("Lawn Tennis Court", const LatLng(26.509668447573063, 80.23009338292336)),
                   ],
                 ),
               ],
@@ -75,15 +78,15 @@ Marker customMarker(String label, LatLng point){
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
-            height: 20.0,
-            padding: const EdgeInsets.all(4.0),
+            padding: const EdgeInsets.all(3.0),
             decoration: BoxDecoration(
-              color: Colors.red.shade50,
+              border: Border.all(color: Colors.blue.shade100),
+              color: Colors.blue.shade50,
               borderRadius: BorderRadius.circular(10.0),
             ),
             child: InkWell(
               onTap: () => openGoogleMaps(point.latitude, point.longitude),
-                child: Text(label, style: TextStyle(color: Colors.red.shade600, fontSize: 9.0)))),
+                child: Text(label, style: TextStyle(color: Colors.blue.shade600, fontSize: 9.0)))),
         const Icon(
           Icons.location_pin,
           color: Colors.red,

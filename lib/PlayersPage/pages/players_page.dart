@@ -26,7 +26,7 @@ class _PlayersPageState extends State<PlayersPage> {
 
 
   int _page = 1;
-  final int _limit = 8; // Default limit
+  final int _limit = 4; // Default limit
   String chipSportValue = "Cricket";
 
   @override
@@ -48,9 +48,9 @@ class _PlayersPageState extends State<PlayersPage> {
   Future<void> _fetchPlayers() async {
     if (_isLoading || !_hasMore) return;
 
-    setState(() {
-      _isLoading = true;
-    });
+    // setState(() {
+    //   _isLoading = true;
+    // });
     final String apiUrl = '$apiBaseUrl/players?page=$_page&limit=$_limit&search=$_searchQuery';
     try {
       final response = await http.get(Uri.parse(apiUrl));
@@ -70,9 +70,9 @@ class _PlayersPageState extends State<PlayersPage> {
       errorSnackMsg('Error fetching players list');
     }
 
-    setState(() {
-      _isLoading = false;
-    });
+    // setState(() {
+    //   _isLoading = false;
+    // });
   }
 
   @override
@@ -139,7 +139,6 @@ class _PlayersPageState extends State<PlayersPage> {
                                       isSearching = !isSearching;
                                       searchController.clear();
                                     });
-
                                   },
                                   icon: Icons.close_rounded,
                                   iconColor: Colors.red,
@@ -185,7 +184,7 @@ class _PlayersPageState extends State<PlayersPage> {
               itemCount: _players.length + (_hasMore ? 1 : 0),
               itemBuilder: (context, index) {
                 if (index >= _players.length) {
-                  return const Center(child: CircularProgressIndicator());
+                  return Container();
                 }
                 var player = _players[index];
                 ParticipantModel playerModel = ParticipantModel.fromJson(player);
