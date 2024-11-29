@@ -12,7 +12,7 @@ Widget verticalLogoWithCollegeName(String collegeName, double height, double wid
             padding: const EdgeInsets.all(5.0),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(70),
+              borderRadius: BorderRadius.circular(20),
             ),
             child: Image.asset('assets/logo/$collegeName.png', width: width, height: height)
         ),

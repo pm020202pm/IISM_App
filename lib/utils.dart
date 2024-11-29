@@ -27,3 +27,13 @@ Map<String, String> sportsTableMap = {
   'Hockey': 'hockey',
   'Table Tennis': 'tabletennis',
 };
+
+
+Map<String, String> locationVenueMap = {
+  'cricket': "https://maps.app.goo.gl/FpTCAMRcANB4gZPA6",
+  'volleyball': "https://maps.app.goo.gl/N1Wifb1BHsvNWGR8A",
+  'basketball': 'https://maps.app.goo.gl/6sn6m9muKxZHhYoN7',
+  'lawn tennis': "https://maps.app.goo.gl/YLZz5zWsPFpyZ6wR8",
+  'hockey': "https://maps.app.goo.gl/uHzKub8eMjU5ELnKA",
+  'table tennis': "https://maps.app.goo.gl/mS963wEW1xnDaKxb8",
+};
