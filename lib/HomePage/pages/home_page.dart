@@ -40,14 +40,14 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: dark ? Colors.black : Colors.grey.shade300,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(800),
+        preferredSize: const Size.fromHeight(950),
         child: AnimatedContainer(
-          height: expanded? 800:160,
-          decoration: const BoxDecoration(
+          height: expanded? 950:160,
+          decoration: BoxDecoration(
             color: Colors.black,
             borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(20),
-              bottomRight: Radius.circular(20),
+              bottomLeft: Radius.circular(expanded? 0: 20),
+              bottomRight: Radius.circular(expanded? 0: 20),
             ),
             boxShadow: [
               BoxShadow(

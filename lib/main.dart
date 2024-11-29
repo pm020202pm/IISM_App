@@ -5,6 +5,7 @@ import 'package:iism/firebase_options.dart';
 import 'package:flutter/services.dart' show ByteData, DeviceOrientation, SystemChrome, rootBundle;
 import 'package:excel/excel.dart' as exl;
 import 'package:iism/DashBoard/pages/dashboard.dart';
+import 'package:in_app_update/in_app_update.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,6 +28,19 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
+  void checkForUpdates() async {
+    try {
+      AppUpdateInfo updateInfo = await InAppUpdate.checkForUpdate();
+      if (updateInfo.updateAvailability == UpdateAvailability.updateAvailable &&
+          updateInfo.immediateUpdateAllowed) {
+        // Trigger force update
+        InAppUpdate.performImmediateUpdate();
+      }
+    } catch (e) {
+      print("Error checking for updates: $e");
+    }
+  }
 
   Future<void> loadExcelData() async {
     String category = 'teams';
@@ -62,6 +76,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     // loadExcelData();
     // fetchFieldData();
+    checkForUpdates();
     super.initState();
   }
 

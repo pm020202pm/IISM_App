@@ -26,7 +26,7 @@ class _PlayersPageState extends State<PlayersPage> {
 
 
   int _page = 1;
-  final int _limit = 4; // Default limit
+  final int _limit = 10; // Default limit
   String chipSportValue = "Cricket";
 
   @override
