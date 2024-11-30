@@ -15,7 +15,7 @@ class GalleryPage extends StatefulWidget {
 class _GalleryPageState extends State<GalleryPage> {
   // final TextEditingController _searchController = TextEditingController();
   final String _searchQuery = "";
-  int _itemsPerPage = 15;
+  int _itemsPerPage = 25;
   final String _sortCriteria = 'Sport';
   DocumentSnapshot? _lastDocument;
   bool _hasMore = true;
