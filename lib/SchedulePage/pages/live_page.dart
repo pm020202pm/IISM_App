@@ -170,8 +170,7 @@ class _LivePageState extends State<LivePage> {
                         if (widget.match.sport == "table tennis" ||
                             widget.match.sport == "lawn tennis" ||
                             widget.match.sport == "volleyball")
-                          setScore("1", widget.match.set1Score1.toString(),
-                              widget.match.set1Score2.toString()),
+                          liveVolleyball(widget.match.active!),
                         if (widget.match.sport == "hockey")
                           score2(widget.match.team1Goals.toString(),
                               widget.match.team2Goals.toString()),
@@ -220,6 +219,18 @@ class _LivePageState extends State<LivePage> {
           );
         },
       ),
+    );
+  }
+  Widget liveVolleyball(String active){
+    String scoreTeam1 = (active=='1')? widget.match.set1Score1 : (active=='2')? widget.match.set2Score1 : (active=='3')? widget.match.set3Score1 : (active=='4')? widget.match.set4Score1 : widget.match.set5Score1;
+    String scoreTeam2 = (active=='1')? widget.match.set1Score2 : (active=='2')? widget.match.set2Score2 : (active=='3')? widget.match.set3Score2 : (active=='4')? widget.match.set4Score2 : widget.match.set5Score2;
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: setScore(active,scoreTeam1 , scoreTeam2),
+        ),
+      ],
     );
   }
 }

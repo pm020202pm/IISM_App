@@ -34,7 +34,7 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
   List<bool> isLoading = [false, false, false];
   List<String> chipValue= ['Cricket', 'All', 'Cricket'];
 
-  final int _limit = 6;
+  final int _limit = 10;
   String _searchQuery = '';
   double tabPadding = 10;
 

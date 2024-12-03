@@ -149,7 +149,7 @@ class _HomePageState extends State<HomePage> {
                     const LiveNowHighLight(),
                     const SizedBox(height: 30),
                     GalleryHighLight(onTap: widget.onTap),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 30),
                     const MapWidget(),
                     const SizedBox(height: 30),
                     const ContactUs(),

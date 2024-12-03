@@ -95,13 +95,13 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
             livenowHeight = 0;
           }
           else if(len == 1){
-            livenowHeight = 45;
+            livenowHeight = 46;
           }
           else if(len == 2){
-            livenowHeight = 90;
+            livenowHeight = 92;
           }
           else{
-            livenowHeight = 135;
+            livenowHeight = 138;
           }
         });
       } else {
