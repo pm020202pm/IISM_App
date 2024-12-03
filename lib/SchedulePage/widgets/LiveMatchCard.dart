@@ -15,7 +15,10 @@ class LiveMatchCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    // IconData category = (match.category=='Men')? Icons.male: (match.category=='Men')? Icons.female: Icons.group;
+    String? locationUrl = locationVenueMap[match.sport?.toLowerCase()];
+    String active = match.active!;
+    String? sport = match.sport?.toUpperCase();
+    String? category = match.category?.toUpperCase();
     double horizontalPadding = size.width>620? 100 :size.width>500? 50 :16;
     return InkWell(
       onTap: (){
@@ -46,7 +49,7 @@ class LiveMatchCard extends StatelessWidget {
                   margin: const EdgeInsets.all(2),
                   color: Colors.grey.shade200,
                   child: Padding(
-                    padding: const EdgeInsets.all(12.0),
+                    padding: const EdgeInsets.only(left: 5, right: 5, top: 24, bottom: 8),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -54,23 +57,13 @@ class LiveMatchCard extends StatelessWidget {
                         verticalLogoWithCollegeName(match.team1!, 45, 45),
                         Column(
                           children: [
-                            if(match.sport=='cricket')
-                              liveCricket(),
-                            // Volleyball, basketball, table tennis, lawn tennis
-                            if(match.sport=='volleyball' || match.sport == 'basketball' || match.sport == 'table tennis' || match.sport=='lawn tennis')
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(3.0),
-                                    child: setScore(1.toString(),match.set1Score1.toString() , match.set1Score2.toString()),
-                                  ),
-                                ],
-                              ),
-                            if(match.sport=='hockey')
-                              liveHockey(),
+                            if(match.sport=='cricket') liveCricket(),
+                            if(match.sport=='volleyball' || match.sport == 'table tennis' || match.sport=='lawn tennis') liveVolleyball(active),
+                            if(match.sport=='hockey') liveHockey(),
+                            if(match.sport=='basketball') liveBasketball(),
                             const SizedBox(height: 3,),
                             InkWell(
-                              onTap:(){openLocationUrl("https://maps.app.goo.gl/G9m3EkGGWUKzQfLk9");},
+                              onTap:(){openLocationUrl(locationUrl!);},
                               child: Row(
                                 children: [
                                   customText(match.venue!, 11, FontWeight.w600, Colors.grey.shade700, 2),
@@ -87,21 +80,29 @@ class LiveMatchCard extends StatelessWidget {
                 ),
               ),
             ),
-            ClipPath(
-              clipper: OctagonClipper3(padding: 12),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
-                color: Colors.red.shade400,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    customText('Live', 14, FontWeight.w600, whiteColor, 1),
-                  ],
+            Column(
+              children: [
+                ClipPath(
+                  clipper: OctagonClipper3(padding: 12),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+                    color: Colors.red.shade400,
+                    child: customText('Live', 14, FontWeight.w600, whiteColor, 1),
+                  ),
                 ),
-              ),
+                SizedBox(height: 3),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: Colors.green.shade300,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: customText(category!, 10, FontWeight.w600, Colors.white, 1),
+                )
+              ],
             ),
           ],
-        ),
+        )
       ),
     );
   }
@@ -143,6 +144,29 @@ class LiveMatchCard extends StatelessWidget {
         customText("VS", 18, FontWeight.w700, Colors.red.shade400, 1),
         const SizedBox(width: 15,),
         customText(match.team2_score.toString(), 18, FontWeight.w600, Colors.grey.shade700, 1),
+      ],
+    );
+  }
+  Widget liveBasketball(){
+    return Row(
+      children: [
+        customText(match.team1Score.toString(), 18, FontWeight.w600, Colors.grey.shade700, 1),
+        const SizedBox(width: 15,),
+        customText("VS", 18, FontWeight.w700, Colors.red.shade400, 1),
+        const SizedBox(width: 15,),
+        customText(match.team2Score.toString(), 18, FontWeight.w600, Colors.grey.shade700, 1),
+      ],
+    );
+  }
+  Widget liveVolleyball(String active){
+    String scoreTeam1 = (active=='1')? match.set1Score1 : (active=='2')? match.set2Score1 : (active=='3')? match.set3Score1 : (active=='4')? match.set4Score1 : match.set5Score1;
+    String scoreTeam2 = (active=='1')? match.set1Score2 : (active=='2')? match.set2Score2 : (active=='3')? match.set3Score2 : (active=='4')? match.set4Score2 : match.set5Score2;
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(3.0),
+          child: setScore(active,scoreTeam1 , scoreTeam2),
+        ),
       ],
     );
   }

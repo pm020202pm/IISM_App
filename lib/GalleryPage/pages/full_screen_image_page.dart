@@ -4,13 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FullScreenImageViewer extends StatefulWidget {
   final List<QueryDocumentSnapshot> initialDocs;
   final int initialIndex;
-  final String sortCriteria;
 
   const FullScreenImageViewer({
     super.key,
     required this.initialDocs,
-    required this.initialIndex,
-    required this.sortCriteria,
+    required this.initialIndex
   });
 
   @override
@@ -41,7 +39,6 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
 
     Query query = FirebaseFirestore.instance
         .collection('gallery')
-        .orderBy(widget.sortCriteria)
         .startAfterDocument(_lastDocument!)
         .limit(15);
 

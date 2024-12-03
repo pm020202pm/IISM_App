@@ -14,7 +14,7 @@ Widget verticalLogoWithCollegeName(String collegeName, double height, double wid
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
             ),
-            child: Image.asset('assets/logo/$collegeName.png', width: width, height: height)
+            child: Image.asset('assets/logo/${collegeName.toUpperCase()}.png', width: width, height: height)
         ),
         customText(collegeName.toUpperCase(), 10, FontWeight.w900, Colors.grey.shade800,1.9),
       ],

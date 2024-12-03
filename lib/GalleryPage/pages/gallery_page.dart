@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:lottie/lottie.dart';
 import '../../utils.dart';
 import '../../widgets/widgets.dart';
 import 'full_screen_image_page.dart';
@@ -13,10 +14,7 @@ class GalleryPage extends StatefulWidget {
 }
 
 class _GalleryPageState extends State<GalleryPage> {
-  // final TextEditingController _searchController = TextEditingController();
-  final String _searchQuery = "";
   int _itemsPerPage = 15;
-  final String _sortCriteria = 'Sport';
   DocumentSnapshot? _lastDocument;
   bool _hasMore = true;
   bool _isLoading = false;
@@ -34,8 +32,7 @@ class _GalleryPageState extends State<GalleryPage> {
       MaterialPageRoute(
         builder: (context) => FullScreenImageViewer(
           initialDocs: _scheduleDocs,
-          initialIndex: index,
-          sortCriteria: _sortCriteria,
+          initialIndex: index
         ),
       ),
     );
@@ -48,37 +45,12 @@ class _GalleryPageState extends State<GalleryPage> {
       _isLoading = true;
     });
 
-    Query query = FirebaseFirestore.instance.collection('gallery').orderBy(_sortCriteria).limit(_itemsPerPage);
+    Query query = FirebaseFirestore.instance.collection('gallery').limit(_itemsPerPage);
     if (_lastDocument != null) {
       query = query.startAfterDocument(_lastDocument!);
     }
 
     List<QueryDocumentSnapshot> mergedDocs = [];
-
-    if (_searchQuery.isNotEmpty) {
-      Query query1 = query.where('Sport', isGreaterThanOrEqualTo: _searchQuery).where('Sport', isLessThanOrEqualTo: '$_searchQuery\uf8ff');
-      Query query2 = query.where('Caption', isGreaterThanOrEqualTo: _searchQuery).where('Caption', isLessThanOrEqualTo: '$_searchQuery\uf8ff');
-
-      QuerySnapshot querySnapshot1 = await query1.get();
-      QuerySnapshot querySnapshot2 = await query2.get();
-
-      Set<String> documentIds = {};
-
-      for (var doc in querySnapshot1.docs) {
-        if (!documentIds.contains(doc.id)) {
-          mergedDocs.add(doc);
-          documentIds.add(doc.id);
-        }
-      }
-
-      for (var doc in querySnapshot2.docs) {
-        if (!documentIds.contains(doc.id)) {
-          mergedDocs.add(doc);
-          documentIds.add(doc.id);
-        }
-      }
-    }
-
     if (mergedDocs.isNotEmpty) {
       _lastDocument = mergedDocs.last;
       _scheduleDocs.addAll(mergedDocs);
@@ -119,62 +91,6 @@ class _GalleryPageState extends State<GalleryPage> {
                 children: [
                   const SizedBox(width: 16,),
                   pageTitleText("Gallery"),
-                  const Spacer(),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      InkWell(
-                        onTap: (){
-                          setState(() {
-                            gridCount = 3;
-                          });
-                        },
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Container(
-                              alignment: Alignment.center,
-                              height: 20,
-                              width: 20,
-                              decoration: BoxDecoration(
-                                // color: Colors.red,
-                                borderRadius: BorderRadius.circular(3),
-                                border: Border.all(color: gridCount==3? blueColor: Colors.grey, width: 2),
-                              ),
-                            ),
-                            Icon(Icons.grid_3x3, color: gridCount==3? blueColor: Colors.grey,),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      InkWell(
-                        onTap: (){
-                          setState(() {
-                            gridCount = 4;
-                            _itemsPerPage = 30;
-                            _fetchMoreData();
-                          });
-                        },
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            Container(
-                              alignment: Alignment.center,
-                              height: 24,
-                              width: 24,
-                              decoration: BoxDecoration(
-                                // color: Colors.red,
-                                borderRadius: BorderRadius.circular(3),
-                                border: Border.all(color: gridCount==4? blueColor: Colors.grey, width: 2),
-                              ),
-                            ),
-                            Icon(Icons.grid_4x4, color: gridCount==4? blueColor: Colors.grey, ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(width: 16,),
                 ],
               ),
             ),
@@ -197,7 +113,9 @@ class _GalleryPageState extends State<GalleryPage> {
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: MasonryGridView.count(
+              child: (_scheduleDocs.isEmpty)
+              ? Center(child: Lottie.asset('assets/lottie/loading/1.json', width: 300),)
+              : MasonryGridView.count(
                 crossAxisCount: gridCount,
                 itemCount: _scheduleDocs.length + (_hasMore ? 1 : 0),
                 itemBuilder: (context, index) {

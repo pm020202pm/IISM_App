@@ -120,7 +120,7 @@ void successSnackMsg(String message) {
 }
 
 void enlargeImg(
-    BuildContext context, double width, String imgUrl, Widget widget) {
+    BuildContext context, double width,double height, String imgUrl, Widget widget) {
   showDialog(
       context: context,
       builder: (BuildContext context) {

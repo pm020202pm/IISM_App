@@ -31,7 +31,7 @@ class MapWidget extends StatelessWidget {
                 initialCenter: LatLng(26.5085011950421, 80.23300520800755), // Initial map center
                 initialZoom: 14.8,
                 minZoom: 14,
-                maxZoom: 16.2,
+                maxZoom: 16.8,
               ),
               children: [
                 TileLayer(

@@ -6,9 +6,7 @@ class ParticipantModel {
   String sport;
   String team;
   String id_generation;
-  String contact;
   String hall_name;
-  String photo;
 
   ParticipantModel({
     required this.id,
@@ -18,16 +16,16 @@ class ParticipantModel {
     required this.sport,
     required this.team,
     required this.id_generation,
-    required this.contact,
-    required this.hall_name,
-    required this.photo,
+    required this.hall_name
   });
 
   factory ParticipantModel.fromJson(Map<String, dynamic> json) {
-    print("json['id'].runtimeType");
-    print(json['id'].runtimeType);
-    print("json['hall_name'].runtimeType");
-    print(json['hall_name'].runtimeType);
+    String email = (json['email']??"");
+    String team = json['team']??"";
+    String collegeFolder = team.split(" ")[1].toLowerCase();
+    String qrUrl = "https://firebasestorage.googleapis.com/v0/b/iism2024.appspot.com/o/QR%2F$collegeFolder%2F${email}_qrcode.png?alt=media";
+
+
     return ParticipantModel(
       id: (json['id']??0).toString(),
       name: json['name']??"",
@@ -35,10 +33,8 @@ class ParticipantModel {
       gender: json['gender']??"",
       sport: json['sport']??"",
       team: json['team']??"",
-      id_generation: json['id_generation']??"",
-      contact: json['contact']??"",
-      hall_name: (json['hall_name']??0).toString(),
-      photo: json['photo']??""
+      id_generation: qrUrl,
+      hall_name: (json['hall_name']??0).toString()
     );
   }
 }

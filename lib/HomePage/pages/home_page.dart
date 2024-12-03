@@ -20,7 +20,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   // bool expanded = true;
-  int animationDuration = 1000;
+  int animationDuration = 700;
   @override
   void initState() {
     super.initState();
@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
               bottomLeft: Radius.circular(expanded? 0: 20),
               bottomRight: Radius.circular(expanded? 0: 20),
             ),
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
                 color: Colors.grey,
                 blurRadius: 10,
@@ -170,3 +170,5 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+

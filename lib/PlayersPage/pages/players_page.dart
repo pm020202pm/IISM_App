@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:iism/PlayersPage/widgets/PlayerCard.dart';
-import 'package:iism/ProfilePage/models/ParticipantModel.dart';
 import 'package:iism/api.dart';
 import 'package:iism/utils.dart';
 import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
 import '../../SchedulePage/pages/schedule_page.dart';
+import '../../SchedulePage/widgets/widgets.dart';
 import '../../widgets/widgets.dart';
+import '../models/PlayerModel.dart';
 
 class PlayersPage extends StatefulWidget {
   const PlayersPage({super.key});
@@ -18,15 +20,16 @@ class PlayersPage extends StatefulWidget {
 
 class _PlayersPageState extends State<PlayersPage> {
   final TextEditingController searchController = TextEditingController();
-  String _searchQuery = "";
-  bool _hasMore = true;
-  bool _isLoading = false;
-  final List<dynamic> _players = [];
+  String searchQuery = "";
+  bool hasMore = true;
+  bool isLoading = false;
+  String chipValue = "All";
+  final List<dynamic> players = [];
   bool isSearching = false;
 
 
-  int _page = 1;
-  final int _limit = 10; // Default limit
+  int page = 1;
+  final int limit = 10; // Default limit
   String chipSportValue = "Cricket";
 
   @override
@@ -35,44 +38,85 @@ class _PlayersPageState extends State<PlayersPage> {
     _fetchPlayers();
   }
 
-  Future<void> searchFun(String value) async {
+  Future<void> onChipTap(String sport) async {
     setState(() {
-      _searchQuery = value;
-      _players.clear();
-      _page = 1;
-      _hasMore = true;
+      chipValue = sport;
+      players.clear();
+      page = 1;
+      hasMore = true;
     });
     await _fetchPlayers();
   }
 
-  Future<void> _fetchPlayers() async {
-    if (_isLoading || !_hasMore) return;
+  Future<void> searchFun(String value) async {
+    setState(() {
+      searchQuery = value;
+      players.clear();
+      page = 1;
+      hasMore = true;
+    });
+    await _fetchPlayers();
+  }
 
-    // setState(() {
-    //   _isLoading = true;
-    // });
-    final String apiUrl = '$apiBaseUrl/players?page=$_page&limit=$_limit&search=$_searchQuery';
+  // Future<void> _fetchPlayers() async {
+  //   print("_hasMore");
+  //   print(hasMore);
+  //   print(page);
+  //   print(page);
+  //   if (!hasMore) return;
+  //   String sport = (chipValue=="All")? "":chipValue.toLowerCase();
+  //   final String apiUrl = '$apiBaseUrl/players?page=$page&limit=$limit&search=$searchQuery&sport=$sport';
+  //   print("apiUrl");
+  //   print(apiUrl);
+  //   try {
+  //     final response = await http.get(Uri.parse(apiUrl));
+  //     if (response.statusCode == 200) {
+  //       final data = json.decode(response.body);
+  //       setState(() {
+  //         players.addAll(data['players']);
+  //         page++;
+  //         if (data['players'].length < limit) {
+  //           hasMore = false;
+  //         }
+  //       });
+  //     } else {
+  //       errorSnackMsg('Failed to load matches');
+  //     }
+  //   } catch (e) {
+  //     errorSnackMsg('Error fetching players list');
+  //   }
+  //   print("_players.length");
+  //   print(players.length);
+  // }
+  Future<void> _fetchPlayers() async {
+    if (isLoading|| !hasMore) return;
+    setState(() {
+      isLoading = true;
+    });
+    String sport = (chipValue=="All")? "":chipValue.toLowerCase();
+    final String apiUrl = '$apiBaseUrl/players?page=$page&limit=$limit&search=$searchQuery&sport=$sport';
+
+    // final String apiUrl = '$apiBaseUrl/${apiUrls[currentIndex]}?page=${pages[currentIndex]}&limit=$_limit&sortBy=time&order=ASC&search=$_searchQuery&sportTableName=$sportTableName';
     try {
       final response = await http.get(Uri.parse(apiUrl));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
-          _players.addAll(data['players']);
-          _page++;
-          if (data['players'].length < _limit) {
-            _hasMore = false;
+          players.addAll(data['players']);
+          page++;
+          if (data['players'].length < limit) {
+            hasMore = false;
           }
         });
       } else {
-        errorSnackMsg('Failed to load matches');
+        print('Failed to load matches');
       }
     } catch (e) {
-      errorSnackMsg('Error fetching players list');
+      print('Error fetching matches: $e');
     }
-
-    // setState(() {
-    //   _isLoading = false;
-    // });
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -158,39 +202,87 @@ class _PlayersPageState extends State<PlayersPage> {
         ),
         body: RefreshIndicator(
           onRefresh: () async {
-            // setState(() {
-              _players.clear();
-              _page = 1;
-              _hasMore = true;
-            // });
+            setState(() {
+              players.clear();
+              page = 1;
+              hasMore = true;
+            });
             await _fetchPlayers();
           },
-          child: NotificationListener<ScrollNotification>(
-            onNotification: (scrollInfo) {
-              if (!_isLoading && _hasMore && scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
-                _fetchPlayers();
-                return true;
-              }
-              return false;
-            },
-            child: ListView.builder(
-              // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              //   crossAxisCount: 1, // 2 items per row
-              //   crossAxisSpacing: 0.0, // Spacing between columns
-              //   mainAxisSpacing: 5.0,  // Spacing between rows
-              //   childAspectRatio: 4,
-              // ),
-              padding: const EdgeInsets.all(8.0),
-              itemCount: _players.length + (_hasMore ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index >= _players.length) {
-                  return Container();
-                }
-                var player = _players[index];
-                ParticipantModel playerModel = ParticipantModel.fromJson(player);
-                return PlayerCard(playerModel: playerModel);
-              },
-            ),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 16, bottom: 10, top: 10, right: 10),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      // if (currentIndex == 1)
+                        customChip2("All", Icons.spoke, chipValue== "All", () async {
+                          await onChipTap("All");
+                        }),
+                      const SizedBox(width: 8.0),
+                      customChip2("Cricket", Icons.sports_cricket, chipValue== "Cricket", () async {
+                        await onChipTap("Cricket");
+                      }),
+                      const SizedBox(width: 8.0),
+                      customChip2("VolleyBall", Icons.sports_volleyball, chipValue== "VolleyBall", () async {
+                        await onChipTap("VolleyBall");
+                      }),
+                      const SizedBox(width: 8.0),
+                      customChip2("BasketBall", Icons.sports_basketball, chipValue== "BasketBall", () async {
+                        await onChipTap("BasketBall");
+                      }),
+                      const SizedBox(width: 8.0),
+                      customChip2("Hockey", Icons.sports_hockey, chipValue== "Hockey", () async {
+                        await onChipTap("Hockey");
+                      }),
+                      const SizedBox(width: 8.0),
+                      customChip2("Lawn Tennis", Icons.sports_tennis, chipValue== "Lawn Tennis", () async {
+                        await onChipTap("Lawn Tennis");
+                      }),
+                      const SizedBox(width: 8.0),
+                      customChip2("Table Tennis", Icons.sports_tennis, chipValue== "Table Tennis", () async {
+                        await onChipTap("Table Tennis");
+                      }),
+                    ],
+                  ),
+                ),
+              ),
+              (players.isEmpty)
+                  ? Center(child: Lottie.asset('assets/lottie/loading/1.json', width: 300),)
+                  : Expanded(
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (ScrollNotification scrollInfo) {
+                    if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent && !isLoading) {
+                      _fetchPlayers();
+                      // return true;
+                    }
+                    return false;
+                  },
+                  child: ListView.builder(
+                    padding: const EdgeInsets.all(8.0),
+                    itemCount: players.length + (hasMore ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      if (index >= players.length) {
+                        return Container();
+                      }
+                      var player = players[index];
+                      if(index==players.length-1) {
+                        return Column(
+                          children: [
+                            PlayerCard(playerModel: PlayerModel.fromJson(player)),
+                            const SizedBox(height: 70.0),
+                          ],
+                        );
+                      }
+                      PlayerModel playerModel = PlayerModel.fromJson(player);
+                      return PlayerCard(playerModel: playerModel);
+                    },
+                  ),
+                ),
+              ),
+            ],
           ),
         )
         ,

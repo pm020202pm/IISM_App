@@ -333,8 +333,6 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
     });
   }
 
-
-
   Widget search() {
     return ClipPath(
       clipper: OctagonClipper(padding: 10),

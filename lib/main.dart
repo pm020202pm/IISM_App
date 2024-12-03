@@ -1,9 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:iism/firebase_options.dart';
-import 'package:flutter/services.dart' show ByteData, DeviceOrientation, SystemChrome, rootBundle;
-import 'package:excel/excel.dart' as exl;
+import 'package:flutter/services.dart' show DeviceOrientation, SystemChrome;
 import 'package:iism/DashBoard/pages/dashboard.dart';
 import 'package:in_app_update/in_app_update.dart';
 
@@ -38,44 +37,14 @@ class _MyAppState extends State<MyApp> {
         InAppUpdate.performImmediateUpdate();
       }
     } catch (e) {
-      print("Error checking for updates: $e");
-    }
-  }
-
-  Future<void> loadExcelData() async {
-    String category = 'teams';
-    final ByteData data = await rootBundle.load('assets/files/$category.xlsx');
-
-    final List<int> bytes = data.buffer.asUint8List();
-    final exl.Excel excel = exl.Excel.decodeBytes(bytes);
-    final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-    // Iterate through each sheet
-    for (var table in excel.tables.keys) {
-      final sheet = excel.tables[table];
-      if (sheet == null) continue;
-
-      for (int rowIndex = 1; rowIndex < sheet.maxRows; rowIndex++) {
-        Map<String, dynamic> dataMap = {};
-
-        // Iterate through each column in the row
-        for (int colIndex = 0; colIndex < sheet.maxColumns; colIndex++) {
-          var cellValue = sheet.rows[rowIndex][colIndex]?.value;
-          String header = sheet.rows[0][colIndex]?.value.toString() ?? 'Column_$colIndex';
-          if(header!='Date') {
-            dataMap[header] = cellValue.toString().toLowerCase();
-          } else {
-            dataMap[header] = cellValue.toString();
-          }
-        }
-        await firestore.collection(category).add(dataMap);
+      if (kDebugMode) {
+        print("Error checking for updates: $e");
       }
     }
   }
+
   @override
   void initState() {
-    // loadExcelData();
-    // fetchFieldData();
     checkForUpdates();
     super.initState();
   }
@@ -84,7 +53,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Inter IIT Sports',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,

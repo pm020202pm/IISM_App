@@ -148,7 +148,7 @@ class _LivePageState extends State<LivePage> {
                                   borderRadius: BorderRadius.circular(70),
                                 ),
                                 child: Image.asset(
-                                    'assets/logo/${widget.match.team1}.png',
+                                    'assets/logo/${widget.match.team1?.toUpperCase()}.png',
                                     width: 20,
                                     height: 20)),
                             const SizedBox(width: 5),
@@ -206,7 +206,7 @@ class _LivePageState extends State<LivePage> {
                                   borderRadius: BorderRadius.circular(70),
                                 ),
                                 child: Image.asset(
-                                    'assets/logo/${widget.match.team2}.png',
+                                    'assets/logo/${widget.match.team2?.toUpperCase()}.png',
                                     width: 20,
                                     height: 20)),
                           ],

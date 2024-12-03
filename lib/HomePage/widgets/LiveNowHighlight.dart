@@ -3,6 +3,7 @@ import 'package:animated_icon/animated_icon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
 import '../../SchedulePage/models/LiveMatchModel.dart';
 import '../../SchedulePage/models/MatchesModel.dart';
 import '../../api.dart';
@@ -83,7 +84,6 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
       _isLoading = true;
     });
     final String apiUrl = '$apiBaseUrl/getLiveMatches?page=1&limit=3&sortBy=time&order=ASC&search=&sportTableName=$sportTableName';
-
     try {
       final response = await http.get(Uri.parse(apiUrl));
       if (response.statusCode == 200) {
@@ -95,13 +95,13 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
             livenowHeight = 0;
           }
           else if(len == 1){
-            livenowHeight = 58;
+            livenowHeight = 45;
           }
           else if(len == 2){
-            livenowHeight = 116;
+            livenowHeight = 90;
           }
           else{
-            livenowHeight = 174;
+            livenowHeight = 135;
           }
         });
       } else {
@@ -151,7 +151,6 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
             ],
           ),
         ),
-
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -173,7 +172,9 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
           ),
         ),
         const SizedBox(height: 6),
-        SizedBox(
+        (_matches.isEmpty)
+        ? Center(child: Lottie.asset('assets/lottie/loading/loading2.json', width: 100))
+        : SizedBox(
           height: livenowHeight,
           child: ListView.builder(
             physics: const NeverScrollableScrollPhysics(),

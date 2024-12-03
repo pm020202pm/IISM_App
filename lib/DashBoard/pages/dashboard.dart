@@ -51,11 +51,9 @@ class _DashBoardState extends State<DashBoard> {
       name: prefs.getString('name') ?? '',
       email: prefs.getString('email') ?? '',
       gender: prefs.getString('gender')??'',
-      photo: prefs.getString('photo')??'',
       sport: prefs.getString('sport')??'',
       team: prefs.getString('team')??'',
       id_generation: prefs.getString('id_generation')??'',
-      contact: prefs.getString('contact')??'',
       hall_name: prefs.getString('hall_name')??'',
     );
     return player;
@@ -65,13 +63,7 @@ class _DashBoardState extends State<DashBoard> {
   Future<bool> checkLoginState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-    if (kDebugMode) {
-      print("isLoggedIn: $isLoggedIn");
-    }
     if(isLoggedIn){
-      if (kDebugMode) {
-        print(prefs.getString('email'));
-      }
       ParticipantModel player = await initialisePlayer();
       setState(() {
         savedPlayer = player;
@@ -89,6 +81,17 @@ class _DashBoardState extends State<DashBoard> {
     super.initState();
   }
 
+  Widget customStyledNavButton(int ind, String text, IconData icon){
+    return NavButton(
+      onTap: (){
+        HapticFeedback.lightImpact();
+        setState(() {
+          index = ind;
+        });
+        },
+      isActive: index==ind, text: text,textSize: navBarTextSize, icon: icon, iconSize: iconSize, curve: Curves.easeIn,);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +107,6 @@ class _DashBoardState extends State<DashBoard> {
           : (index == 4)
           ? const TeamsPage()
           : (index == 5)
-          // ? FeedbackPage()
           ? (isLoggedIn) ? PlayerProfilePage(player: savedPlayer) : LoginPage(onTap: (){setProfilePage();},)
           : Container(),
       floatingActionButton: Padding(
@@ -126,52 +128,12 @@ class _DashBoardState extends State<DashBoard> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              // const NavBarButton(icon: Icons.home),
-              // Button(onPressed: (){}, active: index==0,text: Text("asdkha"), duration: Duration(seconds: 2), icon: Icons.home, curve: Curves.bounceOut, debug: false, gap: 10, color: blueColor,),
-              NavButton(onTap: (){
-                HapticFeedback.lightImpact();
-                setState(() {
-                  index = 0;
-                });
-              }, isActive: index==0, text: "Home",textSize: navBarTextSize, icon: Icons.home, iconSize: iconSize, curve: Curves.easeIn,),
-              NavButton(onTap: (){
-                HapticFeedback.lightImpact();
-                setState(() {
-                  index = 1;
-                });
-              }, isActive: index==1, text: "Matches",textSize: navBarTextSize, icon: Icons.sports_volleyball_rounded,iconSize: iconSize, curve: Curves.easeIn,),
-              NavButton(onTap: (){
-                HapticFeedback.lightImpact();
-                setState(() {
-                  index = 2;
-                });
-              }, isActive: index==2, text: "Players",textSize: navBarTextSize, icon: Icons.sports_handball_outlined, iconSize: iconSize, curve: Curves.easeIn,),
-              NavButton(onTap: (){
-                HapticFeedback.lightImpact();
-                setState(() {
-                  index = 3;
-                });
-              }, isActive: index==3, text: "Gallery",textSize: navBarTextSize, icon: Icons.photo, iconSize: iconSize, curve: Curves.easeIn,),
-              NavButton(onTap: () {
-                HapticFeedback.lightImpact();
-                setState(() {
-                  index = 4;
-                });
-              }, isActive: index==4, text: "Teams",textSize: navBarTextSize, icon: Icons.people, iconSize: iconSize, curve: Curves.easeIn,),
-              NavButton(onTap: () async {
-                HapticFeedback.lightImpact();
-                bool isLogged = await checkLoginState();
-                setState(() {
-                  index = 5;
-                  isLoggedIn = isLogged;
-                });
-              }, isActive: index==5, text: "Profile",textSize: navBarTextSize, icon: Icons.person, iconSize: iconSize, curve: Curves.easeIn,),
-              // NavButton(onTap: () {
-              //   HapticFeedback.lightImpact();
-              //   setState(() {
-              //     index = 5;
-              //   });
-              // }, isActive: index==5, text: "",textSize: navBarTextSize, icon: Icons.feedback_rounded, iconSize: iconSize, curve: Curves.easeIn,),
+              customStyledNavButton(0, "Home", Icons.home),
+              customStyledNavButton(1, "Matches", Icons.sports_volleyball_rounded),
+              customStyledNavButton(2, "Players", Icons.sports_handball_outlined),
+              customStyledNavButton(3, "Gallery", Icons.photo),
+              customStyledNavButton(4, "Teams", Icons.people),
+              customStyledNavButton(5, "Profile", Icons.person),
             ],
           ),
 
