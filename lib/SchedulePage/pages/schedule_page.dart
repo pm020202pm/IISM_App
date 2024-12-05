@@ -24,10 +24,16 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
   int currentIndex = 1;
   List<bool> hasMore = [true, true, true];
   List<List<dynamic>> matches = [[], [], []];
-  List<String> apiUrls = [
+  List<String> apiUrls=[];
+  List<String> apiUrlsStudent = [
     'getLiveMatches',
     'matches',
     'getCompletedMatches',
+  ];
+  List<String> apiUrlsStaff = [
+    'getLiveMatchesStaff',
+    'matchesStaff',
+    'getCompletedMatchesStaff',
   ];
 
   List<int> pages = [1, 1, 1];
@@ -51,6 +57,7 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
+    apiUrls = isStaff ? apiUrlsStaff : apiUrlsStudent;
     _fetchMatches(sportsTableMap[chipValue[currentIndex]]!);
     // _tabController = TabController(length: 3, vsync: this, initialIndex: 1);
   }

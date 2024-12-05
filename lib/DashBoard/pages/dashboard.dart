@@ -71,8 +71,7 @@ class _DashBoardState extends State<DashBoard> {
     }
     return isLoggedIn;
   }
-
-  @override
+    @override
   void initState() {
     index = widget.index;
     checkLoginState().then((value) => setState(() {
@@ -95,51 +94,53 @@ class _DashBoardState extends State<DashBoard> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: (index == 0)
-          ? HomePage(onTap: setGalleryPage,)
-          : (index == 1)
-          ? const SchedulePage()
-          : (index == 2)
-          ? const PlayersPage()
-          : (index == 3)
-          ? const GalleryPage()
-          : (index == 4)
-          ? const TeamsPage()
-          : (index == 5)
-          ? (isLoggedIn) ? PlayerProfilePage(player: savedPlayer) : LoginPage(onTap: (){setProfilePage();},)
-          : Container(),
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Container(
-          padding: const EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(40),
-            color: dark? Colors.grey.shade900:Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: dark? Colors.grey.shade900: Colors.grey.withOpacity(0.5),
-                spreadRadius: 1,
-                blurRadius: 3,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              customStyledNavButton(0, "Home", Icons.home),
-              customStyledNavButton(1, "Matches", Icons.sports_volleyball_rounded),
-              customStyledNavButton(2, "Players", Icons.sports_handball_outlined),
-              customStyledNavButton(3, "Gallery", Icons.photo),
-              customStyledNavButton(4, "Teams", Icons.people),
-              customStyledNavButton(5, "Profile", Icons.person),
-            ],
-          ),
+    return MaterialApp(
+      home: Scaffold(
+        body: (index == 0)
+            ? HomePage(onTap: setGalleryPage,)
+            : (index == 1)
+            ? const SchedulePage()
+            : (index == 2)
+            ? const PlayersPage()
+            : (index == 3)
+            ? const GalleryPage()
+            : (index == 4)
+            ? const TeamsPage()
+            : (index == 5)
+            ? (isLoggedIn) ? PlayerProfilePage(player: savedPlayer) : LoginPage(onTap: (){setProfilePage();},)
+            : Container(),
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Container(
+            padding: const EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(40),
+              color: dark? Colors.grey.shade900:Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: dark? Colors.grey.shade900: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 1,
+                  blurRadius: 3,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                customStyledNavButton(0, "Home", Icons.home),
+                customStyledNavButton(1, "Matches", Icons.sports_volleyball_rounded),
+                customStyledNavButton(2, "Players", Icons.sports_handball_outlined),
+                customStyledNavButton(3, "Gallery", Icons.photo),
+                customStyledNavButton(4, "Teams", Icons.people),
+                customStyledNavButton(5, "Profile", Icons.person),
+              ],
+            ),
 
+          ),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

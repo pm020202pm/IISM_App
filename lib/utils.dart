@@ -3,6 +3,8 @@
 import 'dart:ui';
 bool expanded = true;
 bool dark= false;
+bool isStaff = false;
+// bool isFirstLaunch = true;
 Color whiteColor = const Color.fromRGBO(255, 255, 255,1);
 Color yellowColor = const Color.fromRGBO(235, 161, 45, 1);
 Color darkYellowColor = const Color.fromRGBO(200, 140, 45, 1);
@@ -30,7 +32,7 @@ Map<String, String> sportsTableMap = {
 
 
 Map<String, String> locationVenueMap = {
-  'cricket': "https://maps.app.goo.gl/FpTCAMRcANB4gZPA6",
+  'cricket': "https://maps.app.goo.gl/qWAPavBtsb7KCsYb9",
   'volleyball': "https://maps.app.goo.gl/N1Wifb1BHsvNWGR8A",
   'basketball': 'https://maps.app.goo.gl/6sn6m9muKxZHhYoN7',
   'lawn tennis': "https://maps.app.goo.gl/YLZz5zWsPFpyZ6wR8",

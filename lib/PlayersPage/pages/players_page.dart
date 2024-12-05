@@ -58,43 +58,14 @@ class _PlayersPageState extends State<PlayersPage> {
     await _fetchPlayers();
   }
 
-  // Future<void> _fetchPlayers() async {
-  //   print("_hasMore");
-  //   print(hasMore);
-  //   print(page);
-  //   print(page);
-  //   if (!hasMore) return;
-  //   String sport = (chipValue=="All")? "":chipValue.toLowerCase();
-  //   final String apiUrl = '$apiBaseUrl/players?page=$page&limit=$limit&search=$searchQuery&sport=$sport';
-  //   print("apiUrl");
-  //   print(apiUrl);
-  //   try {
-  //     final response = await http.get(Uri.parse(apiUrl));
-  //     if (response.statusCode == 200) {
-  //       final data = json.decode(response.body);
-  //       setState(() {
-  //         players.addAll(data['players']);
-  //         page++;
-  //         if (data['players'].length < limit) {
-  //           hasMore = false;
-  //         }
-  //       });
-  //     } else {
-  //       errorSnackMsg('Failed to load matches');
-  //     }
-  //   } catch (e) {
-  //     errorSnackMsg('Error fetching players list');
-  //   }
-  //   print("_players.length");
-  //   print(players.length);
-  // }
   Future<void> _fetchPlayers() async {
     if (isLoading|| !hasMore) return;
     setState(() {
       isLoading = true;
     });
     String sport = (chipValue=="All")? "":chipValue.toLowerCase();
-    final String apiUrl = '$apiBaseUrl/players?page=$page&limit=$limit&search=$searchQuery&sport=$sport';
+    String isStaffUrl = isStaff? "playersStaff": "players";
+    final String apiUrl = '$apiBaseUrl/$isStaffUrl?page=$page&limit=$limit&search=$searchQuery&sport=$sport';
 
     // final String apiUrl = '$apiBaseUrl/${apiUrls[currentIndex]}?page=${pages[currentIndex]}&limit=$_limit&sortBy=time&order=ASC&search=$_searchQuery&sportTableName=$sportTableName';
     try {
@@ -250,7 +221,12 @@ class _PlayersPageState extends State<PlayersPage> {
                 ),
               ),
               (players.isEmpty)
-                  ? Center(child: Lottie.asset('assets/lottie/loading/1.json', width: 300),)
+                  ? Center(child: Column(
+                    children: [
+                      Lottie.asset('assets/lottie/loading/3.json', width: 300),
+                      customText("Players are warming up...",14, FontWeight.w800, Colors.grey, 1)
+                    ],
+                  ),)
                   : Expanded(
                 child: NotificationListener<ScrollNotification>(
                   onNotification: (ScrollNotification scrollInfo) {

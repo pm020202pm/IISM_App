@@ -17,41 +17,23 @@ class MapWidget extends StatelessWidget {
           padding: const EdgeInsets.only(top: 15.0, bottom: 8.0),
           child: customText("Campus Map", 28, FontWeight.w600, dark? Colors.grey.shade100:Colors.grey.shade900, 1),
         ),
-        Container(
-          height: 190,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.0),
-            // border: Border.all(color: Colors.black),
+        InkWell(
+          onTap: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const MapPage()));
+          },
+          child: Container(
+            // height: 190,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+              // border: Border.all(color: Colors.black),
 
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20.0),
-            child: FlutterMap(
-              options: const MapOptions(
-                initialCenter: LatLng(26.5085011950421, 80.23300520800755), // Initial map center
-                initialZoom: 14.8,
-                minZoom: 14,
-                maxZoom: 16.8,
-              ),
-              children: [
-                TileLayer(
-                  urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                ),
-                MarkerLayer(
-                  markers: [
-                    customMarker("Cricket Ground", const LatLng(26.509565227578577, 80.23389602086334)),
-                    customMarker("Volleyball Court", const LatLng(26.508439967844815, 80.23187591524409)),
-                    customMarker("Football Ground", const LatLng(26.506224127688213, 80.22945615864042)),
-                    customMarker("Hockey Ground", const LatLng(26.506052791302025, 80.23025579226483)),
-                    customMarker("Basketball Court", const LatLng(26.5085011950421, 80.23300520800755)),
-                    customMarker("Health Center", const LatLng(26.505202229402357, 80.2338527308791)),
-                    customMarker("Lawn Tennis Court", const LatLng(26.509668447573063, 80.23009338292336)),
-                  ],
-                ),
-              ],
             ),
-          ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20.0),
+              child: Image.asset("assets/images/campusmap.png", fit: BoxFit.cover)),
+            ),
         ),
+
       ],
     );
   }
@@ -95,4 +77,58 @@ Marker customMarker(String label, LatLng point){
       ],
     ),
   );
+}
+
+class MapPage extends StatelessWidget {
+  const MapPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Campus Map'),
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Container(
+            height: size.height-200,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.0),
+              // border: Border.all(color: Colors.black),
+
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20.0),
+              child: FlutterMap(
+                options: const MapOptions(
+                  initialCenter: LatLng(26.5085011950421, 80.23300520800755), // Initial map center
+                  initialZoom: 14.8,
+                  minZoom: 14,
+                  maxZoom: 16.8,
+                ),
+                children: [
+                  TileLayer(
+                    urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                  ),
+                  MarkerLayer(
+                    markers: [
+                      customMarker("Cricket Ground", const LatLng(26.509565227578577, 80.23389602086334)),
+                      customMarker("Volleyball Court", const LatLng(26.508439967844815, 80.23187591524409)),
+                      customMarker("Football Ground", const LatLng(26.506224127688213, 80.22945615864042)),
+                      customMarker("Hockey Ground", const LatLng(26.506052791302025, 80.23025579226483)),
+                      customMarker("Basketball Court", const LatLng(26.5085011950421, 80.23300520800755)),
+                      customMarker("Health Center", const LatLng(26.505202229402357, 80.2338527308791)),
+                      customMarker("Lawn Tennis Court", const LatLng(26.509668447573063, 80.23009338292336)),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }

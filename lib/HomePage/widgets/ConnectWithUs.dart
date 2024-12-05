@@ -12,6 +12,8 @@ class ConnectWithUs extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        mediaIcon(FontAwesomeIcons.globe, Colors.blue, iconSize, 'https://iism24.iitk.ac.in/'),
+        const SizedBox(width: 14,),
         InkWell(
           onTap: () {
             launchUrl(
@@ -34,39 +36,26 @@ class ConnectWithUs extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 11,),
-        InkWell(
-          onTap: (){
-            launchUrl(
-                Uri.parse('https://x.com/interiit_sports'),
-                mode: LaunchMode.externalApplication
-            );
-          },
-            child: Icon(FontAwesomeIcons.xTwitter, color: Colors.black, size: iconSize,)),
-        const SizedBox(width: 8,),
-        InkWell(
-          onTap:(){
-            launchUrl(
-                Uri.parse('https://www.youtube.com/@InterIIT_SportsMeet2024'),
-                mode: LaunchMode.externalApplication
-            );
-          },
-            child: Icon(FontAwesomeIcons.youtube,color: Colors.red.shade600, size: iconSize,)),
         const SizedBox(width: 14,),
-        InkWell(
-          onTap: () {
-            launchUrl(
-                Uri.parse('https://www.linkedin.com/company/inter-iit-sports-meet-2024/mycompany/'),
-                mode: LaunchMode.externalApplication
-            );
-          },
-            child: Icon(FontAwesomeIcons.linkedin, color: Colors.blue.shade800, size: iconSize,)
-        ),
-
-
+        mediaIcon(FontAwesomeIcons.xTwitter, Colors.black, iconSize-1, 'https://x.com/interiit_sports'),
+        const SizedBox(width: 14,),
+        mediaIcon(FontAwesomeIcons.youtube, Colors.red.shade600, iconSize, 'https://www.youtube.com/@InterIIT_SportsMeet2024'),
+        const SizedBox(width: 15,),
+        mediaIcon(FontAwesomeIcons.linkedin, Colors.blue.shade800, iconSize, 'https://www.linkedin.com/company/inter-iit-sports-meet-2024/mycompany/'),
       ],
     );
   }
+}
+Widget mediaIcon(IconData icon, Color color, double iconSize, String url){
+  return InkWell(
+      onTap: () {
+        launchUrl(
+            Uri.parse(url),
+            mode: LaunchMode.externalApplication
+        );
+      },
+      child: Icon(icon, color: color, size: iconSize,)
+  );
 }
 
 class GradientIcon extends StatelessWidget {
