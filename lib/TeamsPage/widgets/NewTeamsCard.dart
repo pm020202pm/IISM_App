@@ -5,45 +5,47 @@ import '../../widgets/widgets.dart';
 import '../pages/teams_page.dart';
 
 
-class TeamsCard extends StatelessWidget {
-  const TeamsCard({super.key, this.data});
+class NewTeamsCard extends StatelessWidget {
+  const NewTeamsCard({super.key, this.data});
   final dynamic data;
   @override
   Widget build(BuildContext context) {
     List<String> names = splitName(data['Name']);
-    String imageURl = (names[0].toLowerCase() != 'dr.') ? names[0].toLowerCase() : names[1].toLowerCase();
+    String name = data['Name'].toUpperCase();
+
+    Size size = MediaQuery.of(context).size;
     return InkWell(
       onTap: (){
         enlargeCoreTeamCard(context, data);
       },
       child: ClipPath(
-        clipper: OctagonClipper(padding: 30),
+        clipper: OctagonClipper(padding: 15),
         child: Container(
-          width: 150,
+          width: size.width-40,
+          height: 65,
+          color: yellowColor.withOpacity(0.6),
+          child: Padding(
             padding: const EdgeInsets.all(5),
-            decoration: BoxDecoration(
-              border: Border.all(color: darkBlueColor, width: 1),
-            ),
-            child: Container(
-              color: yellowColor.withOpacity(0.6),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ClipPath(
+                    clipper: OctagonClipper(padding: 15),
+                    child: Image.asset('assets/headPhotos/${names[0].toLowerCase()}.jpg', fit: BoxFit.cover)
+                ),
+                const SizedBox(width: 10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ClipPath(
-                        clipper: OctagonClipper(padding: 15),
-                        child: Image.asset('assets/headPhotos/$imageURl.jpg', fit: BoxFit.cover,)
-                    ),
-                    const SizedBox(height: 10),
-                    customText(names[0].toUpperCase(), 15, FontWeight.w700 , darkBlueColor, 1),
-                    if(names.length>1)customText(names[1].toUpperCase(), 12, FontWeight.w700 , darkBlueColor, 1),
-                    // if(names.length>2)customText(names[2].toUpperCase(), 12, FontWeight.w700 , darkBlueColor, 1),
-                    customText(formatName(data['Position']), 12, FontWeight.w600 , darkBlueColor.withOpacity(0.8), 1.4),
+                    customText(name, 16, FontWeight.w700 , darkBlueColor, 1.4),
+                    // customText(data['Position'], 15, FontWeight.w600 , darkBlueColor.withOpacity(0.8), 1.4),
+                    customText(data['Email'], 14, FontWeight.w600 , darkBlueColor.withOpacity(0.8), 1.4),
                   ],
                 ),
-              ),
-            )
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -103,8 +105,8 @@ class _AnimatedTeamsCardState extends State<AnimatedTeamsCard> {
                             child: Image.asset(
                               'assets/headPhotos/${names[0].toLowerCase()}.jpg',
                               fit: BoxFit.cover,
-                              height: 120, // Adjust image size
-                              width: 120, // Adjust image size
+                              height: 100, // Adjust image size
+                              // width: 120, // Adjust image size
                             ),
                           ),
                           const SizedBox(height: 10),
