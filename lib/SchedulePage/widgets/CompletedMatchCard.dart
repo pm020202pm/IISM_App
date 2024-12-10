@@ -72,9 +72,9 @@ class CompletedMatchCard extends StatelessWidget {
                 ClipPath(
                   clipper: OctagonClipper3(padding: 12),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                     color: Colors.grey.shade400,
-                    child: customText('Ended', 14, FontWeight.w600, whiteColor, 1),
+                    child: customText(match.matchDate, 12, FontWeight.w600, whiteColor, 1),
                   ),
                 ),
                 const SizedBox(height: 3),

@@ -78,8 +78,9 @@ class LiveNowMatchModel {
 
   factory LiveNowMatchModel.fromJson(Map<String, dynamic> json) {
     DateTime time = DateFormat('HH:mm:ss').parse(json['time'].toString());
-    final date = DateTime.parse(json['date']??'2024-12-05');
+    final date = DateTime.parse(json['date']??'2024-12-05').toLocal();
     final formattedDate = DateFormat('d MMMM').format(date); // Date format
+
     final formattedTime = DateFormat('h:mm a').format(time);   // Time format
     return LiveNowMatchModel(
         matchId: json['matchId'],

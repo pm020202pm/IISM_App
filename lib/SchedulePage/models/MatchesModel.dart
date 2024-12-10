@@ -9,6 +9,7 @@ class UpcomingMatchesModel {
   final String venue;
   final String sport;
   final String category;
+  final double delayMinutes;
 
   UpcomingMatchesModel(
       {
@@ -20,11 +21,15 @@ class UpcomingMatchesModel {
         required this.venue,
         required this.sport,
         required this.category,
+        this.delayMinutes = 0,
       });
 
   factory UpcomingMatchesModel.fromJson(Map<String, dynamic> json) {
     DateTime time = DateFormat('HH:mm:ss').parse(json['time'].toString()).toLocal();
     final date = DateTime.parse(json['date']??'2024-11-05').toLocal();
+    DateTime combinedDateTime = DateTime(date.year, date.month, date.day, time.hour, time.minute, time.second,);
+    int matchTimestamp = combinedDateTime.millisecondsSinceEpoch;
+    int currentTimestamp = DateTime.now().millisecondsSinceEpoch;
     final formattedDate = DateFormat('d MMM').format(date);
     final formattedTime = DateFormat('h:mm a').format(time);
     return UpcomingMatchesModel(
@@ -36,6 +41,7 @@ class UpcomingMatchesModel {
       venue: json['venue']??'',
       sport: json['sport']??'',
       category: json['category']??'',
+      delayMinutes: ((currentTimestamp-matchTimestamp) / 60000),
     );
   }
 }

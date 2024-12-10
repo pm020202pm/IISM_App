@@ -43,30 +43,30 @@ class UpcomingMatchCard extends StatelessWidget {
                 margin: const EdgeInsets.all(2),
                 color: Colors.grey.shade200,
                 child: Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    // crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       verticalLogoWithCollegeName(match.team1, 45, 45),
                       Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        // mainAxisAlignment: MainAxisAlignment.end,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              const SizedBox(height: 40,),
+                              SizedBox(height: (match.delayMinutes>2)? 60:48,),
                               customText(match.matchTime, 14, FontWeight.w900, darkBlueColor, 1),
                               Container(
                                 margin: const EdgeInsets.symmetric(horizontal: 5),
-                                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                                 decoration: BoxDecoration(
                                   color: blueColor,
                                   borderRadius: BorderRadius.circular(5),
                                 ),
-                                child: customText(match.matchDate.toUpperCase(), 11, FontWeight.w600, Colors.white, 1),
+                                child: customText(match.matchDate.toUpperCase(), 11, FontWeight.w800, Colors.white, 1),
                               ),
                             ],
                           ),
@@ -92,27 +92,48 @@ class UpcomingMatchCard extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(top: 8),
-            child: ClipPath(
-              clipper: OctagonClipper4(padding: 10),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
-                color: blueColor,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    customText(sport, 11, FontWeight.w600, darkBlueColor, 1),
-                    const SizedBox(width: 3,),
-                    Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: customText(category, 11, FontWeight.w600, darkBlueColor, 1)),
-                    // Icon(category, size: 16,)
-                  ],
+            child: Column(
+              children: [
+                ClipPath(
+                  clipper: OctagonClipper4(padding: 10),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+                    color: blueColor,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        customText(sport, 11, FontWeight.w600, darkBlueColor, 1),
+                        const SizedBox(width: 3,),
+                        Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: customText(category, 11, FontWeight.w600, darkBlueColor, 1)),
+                        // Icon(category, size: 16,)
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+                if(match.delayMinutes>2) Container(
+                  alignment: Alignment.center,
+                  width: 120,
+                  margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.red.shade200, width: 1),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      customText("Delayed by ", 10, FontWeight.w600, Colors.grey.shade700, 1),
+                      customText("${match.delayMinutes.toStringAsFixed(0)} min", 10, FontWeight.w600, Colors.red, 1),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ],
