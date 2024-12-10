@@ -5,6 +5,7 @@ import '../../widgets/widgets.dart';
 import '../models/LiveMatchModel.dart';
 import '../pages/live_page.dart';
 import '../pages/schedule_page.dart';
+import 'UpcomingMatchCard.dart';
 
 
 class CompletedMatchCard extends StatelessWidget {
@@ -14,7 +15,9 @@ class CompletedMatchCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    String? locationUrl = locationVenueMap[match.sport?.toLowerCase()];
     String active = match.active!;
+    String? sport = match.sport?.toUpperCase();
     String? category = match.category?.toUpperCase();
     double horizontalPadding = size.width>620? 100 :size.width>500? 50 :16;
     return InkWell(
@@ -55,7 +58,7 @@ class CompletedMatchCard extends StatelessWidget {
                         Column(
                           children: [
                             if(match.sport=='cricket') liveCricket(),
-                            if(match.sport=='volleyball' || match.sport == 'table tennis' || match.sport=='lawn tennis') liveVolleyball(active),
+                            if(match.sport=='volleyball' || match.sport == 'table tennis' || match.sport=='lawn tennis') liveVolleyball(),
                             if(match.sport=='hockey') liveHockey(),
                             if(match.sport=='basketball') liveBasketball(),
                           ],
@@ -72,19 +75,19 @@ class CompletedMatchCard extends StatelessWidget {
                 ClipPath(
                   clipper: OctagonClipper3(padding: 12),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
                     color: Colors.grey.shade400,
                     child: customText(match.matchDate, 12, FontWeight.w600, whiteColor, 1),
                   ),
                 ),
-                const SizedBox(height: 3),
+                SizedBox(height: 3),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                   decoration: BoxDecoration(
                     color: Colors.green.shade300,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: customText(category!, 10, FontWeight.w600, Colors.white, 1),
+                  child: customText(category!, 12, FontWeight.w600, Colors.white, 1),
                 )
               ],
             ),
@@ -145,16 +148,42 @@ class CompletedMatchCard extends StatelessWidget {
       ],
     );
   }
-  Widget liveVolleyball(String active){
-    String scoreTeam1 = (active=='1')? match.set1Score1 : (active=='2')? match.set2Score1 : (active=='3')? match.set3Score1 : (active=='4')? match.set4Score1 : match.set5Score1;
-    String scoreTeam2 = (active=='1')? match.set1Score2 : (active=='2')? match.set2Score2 : (active=='3')? match.set3Score2 : (active=='4')? match.set4Score2 : match.set5Score2;
-    return Row(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(3.0),
-          child: setScore(active,scoreTeam1 , scoreTeam2),
-        ),
-      ],
+  Widget liveVolleyball(){
+    int score1=0;
+    int score2=0;
+    if(double.parse(match.set1Score1)>double.parse(match.set1Score2)) {
+      score1++;
+    } else if(double.parse(match.set1Score1)<double.parse(match.set1Score2)){
+      score2++;
+    }
+    if(double.parse(match.set2Score1)>double.parse(match.set2Score2)) {
+      score1++;
+    } else if(double.parse(match.set2Score1)<double.parse(match.set2Score2)){
+      score2++;
+    }
+    if(double.parse(match.set3Score1)>double.parse(match.set3Score2)) {
+      score1++;
+    } else if(double.parse(match.set3Score1)<double.parse(match.set3Score2)){
+      score2++;
+    }
+    if(double.parse(match.set4Score1)>double.parse(match.set4Score2)) {
+      score1++;
+    } else if(double.parse(match.set4Score1)<double.parse(match.set4Score2)){
+      score2++;
+    }
+    if(double.parse(match.set5Score1)>double.parse(match.set5Score2)) {
+      score1++;
+    } else if(double.parse(match.set5Score1)<double.parse(match.set5Score2)){
+      score2++;
+    }
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade300,
+        border: Border.all(color: Colors.grey.shade400, width: 1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: customText(score1.toString()+" : "+score2.toString(), 18, FontWeight.w800, Colors.grey.shade900, 1),
     );
   }
 }

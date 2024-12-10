@@ -98,10 +98,10 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
             livenowHeight = 46;
           }
           else if(len == 2){
-            livenowHeight = 92;
+            livenowHeight = 100;
           }
           else{
-            livenowHeight = 143;
+            livenowHeight = 155;
           }
         });
       } else {
@@ -139,15 +139,15 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               customText("Live Now", 28, FontWeight.w600, dark? Colors.grey.shade100: Colors.grey.shade900, 1),
-              AnimateIcon(
-                key: UniqueKey(),
-                onTap: () {},
-                iconType: IconType.continueAnimation,
-                height: 25,
-                width: 40,
-                color: Colors.red,
-                animateIcon: AnimateIcons.liveVideo,
-              )
+              // AnimateIcon(
+              //   key: UniqueKey(),
+              //   onTap: () {},
+              //   iconType: IconType.continueAnimation,
+              //   height: 25,
+              //   width: 40,
+              //   color: Colors.red,
+              //   animateIcon: AnimateIcons.liveVideo,
+              // )
             ],
           ),
         ),

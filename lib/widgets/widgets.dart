@@ -82,18 +82,55 @@ Widget setScore(String setCount, String score1, String score2) {
   );
 }
 
+Widget setScore2(String setCount, String score1, String score2) {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 3, vertical: 2),
+    decoration: BoxDecoration(
+      color: Colors.grey.shade300,
+      borderRadius: BorderRadius.circular(10),
+    ),
+    child: Column(
+      children: [
+        Container(
+            alignment: Alignment.center,
+            width: 100,
+            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(7),
+            ),
+            child: customText(
+                setCount, 11, FontWeight.w700, Colors.grey.shade800, 1)),
+        Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Row(
+            children: [
+              customText(
+                  score1, 14, FontWeight.w700, Colors.grey.shade800, 1.4),
+              customText(" : ", 13, FontWeight.w700, Colors.grey.shade700, 1.4),
+              customText(score2, 14, FontWeight.w700, Colors.grey.shade800, 1),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
 Widget score2(String score1, String score2) {
   return Container(
+    width: 100,
     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
     decoration: BoxDecoration(
       color: Colors.grey.shade300,
       borderRadius: BorderRadius.circular(10),
     ),
     child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        customText(score1, 15, FontWeight.w900, Colors.grey.shade900, 1.4),
+        customText(score1, 14, FontWeight.w900, Colors.grey.shade900, 1.4),
         customText(" : ", 13, FontWeight.w700, Colors.grey.shade700, 1.4),
-        customText(score2, 15, FontWeight.w900, Colors.grey.shade900, 1.4),
+        customText(score2, 14, FontWeight.w900, Colors.grey.shade900, 1.4),
       ],
     ),
   );
