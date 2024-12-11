@@ -1,12 +1,17 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:iism/SchedulePage/widgets/widgets.dart';
 import 'package:iism/utils.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../widgets/widgets.dart';
 import '../models/MatchesModel.dart';
+import '../pages/admin_login_page.dart';
+import '../pages/make_live_page.dart';
 import '../pages/schedule_page.dart';
+
 class UpcomingMatchCard extends StatelessWidget {
   final UpcomingMatchesModel match;
   const UpcomingMatchCard({super.key, required this.match});
@@ -23,68 +28,83 @@ class UpcomingMatchCard extends StatelessWidget {
       child: Stack(
         alignment: Alignment.topCenter,
         children: [
-          Container(
-            width: size.width-horizontalPadding*2,
-            decoration: BoxDecoration(
-              color: blueColor,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.shade300,
-                  blurRadius: 5.0,
-                  spreadRadius: 0.5,
-                  offset: const Offset(0, 3),
-                ),
-              ],
-            ),
-            margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: horizontalPadding),
-            child: ClipPath(
-              clipper: OctagonClipper3(padding: 12),
-              child: Container(
-                margin: const EdgeInsets.all(2),
-                color: Colors.grey.shade200,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    // crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      verticalLogoWithCollegeName(match.team1, 45, 45),
-                      Column(
-                        // mainAxisAlignment: MainAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              SizedBox(height: (match.delayMinutes>2)? 60:48,),
-                              customText(match.matchTime, 14, FontWeight.w900, darkBlueColor, 1),
-                              Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 5),
-                                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                                decoration: BoxDecoration(
-                                  color: blueColor,
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: customText(match.matchDate.toUpperCase(), 11, FontWeight.w800, Colors.white, 1),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 12,),
-                          InkWell(
-                            onTap:(){openLocationUrl(locationUrl!);},
-                            child: Row(
+          InkWell(
+            onLongPress: () async {
+              HapticFeedback.heavyImpact();
+              SharedPreferences prefs = await SharedPreferences.getInstance();
+              token = prefs.getString('token')??'';
+              adminSport = prefs.getString('adminSport')??'';
+              if (token!='' && (adminSport=='cricket' || adminSport=='volleyball' || adminSport=='basketball' || adminSport=='hockey' || adminSport=='tabletennis' || adminSport=='lawntennis')){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>MakeMatchLive(match: match)));
+              } else{
+                errorSnackMsg('Please login to continue');
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const AdminLoginPage()));
+                return;
+              }
+            },
+            child: Container(
+              width: size.width-horizontalPadding*2,
+              decoration: BoxDecoration(
+                color: blueColor,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade300,
+                    blurRadius: 5.0,
+                    spreadRadius: 0.5,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: horizontalPadding),
+              child: ClipPath(
+                clipper: OctagonClipper3(padding: 12),
+                child: Container(
+                  margin: const EdgeInsets.all(2),
+                  color: Colors.grey.shade200,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      // crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        verticalLogoWithCollegeName(match.team1, 45, 45),
+                        Column(
+                          // mainAxisAlignment: MainAxisAlignment.end,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
                               mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                customText(match.venue, 11, FontWeight.w600, Colors.green.shade700, 2),
-                                Icon(Icons.location_on_outlined, color: Colors.green.shade700, size: 15,)
+                                SizedBox(height: (match.delayMinutes>2)? 60:48,),
+                                customText(match.matchTime, 14, FontWeight.w900, darkBlueColor, 1),
+                                Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 5),
+                                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                                  decoration: BoxDecoration(
+                                    color: blueColor,
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: customText(match.matchDate.toUpperCase(), 11, FontWeight.w800, Colors.white, 1),
+                                ),
                               ],
                             ),
-                          ),
-                        ],
-                      ),
-                      verticalLogoWithCollegeName(match.team2, 45, 45),
-                    ],
+                            const SizedBox(height: 12,),
+                            InkWell(
+                              onTap:(){openLocationUrl(locationUrl!);},
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  customText(match.venue, 11, FontWeight.w600, Colors.green.shade700, 2),
+                                  Icon(Icons.location_on_outlined, color: Colors.green.shade700, size: 15,)
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        verticalLogoWithCollegeName(match.team2, 45, 45),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -153,7 +173,6 @@ Future<void> openLocationUrl(String locationUrl) async {
     Fluttertoast.showToast(msg: 'Could not open location');
   }
 }
-
 
 class OctagonClipper4 extends CustomClipper<Path> {
   final double padding;

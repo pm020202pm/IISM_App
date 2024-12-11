@@ -4,6 +4,8 @@ import 'dart:ui';
 bool expanded = true;
 bool dark= false;
 bool isStaff = false;
+String adminSport = '';
+String token = '';
 // bool isFirstLaunch = true;
 Color whiteColor = const Color.fromRGBO(255, 255, 255,1);
 Color yellowColor = const Color.fromRGBO(235, 161, 45, 1);
