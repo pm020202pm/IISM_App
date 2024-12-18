@@ -33,6 +33,8 @@ Map<String, String> sportsTableMap = {
   'Football': 'football',
   'Badminton': 'badminton',
   'Squash': 'squash',
+  'Athletics': 'athletics',
+  'Chess': 'chess'
 };
 
 

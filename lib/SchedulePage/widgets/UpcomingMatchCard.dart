@@ -23,6 +23,120 @@ class UpcomingMatchCard extends StatelessWidget {
     String category = match.category.toUpperCase();
     Size size = MediaQuery.of(context).size;
     double horizontalPadding = size.width>620? 100 :size.width>500? 50 :16;
+    if(sport=='ATHLETICS'){
+      return ClipPath(
+        clipper: OctagonClipper3(padding: 16+horizontalPadding),
+        child: Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            Container(
+              width: size.width-horizontalPadding*2,
+              decoration: BoxDecoration(
+                color: blueColor,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade300,
+                    blurRadius: 5.0,
+                    spreadRadius: 0.5,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+              margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: horizontalPadding),
+              child: ClipPath(
+                clipper: OctagonClipper3(padding: 12),
+                child: Container(
+                  margin: const EdgeInsets.all(2),
+                  color: Colors.grey.shade200,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const SizedBox(height: 25,),
+                        customText(match.athleteType.toUpperCase(), 16, FontWeight.w800, Colors.grey.shade700, 1),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(height: (match.delayMinutes>2)? 60:48,),
+                            customText(match.matchTime, 14, FontWeight.w900, darkBlueColor, 1),
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 5),
+                              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: blueColor,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: customText(match.matchDate.toUpperCase(), 11, FontWeight.w800, Colors.white, 1),
+                            ),
+                          ],
+                        ),
+                        InkWell(
+                          onTap:(){openLocationUrl(locationUrl!);},
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              customText(match.venue, 11, FontWeight.w600, Colors.green.shade700, 1),
+                              Icon(Icons.location_on_outlined, color: Colors.green.shade700, size: 15,)
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Column(
+                children: [
+                  ClipPath(
+                    clipper: OctagonClipper4(padding: 10),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 4),
+                      color: blueColor,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          customText(sport, 11, FontWeight.w600, darkBlueColor, 1),
+                          const SizedBox(width: 3,),
+                          Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: customText(category, 11, FontWeight.w600, darkBlueColor, 1)),
+                          // Icon(category, size: 16,)
+                        ],
+                      ),
+                    ),
+                  ),
+                  if(match.delayMinutes>2) Container(
+                    alignment: Alignment.center,
+                    width: 120,
+                    margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.red.shade200, width: 1),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        customText("Delayed by ", 10, FontWeight.w600, Colors.grey.shade700, 1),
+                        customText("${match.delayMinutes.toStringAsFixed(0)} min", 10, FontWeight.w600, Colors.red, 1),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    }
     return ClipPath(
       clipper: OctagonClipper3(padding: 16+horizontalPadding),
       child: Stack(

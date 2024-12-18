@@ -199,6 +199,7 @@ class _PlayersPageState extends State<PlayersPage> {
                       if(isStaff) sportChip('Badminton', MingCute.badminton_fill),
                       if(isStaff) sportChip('Squash', Icons.sports_tennis),
                       if(isStaff) sportChip('Athletics', Icons.directions_walk),
+                      if(isStaff) sportChip('Chess', MingCute.chess_fill),
                       if(!isStaff) sportChip('Hockey', Icons.sports_hockey),
                     ],
                   ),

@@ -268,6 +268,8 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
                       sportChip('Cricket', Icons.sports_cricket),
                       if(isStaff) sportChip('Badminton', MingCute.badminton_fill),
                       if(isStaff) sportChip('Squash', Icons.sports_tennis),
+                      if(isStaff) sportChip('Athletics', Icons.sports_tennis),
+                      if(isStaff) sportChip('Chess', MingCute.chess_fill),
                       if(!isStaff) sportChip('Hockey', Icons.sports_hockey),
                     ],
                   ),
@@ -305,6 +307,8 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
   }
 
   Future<void> _fetchMatches(String sportTableName) async {
+    print('fetching matches');
+    print(sportTableName);
     if (isLoading[currentIndex] || !hasMore[currentIndex]) return;
     setState(() {
       isLoading[currentIndex] = true;
@@ -314,6 +318,7 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
       final response = await http.get(Uri.parse(apiUrl));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+        print(data);
         setState(() {
           matches[currentIndex].addAll(data['matches']);
           pages[currentIndex]++;

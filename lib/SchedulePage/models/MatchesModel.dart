@@ -10,6 +10,7 @@ class UpcomingMatchesModel {
   final String sport;
   final String category;
   final double delayMinutes;
+  final String athleteType;
 
   UpcomingMatchesModel(
       {
@@ -22,6 +23,7 @@ class UpcomingMatchesModel {
         required this.sport,
         required this.category,
         this.delayMinutes = 0,
+        required this.athleteType
       });
 
   factory UpcomingMatchesModel.fromJson(Map<String, dynamic> json) {
@@ -42,6 +44,7 @@ class UpcomingMatchesModel {
       sport: json['sport']??'',
       category: json['category']??'',
       delayMinutes: ((currentTimestamp-matchTimestamp) / 60000),
+        athleteType: json['athleteType']??''
     );
   }
 }

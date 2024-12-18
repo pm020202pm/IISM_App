@@ -56,6 +56,8 @@ class PlayerCard extends StatelessWidget {
                         children: [
                           customText(sports[0].toUpperCase(), 12, FontWeight.w600 , darkBlueColor.withOpacity(0.8), 1.4),
                           if(sports.length>1) customText(" | ${sports[1].toUpperCase()}", 12, FontWeight.w600 , darkBlueColor.withOpacity(0.8), 1.4),
+                          if(sports.length>2) customText(" | ${sports[2].toUpperCase()}", 12, FontWeight.w600 , darkBlueColor.withOpacity(0.8), 1.4),
+                          if(sports.length>3) customText(" | ${sports[3].toUpperCase()}", 12, FontWeight.w600 , darkBlueColor.withOpacity(0.8), 1.4),
                         ],
                       ),
                       customText(playerModel.team.toUpperCase(), 12, FontWeight.w600 , darkBlueColor.withOpacity(0.8), 1.2)

@@ -40,6 +40,12 @@ class LiveNowMatchModel {
   final String team1_overs;
   final String team2_overs;
 
+  final String first;
+  final String second;
+  final String third;
+  final String athleteType;
+  final String winner;
+  final String loser;
 
   LiveNowMatchModel(
       {
@@ -73,25 +79,30 @@ class LiveNowMatchModel {
         required this.team2_score,
         required this.team2_wickets,
         required this.team1_overs,
-        required this.team2_overs
+        required this.team2_overs,
+        required this.first,
+        required this.second,
+        required this.third,
+        required this.athleteType,
+        required this.winner,
+        required this.loser
       });
 
   factory LiveNowMatchModel.fromJson(Map<String, dynamic> json) {
     DateTime time = DateFormat('HH:mm:ss').parse(json['time'].toString());
     final date = DateTime.parse(json['date']??'2024-12-05').toLocal();
     final formattedDate = DateFormat('d MMMM').format(date); // Date format
-
     final formattedTime = DateFormat('h:mm a').format(time);   // Time format
     return LiveNowMatchModel(
         matchId: json['matchId'],
-        team1: json['team1'],
-        team2: json['team2'],
-        venue: json['venue'],
+        team1: json['team1']??'',
+        team2: json['team2']??'',
+        venue: json['venue']??'',
         matchDate: formattedDate,
         matchTime: formattedTime,
-        category: json['category'],
-        status: json['status'],
-        sport: json['sport'],
+        category: json['category']??'',
+        status: json['status']??'',
+        sport: json['sport']??'',
         active: (json['active']??0).toString(),
         liveStreamUrl: json['liveStreamUrl']??'',
         // tt + lt + volleyball
@@ -117,7 +128,13 @@ class LiveNowMatchModel {
         team2_score: (json['team2_score']??0).toString(),
         team2_wickets: (json['team2_wickets']??0).toString(),
         team1_overs: (json['team1_overs']??0).toString(),
-        team2_overs: (json['team2_overs']??0).toString()
+        team2_overs: (json['team2_overs']??0).toString(),
+        first: json['first']??'',
+        second:json['second']??'',
+        third:json['third']??'',
+        athleteType: json['athleteType']??'',
+        winner: json['winner']??'',
+        loser: json['loser']??""
     );
   }
 }
