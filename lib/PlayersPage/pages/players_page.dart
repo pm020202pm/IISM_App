@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:iism/PlayersPage/widgets/PlayerCard.dart';
 import 'package:iism/api.dart';
 import 'package:iism/utils.dart';
@@ -100,7 +101,7 @@ class _PlayersPageState extends State<PlayersPage> {
           preferredSize: const Size.fromHeight(70),
           child: AppBar(
             backgroundColor: dark ? Colors.black : Colors.white,
-            flexibleSpace: Container(
+            flexibleSpace: SizedBox(
               height: 80,
               child: Stack(
                 alignment: Alignment.topCenter,
@@ -188,34 +189,17 @@ class _PlayersPageState extends State<PlayersPage> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      // if (currentIndex == 1)
-                        customChip2("All", Icons.spoke, chipValue== "All", () async {
-                          await onChipTap("All");
-                        }),
-                      const SizedBox(width: 8.0),
-                      customChip2("Cricket", Icons.sports_cricket, chipValue== "Cricket", () async {
-                        await onChipTap("Cricket");
-                      }),
-                      const SizedBox(width: 8.0),
-                      customChip2("VolleyBall", Icons.sports_volleyball, chipValue== "VolleyBall", () async {
-                        await onChipTap("VolleyBall");
-                      }),
-                      const SizedBox(width: 8.0),
-                      customChip2("BasketBall", Icons.sports_basketball, chipValue== "BasketBall", () async {
-                        await onChipTap("BasketBall");
-                      }),
-                      const SizedBox(width: 8.0),
-                      customChip2("Hockey", Icons.sports_hockey, chipValue== "Hockey", () async {
-                        await onChipTap("Hockey");
-                      }),
-                      const SizedBox(width: 8.0),
-                      customChip2("Lawn Tennis", Icons.sports_tennis, chipValue== "Lawn Tennis", () async {
-                        await onChipTap("Lawn Tennis");
-                      }),
-                      const SizedBox(width: 8.0),
-                      customChip2("Table Tennis", Icons.sports_tennis, chipValue== "Table Tennis", () async {
-                        await onChipTap("Table Tennis");
-                      }),
+                      sportChip('All', Icons.spoke),
+                      sportChip('BasketBall', Icons.sports_basketball),
+                      if(isStaff) sportChip('Football', Icons.sports_soccer),
+                      sportChip('VolleyBall', Icons.sports_volleyball),
+                      sportChip('Table Tennis', Icons.sports_tennis),
+                      sportChip('Lawn Tennis', Icons.sports_tennis),
+                      sportChip('Cricket', Icons.sports_cricket),
+                      if(isStaff) sportChip('Badminton', MingCute.badminton_fill),
+                      if(isStaff) sportChip('Squash', Icons.sports_tennis),
+                      if(isStaff) sportChip('Athletics', Icons.directions_walk),
+                      if(!isStaff) sportChip('Hockey', Icons.sports_hockey),
                     ],
                   ),
                 ),
@@ -309,6 +293,15 @@ class _PlayersPageState extends State<PlayersPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget sportChip(String sport, IconData icon){
+    return Padding(
+      padding: const EdgeInsets.only(right:8),
+      child: customChip2(sport, icon, chipValue == sport, () async {
+        await onChipTap(sport);
+      }),
     );
   }
 }

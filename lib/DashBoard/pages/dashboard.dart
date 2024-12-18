@@ -8,6 +8,7 @@ import 'package:iism/HomePage/pages/home_page.dart';
 import 'package:iism/PlayersPage/pages/players_page.dart';
 import 'package:iism/SchedulePage/pages/schedule_page.dart';
 import 'package:iism/TeamsPage/pages/teams_page.dart';
+import 'package:iism/TeamsPage/pages/teams_page2.dart';
 import 'package:iism/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../ProfilePage/pages/login_page.dart';
@@ -63,6 +64,7 @@ class _DashBoardState extends State<DashBoard> {
   Future<bool> checkLoginState() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    isStaff = prefs.getBool('isStaff') ?? false;
     if(isLoggedIn){
       ParticipantModel player = await initialisePlayer();
       setState(() {
@@ -105,7 +107,7 @@ class _DashBoardState extends State<DashBoard> {
             : (index == 3)
             ? const GalleryPage()
             : (index == 4)
-            ? const TeamsPage()
+            ? (isStaff) ? TeamsPageStaff(): TeamsPage()
             : (index == 5)
             ? (isLoggedIn) ? PlayerProfilePage(player: savedPlayer) : LoginPage(onTap: (){setProfilePage();},)
             : Container(),

@@ -33,13 +33,13 @@ class LiveNowCard extends StatelessWidget {
                   customText(match.team2!.toUpperCase(), 10, FontWeight.w900, Colors.grey.shade800,1.9),
                 ],
               ),
-              (match.sport == "table tennis" || match.sport == "volleyball")
+              (match.sport == "table tennis" || match.sport == "volleyball" || match.sport=='badminton' || match.sport=='squash')
                   ? liveVolleyball(match.active!)
                   : (match.sport == "lawn tennis")
                   ? liveLawnTennis(match.active!)
                   : (match.sport == "hockey")
                   ? score2(match.team1Goals.toString(), match.team2Goals.toString())
-                  : (match.sport == "basketball")
+                  : (match.sport == "basketball" || match.sport == "football")
                   ? score2(match.team1Score.toString(), match.team2Score.toString())
                   : (match.sport == "cricket")
                   ? score2(match.team1_score.toString(), match.team2_score.toString())

@@ -58,9 +58,9 @@ class CompletedMatchCard extends StatelessWidget {
                         Column(
                           children: [
                             if(match.sport=='cricket') liveCricket(),
-                            if(match.sport=='volleyball' || match.sport == 'table tennis' || match.sport=='lawn tennis') liveVolleyball(),
+                            if(match.sport=='volleyball' || match.sport == 'table tennis' || match.sport=='lawn tennis' || match.sport=='badminton' || match.sport=='squash') liveVolleyball(),
                             if(match.sport=='hockey') liveHockey(),
-                            if(match.sport=='basketball') liveBasketball(),
+                            if(match.sport=='basketball' || match.sport=='football') liveBasketball(),
                           ],
                         ),
                         verticalLogoWithCollegeName(match.team2!.toUpperCase(), 45, 45),
@@ -80,7 +80,7 @@ class CompletedMatchCard extends StatelessWidget {
                     child: customText(match.matchDate, 12, FontWeight.w600, whiteColor, 1),
                   ),
                 ),
-                SizedBox(height: 3),
+                const SizedBox(height: 3),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                   decoration: BoxDecoration(

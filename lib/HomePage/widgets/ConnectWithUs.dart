@@ -4,6 +4,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../utils.dart';
 class ConnectWithUs extends StatelessWidget {
   ConnectWithUs({super.key});
   double iconSize = 25;
@@ -17,7 +19,7 @@ class ConnectWithUs extends StatelessWidget {
         InkWell(
           onTap: () {
             launchUrl(
-                Uri.parse('https://www.instagram.com/interiit_sports2024/'),
+                Uri.parse(isStaff? 'https://www.instagram.com/iissm_2024/':'https://www.instagram.com/interiit_sports2024/'),
                 mode: LaunchMode.externalApplication
             );
           },

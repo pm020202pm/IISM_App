@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:iism/api.dart';
 import 'package:iism/utils.dart';
 import 'package:flutter/services.dart';
@@ -38,7 +39,7 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
 
   List<int> pages = [1, 1, 1];
   List<bool> isLoading = [false, false, false];
-  List<String> chipValue= ['Cricket', 'All', 'Cricket'];
+  List<String> chipValue= ['BasketBall', 'All', 'BasketBall'];
 
   final int _limit = 10;
   String _searchQuery = '';
@@ -258,34 +259,16 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: [
-                      if (currentIndex == 1)
-                        customChip2("All", Icons.spoke, chipValue[currentIndex] == "All", () async {
-                          await onChipTap("All");
-                        }),
-                      if (currentIndex == 1) const SizedBox(width: 8.0),
-                      customChip2("Cricket", Icons.sports_cricket, chipValue[currentIndex] == "Cricket", () async {
-                        await onChipTap("Cricket");
-                      }),
-                      const SizedBox(width: 8.0),
-                      customChip2("VolleyBall", Icons.sports_volleyball, chipValue[currentIndex] == "VolleyBall", () async {
-                        await onChipTap("VolleyBall");
-                      }),
-                      const SizedBox(width: 8.0),
-                      customChip2("BasketBall", Icons.sports_basketball, chipValue[currentIndex] == "BasketBall", () async {
-                        await onChipTap("BasketBall");
-                      }),
-                      const SizedBox(width: 8.0),
-                      customChip2("Hockey", Icons.sports_hockey, chipValue[currentIndex] == "Hockey", () async {
-                        await onChipTap("Hockey");
-                      }),
-                      const SizedBox(width: 8.0),
-                      customChip2("Lawn Tennis", Icons.sports_tennis, chipValue[currentIndex] == "Lawn Tennis", () async {
-                        await onChipTap("Lawn Tennis");
-                      }),
-                      const SizedBox(width: 8.0),
-                      customChip2("Table Tennis", Icons.sports_tennis, chipValue[currentIndex] == "Table Tennis", () async {
-                        await onChipTap("Table Tennis");
-                      }),
+                      if (currentIndex == 1) sportChip('All', Icons.spoke),
+                      sportChip('BasketBall', Icons.sports_basketball),
+                      if(isStaff) sportChip('Football', BoxIcons.bx_football),
+                      sportChip('VolleyBall', Icons.sports_volleyball),
+                      sportChip('Table Tennis', Icons.sports_tennis),
+                      sportChip('Lawn Tennis', Icons.sports_tennis),
+                      sportChip('Cricket', Icons.sports_cricket),
+                      if(isStaff) sportChip('Badminton', MingCute.badminton_fill),
+                      if(isStaff) sportChip('Squash', Icons.sports_tennis),
+                      if(!isStaff) sportChip('Hockey', Icons.sports_hockey),
                     ],
                   ),
                 ),
@@ -309,6 +292,15 @@ class _SchedulePageState extends State<SchedulePage> with SingleTickerProviderSt
           ),
         ),
       ),
+    );
+
+  }
+  Widget sportChip(String sport, IconData icon){
+    return Padding(
+      padding: const EdgeInsets.only(right:8),
+      child: customChip2(sport, icon, chipValue[currentIndex] == sport, () async {
+        await onChipTap(sport);
+      }),
     );
   }
 

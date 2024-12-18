@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:iism/DashBoard/pages/dashboard.dart';
+import 'package:iism/HomePage/pages/standings.dart';
+import 'package:lottie/lottie.dart';
 import 'package:popover/popover.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:showcaseview/showcaseview.dart';
@@ -182,6 +184,39 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       const LiveNowHighLight(),
                       const SizedBox(height: 30),
+                      // InkWell(
+                      //   onTap: () {
+                      //     Navigator.push(context, MaterialPageRoute(builder: (context) => StandingsPage()));
+                      //   },
+                      //   child: Container(
+                      //     margin: const EdgeInsets.symmetric(horizontal: 4),
+                      //     height: 100,
+                      //     width: double.infinity,
+                      //     decoration: BoxDecoration(
+                      //       borderRadius: BorderRadius.circular(10),
+                      //       border: Border.all(color: Colors.yellow),
+                      //       color: Colors.yellow[50],
+                      //       boxShadow: [
+                      //         BoxShadow(
+                      //           color: Colors.yellow.shade100,
+                      //           blurRadius: 5,
+                      //           spreadRadius: 3,
+                      //         ),
+                      //       ],
+                      //     ),
+                      //     child: Row(
+                      //       mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      //       children: [
+                      //         const SizedBox(width: 20),
+                      //         customText("Standings", 30, FontWeight.w800, darkBlueColor, 1),
+                      //         const SizedBox(width: 20),
+                      //         Lottie.asset('assets/files/standings.json', height: 80),
+                      //         const SizedBox(width: 20),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
+                      // const SizedBox(height: 30),
                       GalleryHighLight(onTap: widget.onTap),
                       const SizedBox(height: 30),
                       const MapWidget(),

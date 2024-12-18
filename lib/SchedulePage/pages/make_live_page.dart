@@ -35,7 +35,7 @@ class _MakeMatchLiveState extends State<MakeMatchLive> {
       });
       return;
     }
-    String makeMatchLiveUrl = '$apiBaseUrl/makeMatchLive';
+    String makeMatchLiveUrl = '$apiBaseUrl/${isStaff? "makeMatchLiveStaff" : "makeMatchLive"}';
     final response = await http.post(
       Uri.parse(makeMatchLiveUrl),
       headers: {

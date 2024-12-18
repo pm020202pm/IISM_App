@@ -27,7 +27,6 @@ class NewTeamsCard extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(5),
             child: Row(
-              mainAxisSize: MainAxisSize.min,
               children: [
                 ClipPath(
                     clipper: OctagonClipper(padding: 15),
@@ -39,7 +38,6 @@ class NewTeamsCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     customText(name, 16, FontWeight.w700 , darkBlueColor, 1.4),
-                    // customText(data['Position'], 15, FontWeight.w600 , darkBlueColor.withOpacity(0.8), 1.4),
                     customText(data['Email'], 14, FontWeight.w600 , darkBlueColor.withOpacity(0.8), 1.4),
                   ],
                 ),

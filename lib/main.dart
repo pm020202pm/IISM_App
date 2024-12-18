@@ -57,7 +57,7 @@ class _MyAppState extends State<MyApp> {
                   actions: [
                     TextButton(
                       onPressed: () async {
-                        final url = 'https://apps.apple.com/app/id$appId';
+                        const url = 'https://apps.apple.com/app/id$appId';
                         if (await canLaunchUrl(Uri.parse(url))) {
                           await launchUrl(Uri.parse(url),
                               mode: LaunchMode.externalApplication);

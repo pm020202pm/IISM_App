@@ -57,10 +57,10 @@ class LiveMatchCard extends StatelessWidget {
                         Column(
                           children: [
                             if(match.sport=='cricket') liveCricket(),
-                            if(match.sport=='volleyball' || match.sport == 'table tennis') liveVolleyball(active),
+                            if(match.sport=='volleyball' || match.sport == 'table tennis' || match.sport=='badminton' || match.sport=='squash') liveVolleyball(active),
                             if(match.sport=='lawn tennis') liveLawnTennis(active),
                             if(match.sport=='hockey') liveHockey(),
-                            if(match.sport=='basketball') liveBasketball(),
+                            if(match.sport=='basketball' || match.sport=='football') liveBasketball(),
                             const SizedBox(height: 3,),
                             InkWell(
                               onTap:(){openLocationUrl(locationUrl!);},

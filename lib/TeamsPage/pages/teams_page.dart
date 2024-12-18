@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:iism/TeamsPage/pages/teams_page2.dart';
 import 'package:iism/TeamsPage/widgets/OfficialsCard.dart';
 import '../../SchedulePage/pages/schedule_page.dart';
 import '../../utils.dart';
@@ -25,20 +25,6 @@ class _TeamsPageState extends State<TeamsPage> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: dark? Colors.black : Colors.white,
-        // appBar: PreferredSize(
-        //   preferredSize: const Size.fromHeight(70),
-        //   child: AppBar(
-        //     backgroundColor: Colors.transparent,
-        //     flexibleSpace: Container(
-        //       alignment: Alignment.centerLeft,
-        //       height: 80,
-        //       child: Padding(
-        //         padding: const EdgeInsets.only(left: 16, right: 16),
-        //         child: pageTitleText("Our Team"),
-        //       ),
-        //     ),
-        //   ),
-        // ),
         body: Padding(
           padding: const EdgeInsets.all(10),
           child: SingleChildScrollView(
@@ -49,63 +35,30 @@ class _TeamsPageState extends State<TeamsPage> {
                   padding: const EdgeInsets.all(10),
                   child: ClipPath(
                     clipper: OctagonClipper3(padding: 10),
-                    child: SizedBox(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          InkWell(
-                            onTap: (){
-                              HapticFeedback.lightImpact();
-                              setState(() {
-                                currentIndex = 0;
-                              });
-                            },
-                            child: AnimatedContainer(
-                              curve: Curves.easeInOut,
-                              padding: EdgeInsets.all((currentIndex==0) ? tabPadding : 8.0),
-                              duration: const Duration(milliseconds: 300),
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: (currentIndex==0) ? yellowColor : Colors.grey.shade300,
-                              ),
-                              child: customText("Key Officials", (currentIndex==0) ? 18 : 15, FontWeight.w600, (currentIndex==0) ? Colors.white :Colors.grey.shade600, 1),
-                            ),
-                          ),
-                          const SizedBox(width: 3.0),
-                          InkWell(
-                            onTap: (){
-                              HapticFeedback.lightImpact();
-                              setState(() {
-                                currentIndex = 1;
-                              });
-                            },
-                            child: AnimatedContainer(
-                              curve: Curves.easeInOut,
-                              padding: EdgeInsets.all((currentIndex==1) ? tabPadding : 8.0),
-                              duration: const Duration(milliseconds: 300),
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: (currentIndex==1) ? yellowColor : Colors.grey.shade300,
-                              ),
-                              child: customText(" Core Team ", (currentIndex==1) ? 18 : 15, FontWeight.w600, (currentIndex==1) ? Colors.white :Colors.grey.shade600, 1),
-                            ),
-                          ),
-                        ],
-                      ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        tabButton("Key Officials", currentIndex,0, (){
+                          setState(() {
+                            currentIndex = 0;
+                          });
+                        }),
+                        tabButton("Core Team", currentIndex,1, (){
+                          setState(() {
+                            currentIndex = 1;
+                          });
+                        }),
+                      ],
                     ),
                   ),
                 ),
-                if(currentIndex==0) OfficialsCard(data: data[0]),
-                if(currentIndex==0)const SizedBox(height: 10),
-                if(currentIndex==0)OfficialsCard(data: data[1]),
-                if(currentIndex==0)const SizedBox(height: 10),
-                if(currentIndex==0)OfficialsCard(data: data[2]),
-                if(currentIndex==0)const SizedBox(height: 10),
-                if(currentIndex==0)OfficialsCard(data: data[3]),
-                if(currentIndex==0)const SizedBox(height: 10),
-                if(currentIndex==0)OfficialsCard(data: data[4]),
-                if(currentIndex==0)const SizedBox(height: 10),
+                if(currentIndex==0)ListView.builder(
+                  itemCount: data.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) => OfficialsCard(data: data[index]),
+                ),
 
                 if(currentIndex==1)twoMembersCard(size, data[0], data[1], "OVERALL COORDINATORS", 180, 28,70),
                 if(currentIndex==1)const SizedBox(height: 10),
@@ -130,39 +83,6 @@ class _TeamsPageState extends State<TeamsPage> {
                 if(currentIndex==1)const SizedBox(height: 10),
                 if(currentIndex==1)twoMembersCard(size, data[20], data[21], "DESIGN HEADS", 112, 28,2),
                 const SizedBox(height: 70),
-                // (currentIndex==1)
-                // ? GridView.builder(
-                //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                //     crossAxisCount: 2,
-                //     crossAxisSpacing: 14.0,
-                //     mainAxisSpacing: 18.0,
-                //     childAspectRatio:0.68,
-                //   ),
-                //   padding: const EdgeInsets.all(16.0),
-                //   itemCount: data.length,
-                //   itemBuilder: (context, index) {
-                //     if (index >= data.length) {
-                //       return const Center(child: CircularProgressIndicator());
-                //     }
-                //     return TeamsCard(data: data[index]);
-                //   },
-                // )
-                // : ListView.builder(
-                //   padding: const EdgeInsets.all(16.0),
-                //   itemCount: data.length,
-                //   itemBuilder: (context, index) {
-                //     if (index >= data.length) {
-                //       return const Center(child: CircularProgressIndicator());
-                //     }
-                //     return Column(
-                //       children: [
-                //         OfficialsCard(data: data[index]),
-                //         const SizedBox(height: 15),
-                //       ],
-                //     );
-                //   },
-                // ),
-
               ],
             ),
           ),

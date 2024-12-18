@@ -3,7 +3,9 @@ import 'package:animated_icon/animated_icon.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:icons_plus/icons_plus.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../SchedulePage/models/LiveMatchModel.dart';
 import '../../SchedulePage/models/MatchesModel.dart';
 import '../../api.dart';
@@ -23,49 +25,43 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
   bool _isLoading = false;
   double livenowHeight = 0;
   final List<dynamic> _matches = [];
-  final List<int> _liveMatchesLength = List.filled(6, 0);
+  final List<int> _liveMatchesLength = List.filled(8, 0);
   List<dynamic> liveMatchesLength=[];
 
   Future<void> onChipTap(String sport) async {
-    setState(() {
-      chipSportValue = sport;
-      _matches.clear();
-    });
+    chipSportValue = sport;
+    _matches.clear();
     await _fetchMatches(sportsTableMap[chipSportValue]!);
+    setState(() {});
   }
 
   void getLiveMatchesLength() async {
-    final String apiUrl = '$apiBaseUrl/getTablesLength';
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isStaff = prefs.getBool('isStaff') ?? false;
+    final String apiUrl = '$apiBaseUrl/${isStaff? "getTablesLengthStaff":"getTablesLength"}';
     try {
       final response = await http.get(Uri.parse(apiUrl));
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        _liveMatchesLength[0] = data['data'][0][1];
-        _liveMatchesLength[1] = data['data'][1][1];
-        _liveMatchesLength[2] = data['data'][2][1];
-        _liveMatchesLength[3] = data['data'][3][1];
-        _liveMatchesLength[4] = data['data'][4][1];
-        _liveMatchesLength[5] = data['data'][5][1];
-        String _chipSportValue = chipSportValue;
-        if(_liveMatchesLength[0]>0){
-          _chipSportValue = "Cricket";
+        for(int i=0; i< data['data'].length; i++){
+          _liveMatchesLength[i] = data['data'][i][1];
         }
-        else if(_liveMatchesLength[1]>0){
-          _chipSportValue = "VolleyBall";
+        if(isStaff){
+          for(int i=0; i<_liveMatchesLength.length; i++){
+            if(_liveMatchesLength[i]>0) {
+              chipSportValue = sportsTableMapStaff.keys.elementAt(i+1);
+              break;
+            }
+          }
+        } else{
+          for(int i=0; i<_liveMatchesLength.length; i++){
+            if(_liveMatchesLength[i]>0) {
+              chipSportValue = sportsTableMapStudent.keys.elementAt(i+1);
+              break;
+            }
+          }
         }
-        else if(_liveMatchesLength[2]>0){
-          _chipSportValue = "BasketBall";
-        }
-        else if(_liveMatchesLength[3]>0){
-          _chipSportValue = "Hockey";
-        }
-        else if(_liveMatchesLength[4]>0){
-          _chipSportValue = "Lawn Tennis";
-        }
-        else if(_liveMatchesLength[5]>0){
-          _chipSportValue = "Table Tennis";
-        }
-        await onChipTap(_chipSportValue);
+        await onChipTap(chipSportValue);
       } else {
         if (kDebugMode) {
           print('Failed to load matches');
@@ -79,11 +75,13 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
   }
 
   Future<void> _fetchMatches(String sportTableName) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isStaff = prefs.getBool('isStaff') ?? false;
     if (_isLoading) return;
     setState(() {
       _isLoading = true;
     });
-    final String apiUrl = '$apiBaseUrl/getLiveMatches?page=1&limit=3&sortBy=time&order=ASC&search=&sportTableName=$sportTableName';
+    final String apiUrl = '$apiBaseUrl/${isStaff? "getLiveMatchesStaff":"getLiveMatches"}?page=1&limit=3&sortBy=time&order=ASC&search=&sportTableName=$sportTableName';
     try {
       final response = await http.get(Uri.parse(apiUrl));
       if (response.statusCode == 200) {
@@ -91,21 +89,10 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
         setState(() {
           _matches.addAll(data['matches']);
           int len = _matches.length;
-          if(len == 0){
-            livenowHeight = 0;
-          }
-          else if(len == 1){
-            livenowHeight = 50;
-          }
-          else if(len == 2){
-            livenowHeight = 100;
-          }
-          else{
-            livenowHeight = 155;
-          }
+          livenowHeight = len==0?0:(len==1?50:(len==2?100:155));
+          print('livenowHeight: $livenowHeight');
         });
       } else {
-
         if (kDebugMode) {
           print('Failed to load matches');
         }
@@ -139,15 +126,6 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               customText("Live Now", 28, FontWeight.w600, dark? Colors.grey.shade100: Colors.grey.shade900, 1),
-              // AnimateIcon(
-              //   key: UniqueKey(),
-              //   onTap: () {},
-              //   iconType: IconType.continueAnimation,
-              //   height: 25,
-              //   width: 40,
-              //   color: Colors.red,
-              //   animateIcon: AnimateIcons.liveVideo,
-              // )
             ],
           ),
         ),
@@ -157,17 +135,15 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              if(_liveMatchesLength[0]>0) customChips1("Cricket", Icons.sports_cricket,chipSportValue=="Cricket",() async {if(chipSportValue!='Cricket') await onChipTap("Cricket");}),
-              if(_liveMatchesLength[1]>0) const SizedBox(width: 6.0),
-              if(_liveMatchesLength[1]>0) customChips1("VolleyBall", Icons.sports_volleyball,chipSportValue=="VolleyBall", () async {if(chipSportValue!='VolleyBall') await onChipTap("VolleyBall");}),
-              if(_liveMatchesLength[2]>0) const SizedBox(width: 6.0),
-              if(_liveMatchesLength[2]>0) customChips1("BasketBall", Icons.sports_basketball,chipSportValue=="BasketBall",() async {if(chipSportValue!='BasketBall') await onChipTap("BasketBall");}),
-              if(_liveMatchesLength[3]>0) const SizedBox(width: 6.0),
-              if(_liveMatchesLength[3]>0) customChips1("Hockey", Icons.sports_hockey,chipSportValue=="Hockey", () async {if(chipSportValue!='Hockey') await onChipTap("Hockey");}),
-              if(_liveMatchesLength[4]>0) const SizedBox(width: 6.0),
-              if(_liveMatchesLength[4]>0) customChips1("Lawn Tennis", Icons.sports_tennis,chipSportValue=="Lawn Tennis",() async {if(chipSportValue!='Lawn Tennis') await onChipTap("Lawn Tennis");}),
-              if(_liveMatchesLength[5]>0) const SizedBox(width: 6.0),
-              if(_liveMatchesLength[5]>0) customChips1("Table Tennis", Icons.sports_tennis,chipSportValue=="Table Tennis", () async {if(chipSportValue!='Table Tennis') await onChipTap("Table Tennis");}),
+              chipSport('Cricket', 0, Icons.sports_cricket),
+              chipSport('VolleyBall', 1, Icons.sports_volleyball),
+              chipSport('BasketBall', 2, Icons.sports_basketball),
+              if(!isStaff) chipSport('Hockey', 3, Icons.sports_hockey),
+              chipSport('Lawn Tennis', isStaff? 3:4, Icons.sports_tennis),
+              chipSport('Table Tennis', isStaff? 4:5, Icons.sports_tennis),
+              if(isStaff) chipSport('Football', 5, BoxIcons.bx_football),
+              if(isStaff) chipSport('Badminton', 6, MingCute.badminton_fill),
+              if(isStaff) chipSport('Squash', 7, Icons.sports_tennis),
             ],
           ),
         ),
@@ -194,6 +170,17 @@ class _LiveNowHighLightState extends State<LiveNowHighLight> {
       ],
     );
     } else {
+      return const SizedBox.shrink();
+    }
+  }
+  Widget chipSport(String sport, int index, IconData icon){
+    if(_liveMatchesLength[index]>0) {
+      return Padding(
+        padding: const EdgeInsets.only(right: 6.0),
+        child: customChips1(sport, icon,chipSportValue==sport, () async {if(chipSportValue!=sport) await onChipTap(sport);}),
+      );
+    }
+    else {
       return const SizedBox.shrink();
     }
   }
@@ -228,4 +215,27 @@ Widget customChips1(String sport, IconData icon, bool isActive, Function() onTap
       ),
     ),
   );
+
 }
+
+Map<String, String> sportsTableMapStaff = {
+  'All': 'all',
+  'Cricket': 'cricket',
+  'VolleyBall': 'volleyball',
+  'BasketBall': 'basketball',
+  'Lawn Tennis': 'lawntennis',
+  'Table Tennis': 'tabletennis',
+  'Football': 'football',
+  'Badminton': 'badminton',
+  'Squash': 'squash',
+};
+
+Map<String, String> sportsTableMapStudent = {
+  'All': 'all',
+  'Cricket': 'cricket',
+  'VolleyBall': 'volleyball',
+  'BasketBall': 'basketball',
+  'Hockey': 'hockey',
+  'Lawn Tennis': 'lawntennis',
+  'Table Tennis': 'tabletennis',
+};
